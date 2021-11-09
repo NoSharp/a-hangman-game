@@ -11,7 +11,7 @@
 - hangman/server/data/dto Used to construct/define Data Transport Objects which represent something in the database.
 
 
-## How it works:
+## Websocket Structure:
 The website is a SPA (Single Page Application), where the content on the webpage updates when the user joins/creates a room.
 
 A room is wrappper for the Game object which handles the current game state such as hangman status, guesses etc.
@@ -183,4 +183,72 @@ The messages supported by the websocket are as follows:
             "hangmanState": 7
         }
     } 
+```
+
+## API Endpoints
+- GET /
+    - Returns the index page/SPA.
+
+- GET /game/{room_name}
+    - Returns a game from a room ID.
+    - Status Codes:
+        - 404, Room not found
+        - 400, Missing room_name
+        - 200, Game found, request successful.
+            This object will have information abuot the websocket, game name, player data etc.
+```json
+    {
+        "game": {
+            "name": "{{GAME_NAME}}",
+            "code": "{{GAME_CODE}}",
+            "maxPlayers": 10,
+            "players": [
+                {
+                    "name": "{{PLAYER_NAME}}",
+                    "role": "{{PLAYER_ROLE_ENUM}}"
+                }
+            ]
+        },
+        "websocketUrl": "http://localhost:8080/ws/game_code"
+    }
+```
+- POST /game/
+    - Used to create a game.
+    - Request:
+```json
+
+    {
+        "name": "{{GAME_NAME}}",
+        "playerCount": 10
+    }
+
+```
+    - Status Codes:
+        - 200, Success full request:
+```json
+    {
+        "game": {
+            "name": "{{GAME_NAME}}",
+            "maxPlayers": 10,
+            "code": "{{GAME_CODE}}",
+            "players": [
+                {
+                    "name": "{{PLAYER_NAME}}",
+                    "role": "{{PLAYER_ROLE_ENUM}}"
+                }
+            ]
+        },
+        "websocketUrl": "http://localhost:8080/ws/game_code"
+    }
+```
+    - 400, Invalid body:
+```json
+    {
+        "invalidFields": [
+            {
+                "fieldName": "{{FieldName}}",
+                "reason": "{{Reason}}"
+            }
+        ]
+    }
 ```
