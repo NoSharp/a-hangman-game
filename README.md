@@ -1,6 +1,15 @@
 # Hangman.
 
-## Strucutre:
+### Libraries (✅ approved, ❌ denied, 🔃 TBC ):
+- Jest 🔃
+- Ws ✅
+- Express ✅
+- JWT 🔃
+- pg (postgres lib) ✅ probably the right one.
+- AJV 🔃
+- 
+
+## Structure:
 - hangman/server Handles the "web server" aspect of this. :
 
 - hangman/server/routes Used to handle the actual endpoints that the client can request:
