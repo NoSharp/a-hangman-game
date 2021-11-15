@@ -64,7 +64,7 @@ body{
     width: 100%;
     font-size: 0.75rem;
     font-family: 'Montserrat', sans-serif;
-    color: #252525;
+    color: #454545;
 }
 
 .room-code{
@@ -73,13 +73,16 @@ body{
     height: 2rem;
     padding-left: 5%;
     border-color: #252525;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;;
 }
 
 .game-modal-join-submit{
     position: relative;
-    margin-top: 15%;
+    margin-top: 10vh;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 0%;
     height: 2rem;
     width: 50%;
     background: rgb(106,13,255);
