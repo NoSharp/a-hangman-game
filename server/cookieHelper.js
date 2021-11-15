@@ -39,9 +39,7 @@ function setGameCookie(res){
 export function cookieMiddlewear(req, res, next){
     Object.assign(req, cookieMixin);
     let cookie = getGameCookie(req);
-    console.log("COOKIE:", cookie);
     if(cookie === undefined){
-        console.log("Set cookie!");
         cookie = setGameCookie(res);
     }
     req.gameCookie = cookie;

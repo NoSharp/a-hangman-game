@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static("public/index"))
+app.use(express.static("public/sap"))
 
 app.use(cookieMiddlewear);
 
