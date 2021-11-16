@@ -1,6 +1,8 @@
 
 
 import { Router } from "express";
+import { addGame, findGameByRoomCode } from "../../game/game.js";
+
 const router = Router();
 
 router.get("/", (req, res)=>{
@@ -25,7 +27,13 @@ router.post("/", (req,res)=>{
 
     console.log(gameName, playerCount);
     
-    res.send(200);
+    if(findGameByRoomCode(gameName) !== undefined) {
+        res.status(400).send("Game Name already exists");
+        return;
+    }
+
+    addGame(gameName, playerCount);
+    res.sendStatus(200);
 })
 
 export default router;
