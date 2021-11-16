@@ -13,7 +13,7 @@ const cookieMixin = {
  * @returns 
  */
 function getGameCookie(req){
-    return req.cookies["gameCookie"];
+    return req.cookies?.gameCookie;
 }
 
 function genCookie(){
