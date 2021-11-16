@@ -19,7 +19,12 @@
   },
   "homepage": "https://github.com/NoSharp/uni-M30221#readme",
   "dependencies": {
+    "ajv": "^8.8.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "ws": "^8.2.3"
+  },
+  "devDependencies": {
+    "baretest": "^2.0.0"
   }
 }
