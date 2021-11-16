@@ -1,6 +1,6 @@
 // 🎷🐛
 
-import { Player } from "./player";
+import { Player } from "./player.js";
 
 /**
  * This can be constant, however as its mutable
@@ -20,6 +20,9 @@ export function findGameByCreator(creator){
 
 }
 
+export function addGame(gameCode, playerCount){
+    games[gameCode] = new Game(gameCode, playerCount);
+}
 
 export class Game{
  
@@ -27,11 +30,11 @@ export class Game{
      * 
      * @param {string} code 
      * @param {Player} creator 
+     * @param {number} roomSize
      */
-    constructor(code, creator){
+    constructor(code, roomSize){
         this.code = code;
-        this.creator = creator;
-        this.players = [this.creator];
+        this.roomSize = roomSize;
     }
 
     getCode(){
