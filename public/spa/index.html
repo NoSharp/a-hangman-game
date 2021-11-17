@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="index.css" type="text/css" rel="stylesheet">
-    <title>Hangman!</title>
-</head>
-<body>
-    <div class="container">
-        <div class="game-modal">
-            <div class="game-modal-title">
-                <h1>Enter or Create a Room</h1>
-            </div>
-            <form class="game-modal-join">
-                <h2>Room Code</h2>
-                <input type="text" class="room-code" type="submit">
-                <button class="game-modal-join-submit">
-                    <h1 style="margin: auto;">Submit</h1>
-                </button>
-            </form>
-    
-        </div>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="index.css" type="text/css" rel="stylesheet">
+        <title>Hangman!</title>
+    </head>
 
-    <script>
-        function rgbBackground(){}
-        window.onload = () =>{
-            rgbBackground();
-        }
-    </script>
-</body>
+    <body>
+        <div class="container">
+            <div class="game-modal">
+                <div class="game-modal-title">
+                    <h1>Enter or Create a Room</h1>
+                </div>
+
+                <form class="game-modal-join" style="display: none">
+                    <h2>Room Code</h2>
+                    <input type="text" class="room-code">
+                    <button name="button" class="game-modal-submit" type="button" onclick="click">
+                        Submit
+                    </button>
+                </form>
+
+                <form class="game-modal-create" style="display: none;">
+                    <h2>Game Name</h2>
+                    <input type="text" class="text-box-modal-format">
+                    <h2>Player Count</h2>
+                    <input type="text" class="text-box-modal-format">
+                    <button name="button" class="game-modal-submit" type="button" onclick="click">Submit</button>
+                </form>
+                
+                <form class="game-modal-selection">
+                    <button class="game-modal-create-option" type="button" onclick="showGameCreateModal()">Create</button>
+                    <button class="game-modal-join-option" type="button" onclick="showGameJoinModal()">Join</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            
+            let gameCreate = undefined;
+            let gameJoin = undefined;
+            let selectionPanel = undefined;
+
+            function hideSelectionPanel(){
+                selectionPanel.style.display = "none";
+            }
+
+            function showGameCreateModal(){
+                hideSelectionPanel();
+                gameJoin.style.display = "none";
+                gameCreate.style.display = "";
+            }
+
+            function showGameJoinModal(){
+                hideSelectionPanel();
+                gameJoin.style.display = "";
+                gameCreate.style.display = "none";
+            }
+
+            function rgbBackground(){}
+            
+            window.onload = () =>{
+                gameCreate = document.getElementsByClassName("game-modal-create")[0];
+                gameJoin = document.getElementsByClassName("game-modal-join")[0];
+                selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
+                rgbBackground();
+            }
+        </script>
+    </body>
 </html>
