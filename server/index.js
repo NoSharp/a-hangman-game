@@ -7,11 +7,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static("public/sap"))
+app.use(express.static("public/spa"))
 
 app.use(cookieMiddlewear);
 
-app.use("/game", gameRouter);
+app.use("/api/game/", gameRouter);
 
 app.listen(8080, ()=>{
     console.log("Yo we listening.");
