@@ -1,7 +1,8 @@
-
-
 import { Router } from "express";
 import { addGame, findGameByRoomCode } from "../../game/game.js";
+import Ajv from "ajv";
+
+const ajv = new Ajv();
 
 const router = Router();
 
@@ -16,17 +17,32 @@ router.get("/", (req, res)=>{
 
 });
 
+const postSchemaValidator = ajv.compile({
+    type: "object",
+    properties: {
+        playerCount: {
+            type: "number"
+        },
+        name: {
+            type: "string"
+        }
+    },
+    required: [
+        "playerCount",
+        "name",
+    ]
+});
+
+
 router.post("/", (req,res)=>{
     let gameName = req.body?.name;
     let playerCount = req.body?.playerCount;
-    
-    if(gameName === undefined || playerCount === undefined){
-        res.status(400).send("Missing Game Name or Player Count.");
+  
+    if(!postSchemaValidator(req.body)){
+        res.status(400).send("invalid request body.");
         return;
     }
-
-    console.log(gameName, playerCount);
-    
+        
     if(findGameByRoomCode(gameName) !== undefined) {
         res.status(400).send("Game Name already exists");
         return;
