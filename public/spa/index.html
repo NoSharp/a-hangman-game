@@ -63,9 +63,9 @@
             function gameCreationSubmit(){
                 const gameName = document.getElementById("game-name");  
                 const playerCount = document.getElementById("player-count");
-                console.log(gameName);
-                
-                createGame(gameName.innerText, parseInt(playerCount.innerText));
+
+
+                createGame(gameName.value, parseInt(playerCount.value));
             }
 
             function gameCreationJoin(){
