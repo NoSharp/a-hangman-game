@@ -18,17 +18,15 @@
                 <form class="game-modal-join" style="display: none">
                     <h2>Room Code</h2>
                     <input type="text" class="room-code">
-                    <button name="button" class="game-modal-submit" type="button" onclick="click">
-                        Submit
-                    </button>
+                    <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Submit</button>
                 </form>
 
                 <form class="game-modal-create" style="display: none;">
                     <h2>Game Name</h2>
-                    <input type="text" class="text-box-modal-format">
+                    <input type="text" class="text-box-modal-format" id="game-name">
                     <h2>Player Count</h2>
-                    <input type="text" class="text-box-modal-format">
-                    <button name="button" class="game-modal-submit" type="button" onclick="click">Submit</button>
+                    <input type="text" class="text-box-modal-format" id="player-count">
+                    <button name="button" class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button>
                 </form>
                 
                 <form class="game-modal-selection">
@@ -38,8 +36,10 @@
             </div>
         </div>
 
+        <script src= "api/rest.js"></script>
+
         <script>
-            
+
             let gameCreate = undefined;
             let gameJoin = undefined;
             let selectionPanel = undefined;
@@ -60,8 +60,18 @@
                 gameCreate.style.display = "none";
             }
 
-            function rgbBackground(){}
-            
+            function gameCreationSubmit(){
+                const gameName = document.getElementById("game-name");  
+                const playerCount = document.getElementById("player-count");
+                console.log(gameName);
+                
+                createGame(gameName.innerText, parseInt(playerCount.innerText));
+            }
+
+            function gameCreationJoin(){
+
+            }
+
             window.onload = () =>{
                 gameCreate = document.getElementsByClassName("game-modal-create")[0];
                 gameJoin = document.getElementsByClassName("game-modal-join")[0];
