@@ -1,6 +1,10 @@
 # Hangman.
 
-### Libraries (✅ approved, ❌ denied, 🔃 TBC ):
+## Also cool version:
+
+the cool version of this app: https://github.com/nosharp/hangman-rs
+
+## Libraries (✅ approved, ❌ denied, 🔃 TBC ):
 - Baretest ✅
 - Ws ✅
 - Express ✅
