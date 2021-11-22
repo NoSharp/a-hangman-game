@@ -30,6 +30,7 @@ function setGameCookie(res){
     res.cookie("gameCookie", cookie);
     return cookie;
 }
+
 /**
  * Creates a cookie if one doesn't exist.
  * It also supplies the game cookie mixins to the request.
@@ -44,4 +45,13 @@ export function cookieMiddlewear(req, res, next){
     }
     req.gameCookie = cookie;
     next();
+}
+
+/**
+ * Checks if a request has a cookie.
+ * @param {Request} req 
+ * @returns {boolean} does it have a game cookie.
+ */
+export function requestHasCookie(req){
+    return getGameCookie(req) !== undefined;
 }
