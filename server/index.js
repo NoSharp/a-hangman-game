@@ -1,6 +1,7 @@
 import express from "express";
 import {WebSocketServer} from "ws";
 import { cookieMiddlewear, requestHasCookie } from "./cookieHelper.js";
+import {mountWebSocketManager} from "./websocket/websocket.js";
 import gameRouter from "./routes/api/game.js";
 import http from "http";
 
@@ -42,9 +43,7 @@ httpServer.on('upgrade', (req, socket, head) => {
     wss.handleUpgrade(req, socket, head, (client, req) => wss.emit("connection", client, req));
 });
 
-wss.on("connection", (ws, req) => {
-    console.log("WS connected. 123! ");
-})
+mountWebSocketManager(wss);
 
 httpServer.listen(8080, ()=>{
     console.log("On!");
