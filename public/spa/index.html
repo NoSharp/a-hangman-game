@@ -41,6 +41,7 @@
         </div>
 
         <script src= "api/rest.js"></script>
+        <script src= "api/ws.js"></script>
 
         <script>
 
@@ -71,16 +72,14 @@
                 setSelectionPanelVisible(!show);
                 gameJoin.setVisible(show);
                 gameCreate.setVisible(!show);
-                
                 backButton.setVisible(show);
             }
 
             function gameCreationSubmit(){
                 const gameName = document.getElementById("game-name");  
                 const playerCount = document.getElementById("player-count");
-
-
                 createGame(gameName.value, parseInt(playerCount.value));
+                
             }
 
             function gameCreationJoin(){                
