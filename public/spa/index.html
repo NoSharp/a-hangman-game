@@ -54,6 +54,7 @@
                 selectionPanel.setVisible(show);
                 gameJoin.setVisible(!show);
                 gameCreate.setVisible(!show);
+                backButton.setVisible(!show);
             }
 
             function setCreateModalVisible(display){
@@ -61,6 +62,8 @@
                 setSelectionPanelVisible(!show);
                 gameJoin.setVisible(!show);
                 gameCreate.setVisible(show);
+                
+                backButton.setVisible(show);
             }
 
             function setJoinModalVisible(display){
@@ -68,6 +71,8 @@
                 setSelectionPanelVisible(!show);
                 gameJoin.setVisible(show);
                 gameCreate.setVisible(!show);
+                
+                backButton.setVisible(show);
             }
 
             function gameCreationSubmit(){
@@ -91,6 +96,7 @@
                 gameJoin = document.getElementsByClassName("game-modal-join")[0];
                 selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
                 backButton = document.getElementsByClassName("back-to-selection")[0];
+                backButton.setVisible(false);
             }
         </script>
     </body>
