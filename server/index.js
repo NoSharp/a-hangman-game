@@ -20,15 +20,20 @@ app.use(cookieMiddlewear);
 
 app.use("/api/game/", gameRouter);
 
-httpServer.on('upgrade', (req, socket, head) => {
+const cookieRegex = /([^gameCookie=].*[^;])/g;
 
+httpServer.on('upgrade', (req, socket, head) => {
+    console.log("got here?");
     if((req.headers?.upgrade ?? "") !== "websocket"){
         socket.write(`HTTP/1.1 401 Unauthorized \r\n\r\n`);
         socket.destroy();
         return;
     }
 
-    if(!requestHasCookie(req)){
+    const cookie = req.headers?.cookie ?? "";
+    const matched = cookie.match(cookieRegex)[0];
+
+    if(matched === undefined){
         socket.write(`HTTP/1.1 401 Unauthorized \r\n\r\n`);
         socket.destroy();
         return;
@@ -38,7 +43,7 @@ httpServer.on('upgrade', (req, socket, head) => {
 });
 
 wss.on("connection", (ws, req) => {
-    console.log("WS connected. ");
+    console.log("WS connected. 123! ");
 })
 
 httpServer.listen(8080, ()=>{
