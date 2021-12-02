@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
 
-:root{
-    --main-bg: #8233ff;
-}
-
-
 body{
     margin: 0 !important;
     padding: 0 !important;
@@ -43,7 +38,7 @@ body{
     margin: 1vh;
     background-color: #FFF;
     display: flex;
-    align-content: flex-start;
+    align-content: stretch;
     justify-content: flex-start;
     flex-wrap: wrap;
 }
@@ -56,6 +51,9 @@ body{
     color: #454545;
     font-size: 0.75em;
     padding: 1vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
 }
@@ -71,12 +69,13 @@ body{
 .game-modal-selection{
     text-align: center;
     width: 100%;
-    height: 70%;
+    height: 60%;
     font-size: 0.75rem;
     font-family: 'Montserrat', sans-serif;
     color: #454545;
     display: flex;
     flex-wrap: wrap;
+    /* align-content: stretch; */
     /* align-content: center; */
     justify-content: center;
 }
@@ -93,7 +92,7 @@ body{
 .game-modal-create{
     text-align: center;
     width: 100%;
-    height: 70%;
+    height: 50%;
     flex-wrap: wrap;
     justify-content: center;
     font-size: 0.75rem;
@@ -104,9 +103,14 @@ body{
 }
 
 .game-modal-create>h2{
-    padding-bottom: 0 !important;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    height: 1rem;
 }
 
+.game-modal-join>button{
+    margin-top: 1vh;
+}
 
 .text-box-modal-format{
     position: relative;
@@ -117,7 +121,6 @@ body{
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     border-style: solid;
-
 }
 
 .room-code{
@@ -127,7 +130,18 @@ body{
     padding-left: 5%;
     border-color: #252525;
     font-family: 'Montserrat', sans-serif;
-    font-weight: bold;;
+    font-weight: bold;
+}
+
+.button-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.button-container>button{
+    align-self: center;
 }
 
 button{

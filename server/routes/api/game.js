@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { addGame, findGameByRoomCode } from "../../game/game.js";
+import { Router, text } from "express";
+import { addGame, findGameByRoomCode, gameExists } from "../../game/game.js";
 import Ajv from "ajv";
 
 const ajv = new Ajv();
@@ -15,6 +15,12 @@ router.get("/", (req, res)=>{
         return;
     }
 
+    if (!gameExists(targetGame)){
+        res.sendStatus(404);
+        return;
+    }
+
+    res.send(JSON.stringify(findGameByRoomCode(targetGame)))
 });
 
 const postSchemaValidator = ajv.compile({
