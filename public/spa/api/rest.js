@@ -10,7 +10,7 @@ function createGame(gameName, playerCount){
     newGameCreate.onreadystatechange = () => {
         if(newGameCreate.readyState === 4){
             console.log(`Got response : ${newGameCreate.response}`);
-
+            connectToGameWs(gameName);
         }
     };
 }
