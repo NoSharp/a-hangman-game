@@ -24,7 +24,6 @@ app.use("/api/game/", gameRouter);
 const cookieRegex = /([^gameCookie=].*[^;])/g;
 
 httpServer.on('upgrade', (req, socket, head) => {
-    console.log("got here?");
     if((req.headers?.upgrade ?? "") !== "websocket"){
         socket.write(`HTTP/1.1 401 Unauthorized \r\n\r\n`);
         socket.destroy();
@@ -32,7 +31,7 @@ httpServer.on('upgrade', (req, socket, head) => {
     }
 
     const cookie = req.headers?.cookie ?? "";
-    const matched = cookie.match(cookieRegex)[0];
+    const matched = cookie.match(cookieRegex)?.[0] ?? undefined;
 
     if(matched === undefined){
         socket.write(`HTTP/1.1 401 Unauthorized \r\n\r\n`);
@@ -46,5 +45,5 @@ httpServer.on('upgrade', (req, socket, head) => {
 mountWebSocketManager(wss);
 
 httpServer.listen(8080, ()=>{
-    console.log("On!");
+    console.log("Hangman is online.");
 });
