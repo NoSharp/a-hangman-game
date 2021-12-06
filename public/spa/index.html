@@ -17,13 +17,13 @@
 
                 <form class="game-modal-join" style="display: none">
                     <h2>Room Code</h2>
-                    <input type="text" class="room-code" id="game-name">
+                    <input type="text" class="room-code" id="game-name-join">
                     <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
                 </form>
 
                 <form class="game-modal-create" style="display: none;">
                     <h2>Game Name</h2>
-                    <input type="text" class="text-box-modal-format" id="game-name">
+                    <input type="text" class="text-box-modal-format" id="game-name-create">
                     <h2>Player Count</h2>
                     <input type="text" class="text-box-modal-format" id="player-count">
                     <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button>
@@ -76,14 +76,14 @@
             }
 
             function gameCreationSubmit(){
-                const gameName = document.getElementById("game-name");  
+                const gameName = document.getElementById("game-name-create");  
                 const playerCount = document.getElementById("player-count");
                 createGame(gameName.value, parseInt(playerCount.value));
                 
             }
 
             function gameCreationJoin(){                
-                joinGame(document.getElementById("game-name").value);
+                joinGame(document.getElementById("game-name-join").value);
             }
 
             Element.prototype.setVisible = function(show){
