@@ -12,7 +12,7 @@ let types = {};
 for(const fPath of contents){
     import("./messagetypes/" + fPath)
     .then((data)=>{
-        types[data.messageName] = data.onMesssage; 
+        types[data.messageName] = data.onMessage; 
         console.log("Loaded message: ", data.messageName);
     });
 }

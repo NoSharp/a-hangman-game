@@ -36,7 +36,7 @@ const validateJoinRequest = ajv.compile({
     required: [
         "name"
     ]
-})
+});
 
 /**
  * Used to validate the join request,

@@ -1,7 +1,7 @@
 import {WebSocketServer, WebSocket} from "ws";
 import { isValidRequest, createInvalidPayloadMessage } from "./requestValidation.js";
-import messageTypes from "./messageTypes.cjs";
-const {getActioner} = messageTypes;
+import {getActioner} from "./messageTypes.js";
+
 const wsConnections = {};
 
 function unknownMessage(sender, payload){
@@ -19,8 +19,8 @@ function initiateWebSocket(ws){
         if(!isValidRequest(data)){
             ws.send(JSON.stringify(createInvalidPayloadMessage("Invalid Request")));
             console.log("DATA: %s", JSON.parse(data));
-            return;
         }else{
+            console.log(data.message, getActioner(data.message));
             (getActioner(data.message) ?? unknownMessage)(ws, data);
         }
     })
