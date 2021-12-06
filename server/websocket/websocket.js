@@ -21,7 +21,7 @@ function initiateWebSocket(ws){
             console.log("DATA: %s", JSON.parse(data));
         }else{
             console.log(data.message, getActioner(data.message));
-            (getActioner(data.message) ?? unknownMessage)(ws, data);
+            (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
         }
     })
 }
