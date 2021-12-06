@@ -39,8 +39,7 @@ const validateJoinRequest = ajv.compile({
 });
 
 /**
- * Used to validate the join request,
- * does not validate payload.
+ * Used to validate the join request.
  * @param {any} req
  */
 export function isValidJoinRequest(req){
