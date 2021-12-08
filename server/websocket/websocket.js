@@ -34,9 +34,17 @@ function initiateWebSocket(ws){
  */
 export function mountWebSocketManager(wss){
 
-    wss.on("connection", (ws) => { 
-        console.log("Got connection?")
-        initiateWebSocket(ws) 
+    WebSocket.prototype.sendObject = function(obj){
+        this.send(JSON.stringify(obj));
+    }
+
+    WebSocket.prototype.sendInvalidResponse = function (err){
+        this.sendObject(createInvalidPayloadMessage(err));
+    }
+    
+    wss.on("connection", (ws) => {
+        console.log("Got connection?");
+        initiateWebSocket(ws);
     });
     // wss.on("close")
 }
