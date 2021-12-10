@@ -15,31 +15,31 @@
                     <h1>Enter or Create a Room</h1>
                 </div>
 
-                <form class="game-modal-join" style="display: none">
+                <section class="game-modal-join" style="display: none">
                     <h2>Room Code</h2>
                     <input type="text" class="room-code" id="game-name-join">
                     <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
-                </form>
+                </section>
 
-                <form class="game-modal-create" style="display: none;">
+                <section class="game-modal-create" style="display: none;">
                     <h2>Game Name</h2>
                     <input type="text" class="text-box-modal-format" id="game-name-create">
                     <h2>Player Count</h2>
                     <input type="text" class="text-box-modal-format" id="player-count">
-                    <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button>
-                    
-                </form>
+                    <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button> 
+                </section>
                 
-                <form class="game-modal-selection">
+                <section class="game-modal-selection">
                     <button class="game-modal-create-option" type="button" onclick="setCreateModalVisible(true)">Create</button>
                     <button class="game-modal-join-option" type="button" onclick="setJoinModalVisible(true)">Join</button>
-                </form>
+                </section>
                 <div class="button-container">
                     <button class="back-to-selection" type="button" onclick="setSelectionPanelVisible(true)">Back</button>
                 </div>
             </div>
         </div>
 
+        <script src= "dom/domMediator.js"></script>
         <script src= "api/rest.js"></script>
         <script src= "api/ws.js"></script>
 
