@@ -5,7 +5,7 @@ import {getActioner} from "./messageTypes.js";
 const wsConnections = {};
 
 function unknownMessage(sender, payload){
-    sender.send(JSON.stringify(createInvalidPayloadMessage("Unknown Message")))
+    sender.sendInvalidResponse(createInvalidPayloadMessage("Unknown Message"));
 }
 
 /**
@@ -40,6 +40,13 @@ export function mountWebSocketManager(wss){
 
     WebSocket.prototype.sendInvalidResponse = function (err){
         this.sendObject(createInvalidPayloadMessage(err));
+    }
+
+    WebSocket.prototype.sendResponse = function(message, payload){
+        this.sendObject({
+            "message": message,
+            "payload": payload
+        });
     }
     
     wss.on("connection", (ws) => {

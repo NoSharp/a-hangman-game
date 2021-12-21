@@ -10,7 +10,7 @@ import { Player } from "./player.js";
  * The key is a string, the room code.
  * The value is a Game Object.
  */
-let games = {}
+let games = {};
 
 /**
  * Gets a room by it's code.
@@ -18,7 +18,7 @@ let games = {}
  * @returns {Game}
  */
 export function findGameByRoomCode(roomCode){
-    return games[roomCode]
+    return games[roomCode];
 }
 
 export function gameExists(roomCode){
