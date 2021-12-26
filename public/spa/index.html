@@ -1,103 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="index.css" type="text/css" rel="stylesheet">
-        <title>Hangman!</title>
-    </head>
 
-    <body>
-        <div class="home-container">
-            <div class="game-modal">
-                <div class="game-modal-title">
-                    <h1>Enter or Create a Room</h1>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="index.css" type="text/css" rel="stylesheet">
+    <link href="styles/gameContainer.css" type="text/css" rel="stylesheet">
+    <link href="styles/hangmanContainer.css" type="text/css" rel="stylesheet">
+    <title>Hangman!</title>
+</head>
 
-                <section class="game-modal-join" style="display: none">
-                    <h2>Room Code</h2>
-                    <input type="text" class="room-code" id="game-name-join">
-                    <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
-                </section>
+<body>
+    <div class="home-container">
+        <div class="game-modal">
+            <div class="game-modal-title">
+                <h1>Enter or Create a Room</h1>
+            </div>
 
-                <section class="game-modal-create" style="display: none;">
-                    <h2>Game Name</h2>
-                    <input type="text" class="text-box-modal-format" id="game-name-create">
-                    <h2>Player Count</h2>
-                    <input type="text" class="text-box-modal-format" id="player-count">
-                    <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button> 
-                </section>
-                
-                <section class="game-modal-selection">
-                    <button class="game-modal-create-option" type="button" onclick="setCreateModalVisible(true)">Create</button>
-                    <button class="game-modal-join-option" type="button" onclick="setJoinModalVisible(true)">Join</button>
-                </section>
+            <section class="game-modal-join" style="display: none">
+                <h2>Room Code</h2>
+                <input type="text" class="room-code" id="game-name-join">
+                <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
+            </section>
 
-                <div class="button-container">
-                    <button class="back-to-selection" type="button" onclick="setSelectionPanelVisible(true)">Back</button>
-                </div>
+            <section class="game-modal-create" style="display: none;">
+                <h2>Game Name</h2>
+                <input type="text" class="text-box-modal-format" id="game-name-create">
+                <h2>Player Count</h2>
+                <input type="text" class="text-box-modal-format" id="player-count">
+                <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button>
+            </section>
+
+            <section class="game-modal-selection">
+                <button class="game-modal-create-option" type="button"
+                    onclick="setCreateModalVisible(true)">Create</button>
+                <button class="game-modal-join-option" type="button" onclick="setJoinModalVisible(true)">Join</button>
+            </section>
+
+            <div class="button-container">
+                <button class="back-to-selection" type="button" onclick="setSelectionPanelVisible(true)">Back</button>
             </div>
         </div>
+    </div>
 
-        <script src= "dom/domMediator.js"></script>
-        <script src= "api/rest.js"></script>
-        <script src= "api/ws.js"></script>
+    <div class="game-container">
+        <canvas class="hangman-canvas"></canvas>
+        <div class="keyboard">
+            <!-- This is dyanmically generated at runtime. -->
+        </div>
+    </div>
 
-        <script>
+    <script src="dom/domMediator.js"></script>
+    <script src="api/rest.js"></script>
+    <script src="api/ws.js"></script>
 
-            let gameCreate = undefined;
-            let gameJoin = undefined;
-            let selectionPanel = undefined;
-            let backButton = undefined;
+    <script>
 
-            function setSelectionPanelVisible(display){
-                const show = display !== undefined && display;
-                selectionPanel.setVisible(show);
-                gameJoin.setVisible(!show);
-                gameCreate.setVisible(!show);
-                backButton.setVisible(!show);
-            }
+        let gameCreate = undefined;
+        let gameJoin = undefined;
+        let selectionPanel = undefined;
+        let backButton = undefined;
 
-            function setCreateModalVisible(display){
-                const show = display !== undefined && display;
-                setSelectionPanelVisible(!show);
-                gameJoin.setVisible(!show);
-                gameCreate.setVisible(show);
-                
-                backButton.setVisible(show);
-            }
+        function setSelectionPanelVisible(display) {
+            const show = display !== undefined && display;
+            selectionPanel.setVisible(show);
+            gameJoin.setVisible(!show);
+            gameCreate.setVisible(!show);
+            backButton.setVisible(!show);
+        }
 
-            function setJoinModalVisible(display){
-                const show = display !== undefined && display;
-                setSelectionPanelVisible(!show);
-                gameJoin.setVisible(show);
-                gameCreate.setVisible(!show);
-                backButton.setVisible(show);
-            }
+        function setCreateModalVisible(display) {
+            const show = display !== undefined && display;
+            setSelectionPanelVisible(!show);
+            gameJoin.setVisible(!show);
+            gameCreate.setVisible(show);
 
-            function gameCreationSubmit(){
-                const gameName = document.getElementById("game-name-create");  
-                const playerCount = document.getElementById("player-count");
-                createGame(gameName.value, parseInt(playerCount.value));
-                
-            }
+            backButton.setVisible(show);
+        }
 
-            function gameCreationJoin(){                
-                joinGame(document.getElementById("game-name-join").value);
-            }
+        function setJoinModalVisible(display) {
+            const show = display !== undefined && display;
+            setSelectionPanelVisible(!show);
+            gameJoin.setVisible(show);
+            gameCreate.setVisible(!show);
+            backButton.setVisible(show);
+        }
 
-            Element.prototype.setVisible = function(show){
-                this.style.display = show ? "" : "none";
-            }
+        function gameCreationSubmit() {
+            const gameName = document.getElementById("game-name-create");
+            const playerCount = document.getElementById("player-count");
+            createGame(gameName.value, parseInt(playerCount.value));
 
-            window.onload = () =>{
-                gameCreate = document.getElementsByClassName("game-modal-create")[0];
-                gameJoin = document.getElementsByClassName("game-modal-join")[0];
-                selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
-                backButton = document.getElementsByClassName("back-to-selection")[0];
-                backButton.setVisible(false);
-            }
-        </script>
-    </body>
+        }
+
+        function gameCreationJoin() {
+            joinGame(document.getElementById("game-name-join").value);
+        }
+
+        Element.prototype.setVisible = function (show) {
+            this.style.display = show ? "" : "none";
+        }
+
+        window.onload = () => {
+            gameCreate = document.getElementsByClassName("game-modal-create")[0];
+            gameJoin = document.getElementsByClassName("game-modal-join")[0];
+            selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
+            backButton = document.getElementsByClassName("back-to-selection")[0];
+            document.getElementsByClassName("home-container")[0].setVisible(false);
+            backButton.setVisible(false);
+        }
+    </script>
+</body>
+
 </html>
