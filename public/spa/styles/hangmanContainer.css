@@ -3,6 +3,7 @@
     height: 100%;
     width: 100%;
     justify-content: left;
+    align-content: stretch;
 }
 
 .hangman-canvas{
@@ -10,5 +11,71 @@
     height: 75vh;
     margin-top: auto;
     margin-left: 5vw;
-    margin-bottom: auto
+    margin-bottom: auto;
+    background-color: white;
+}
+
+.game-container > .keyboard{
+    width: 70vw;
+    height: 75vh;
+    background-color: white;
+    
+    margin-left: 5vw;
+    margin-top: auto;
+    margin-right: 5vw;
+    margin-bottom: auto;
+
+}
+
+.keyboard > .keys {
+    width: 90%;
+    margin-left: 5%;
+    /* margin-top: 25%; */
+    /* background-color: green; */
+    height: 25%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+}
+
+.keyboard > .keys > .key {
+    width: 3rem;
+    height: 3rem;
+    margin: 0.5vh;
+    border-radius: .5rem;
+    font-size: 2.5rem;
+    text-align: center;
+    padding: auto;
+    font-weight: 900;
+}
+
+.word-status {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    /* background-color: green; */
+    height: 45%;    
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+.word-status > .char{
+    width: 3rem;
+    height: 3rem;
+    background-color: white;
+    border-color: black;
+    text-align: center;
+    border-bottom: 5px solid black;
+    margin: 0.5vh; 
+    font-size: 2.5rem;
+    text-align: center;
+    padding: auto;
+    font-family: "montserrat", sans-serif;
+    font-weight: 900;
 }
