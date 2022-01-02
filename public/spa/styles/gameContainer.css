@@ -117,19 +117,3 @@
 .button-container>button{
     align-self: center;
 }
-
-button{
-    position: relative;
-    height: 2rem;
-    width: 50%;
-    background: rgb(106,13,255);
-    background: radial-gradient(circle, rgba(106,13,255,1) 0%, rgba(166,110,255,1) 100%); 
-    border-style: none;
-    border-radius: 5vh;
-    background-color: #00ff00;
-    font-size: 1rem;
-    color: aliceblue;
-    font-family: "montserrat", sans-serif;
-    z-index: 12;
-    cursor: pointer;
-}

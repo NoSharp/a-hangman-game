@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@7000&display=swap');
 body{
     margin: 0 !important;
     padding: 0 !important;
@@ -13,4 +13,21 @@ body{
     body{
         height: 100vh;
     }
+}
+
+
+button{
+    position: relative;
+    height: 2rem;
+    width: 50%;
+    background: rgb(106,13,255);
+    background: radial-gradient(circle, rgba(106,13,255,1) 0%, rgba(166,110,255,1) 100%); 
+    border-style: none;
+    border-radius: 5vh;
+    background-color: #00ff00;
+    font-size: 1rem;
+    color: aliceblue;
+    font-family: "montserrat", sans-serif;
+    z-index: 12;
+    cursor: pointer;
 }
