@@ -11,7 +11,7 @@ function createCharacterElementForCharacter(content){
 }
 
 function setWordToGuess(word){
-    const keysElement = document.querySelector(".keyboard>.word-status");
+    const keysElement = document.querySelector(".word-status");
     
     for(const char of word){
         const button = createCharacterElementForCharacter(char);

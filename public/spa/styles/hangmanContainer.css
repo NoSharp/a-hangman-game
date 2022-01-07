@@ -1,9 +1,12 @@
 .game-container{
     display: flex;
-    height: 100%;
+    height: auto;
+    margin-top: auto;
+    margin-bottom: auto;
     width: 100%;
     justify-content: left;
     align-content: stretch;
+    flex-wrap: wrap;
 }
 
 .hangman-container{
@@ -25,25 +28,18 @@
     width: 70vw;
     height: 75vh;
     background-color: white;
-    
     margin-left: 5vw;
-    margin-top: auto;
     margin-right: 5vw;
-    margin-bottom: auto;
-
 }
 
 .keyboard > .keys {
     width: 90%;
     margin-left: 5%;
-    /* margin-top: 25%; */
-    /* background-color: green; */
     height: 25%;
     display: flex;
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
-
 }
 
 .keyboard > .keys > .key {
@@ -62,7 +58,6 @@
     margin-left: 5%;
     margin-top: 5%;
     margin-bottom: 5%;
-    /* background-color: green; */
     height: 45%;    
     display: flex;
     align-content: center;
@@ -84,4 +79,25 @@
     padding: auto;
     font-family: "montserrat", sans-serif;
     font-weight: 900;
+}
+
+@media screen and (max-width: 550px) {
+    .hangman-container {
+        margin-bottom: 10vh;
+        flex-grow: 1;
+        margin-top: 5vh;
+        height: 50vh !important;
+        margin-right: 5vw;
+    }
+
+    .keyboard{
+        flex-grow: 1;
+        height: fit-content !important;
+        margin-bottom: 5vh;
+    }
+    .keys{
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+        height: fit-content !important;
+    }
 }
