@@ -81,7 +81,7 @@
     font-weight: 900;
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 900px) {
     .hangman-container {
         margin-bottom: 10vh;
         flex-grow: 1;
@@ -100,4 +100,28 @@
         margin-bottom: 5vh;
         height: fit-content !important;
     }
+}
+
+@media screen and (min-width: 900px) {
+    
+    .hangman-container {
+        margin-bottom: 10vh;
+        flex-grow: 2;
+        margin-top: 5vh;
+        height: 50vh !important;
+        margin-right: 5vw;
+    }
+
+    .keyboard{
+        flex-grow: 1;
+        height: fit-content !important;
+        margin-bottom: 5vh;
+    }
+    
+    .keys{
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+        height: fit-content !important;
+    }
+
 }

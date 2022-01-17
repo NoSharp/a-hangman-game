@@ -48,6 +48,8 @@ function generateKeys() {
     }
 }
 
+
+
 let canvas;
 const vh = (y) => canvas.height * (y / 100);
 const vw = (x) => canvas.width * (x / 100);
