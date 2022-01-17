@@ -10,33 +10,77 @@ let characters = {}
 let currentWordState = [];
 
 function showCharacter(idx){
-    const wordStatus = document.querySelector(".word-status");
-    wordStatus[idx].setText(gameWord[idx]);
+    const wordStatus = document.querySelectorAll(".word-status>.char");
+    console.log(wordStatus);
+    console.log(idx);
+    wordStatus[idx].innerText = gameWord[idx];
 }
 
-export function setupGame(word){
+function setupGame(word){
     gameWord = word;
-    currentWordState = "";
-    for(let i = 0; i < word.length(); i++){
+    currentWordState = [];
+    for(let i = 0; i < word.length; i++){
         currentWordState[i] = " ";
     }
 }
 
-export function getWordState(){
-    return gameWord;
+function getWordState(){
+    return currentWordState.join('');
 }
 
-export function isCharacterGuessed(character){
+function isCharacterGuessed(character){
     return characters[character] !== undefined;
 }
 
-export function guessCharacter(char){
-    let idx = gameWord.indexOf(char);
-    showCharacter(idx);
-    while(idx != -1){
-        currentWordState[idx] = char;
-        idx = gameWord.indexOf(char);
-        showCharacter(idx);
+
+function removeCharAtIndex(str, idx){
+    return str.substring(0,idx) + str.substring(idx+1);
+}
+
+function swapCharAtIndex(str, idx){
+    return str.substring(0,idx) + " " + str.substring(idx+1);
+}
+
+function onGameLose(){
+}
+
+function checkGameStatus(){
+
+    if(getHangmanState() === 7){
+        alert("Game lost");
     }
-    characters[char] = inWord;
+    console.log(getWordState().toLowerCase(), gameWord.toLowerCase());
+    if(getWordState().toLowerCase() === gameWord.toLowerCase()){
+        alert("Game won!");
+        
+    }
+}
+
+function guessCharacter(char){
+    let gameWordLower = gameWord.toLowerCase();
+    char = char.toLowerCase();
+    while(true){
+        let idx = gameWordLower.indexOf(char);
+        if(idx === -1) {
+            break;
+        }
+
+        if(characters[char] !== undefined){
+            const inWord = idx != -1;
+            characters[char] = inWord;
+        }
+
+        if(currentWordState[idx] === char){
+            break;
+        }
+        
+        showCharacter(idx);
+        currentWordState[idx] = char;
+        gameWordLower = swapCharAtIndex(gameWordLower, idx);
+    }
+    
+    if(!characters[char]){
+        incrementHangmanState();
+    }
+    checkGameStatus();
 }

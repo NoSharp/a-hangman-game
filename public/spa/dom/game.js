@@ -32,6 +32,10 @@ function createKeyButton(key){
         this.style.background = "linear-gradient(#00000000, #0000000) !important";
     }
 
+    button.onclick = function(){
+        guessCharacter(button.innerText);
+    }
+
     button.className = "key";
     button.textContent = key;
     return button;
@@ -158,10 +162,13 @@ function setHangmanState(stage){
     drawingContext.lineWidth = oldLineWidth;
 }
 
-setHangmanState(1);
-setHangmanState(2);
-setHangmanState(3);
-setHangmanState(4);
-setHangmanState(5);
-setHangmanState(6);
-setHangmanState(7);
+let currentHangmanState = -1;
+
+function incrementHangmanState(){
+    currentHangmanState++;
+    setHangmanState(currentHangmanState);
+}
+
+function getHangmanState(){
+    return currentHangmanState;
+}
