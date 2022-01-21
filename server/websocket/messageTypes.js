@@ -7,6 +7,7 @@ const contents = readdirSync(basePath);
 
 // I belive for readability it's easier if we use 
 // let for the object/kv data structure, as it signifies mutability.
+// Where as const will not.
 let types = {};
 
 for(const fPath of contents){
