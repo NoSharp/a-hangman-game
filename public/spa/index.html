@@ -72,7 +72,7 @@
         let gameJoin = undefined;
         let selectionPanel = undefined;
         let backButton = undefined;
-
+        let gameContainer = undefined;
         function setSelectionPanelVisible(display) {
             const show = display !== undefined && display;
             selectionPanel.setVisible(show);
@@ -101,22 +101,17 @@
         Element.prototype.setVisible = function (show) {
             this.style.display = show ? "" : "none";
         }
-
-
-        console.log(removeCharAtIndex("hello", 0));
+        
         window.onload = () => {
             gameCreate = document.getElementsByClassName("game-modal-create")[0];
             gameJoin = document.getElementsByClassName("game-modal-join")[0];
             selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
             backButton = document.getElementsByClassName("back-to-selection")[0];
-            document.getElementsByClassName("home-container")[0].setVisible(false);
+            gameContainer = document.getElementsByClassName("game-container")[0];
             backButton.setVisible(false);
-            // setWordToGuess("aaaahhh");
-            setupGame("Flood");
-
-            
-            setWordToGuess(getWordState());
-            generateKeys();
+            gameContainer.setVisible(false);
+            // setWordToGuess(getWordState());
+            // generateKeys();
         }
     </script>
 </body>
