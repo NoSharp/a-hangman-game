@@ -33,6 +33,10 @@ export function addGame(gameCode, playerCount){
     games[gameCode] = new Game(gameCode, playerCount);
 }
 
+function generateWord(){
+    return "flood";
+}
+
 export class Game{
  
     /**
@@ -44,14 +48,23 @@ export class Game{
     constructor(code, roomSize){
         this.code = code;
         this.roomSize = roomSize;
+        this.word = generateWord();
     }
 
     getCode(){
         return this.code;
     }
 
-
     getCreator(){
         return this.creator;
+    }
+
+    /**
+     * Converts the game data into an object
+     * that the websocket server will send the client.
+     * @returns {Object} The payload to send to the client
+     */
+    serialize(){
+        
     }
 }
