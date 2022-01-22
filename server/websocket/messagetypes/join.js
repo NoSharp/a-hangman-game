@@ -18,6 +18,7 @@ export function onMessage(ws, data){
     }
 
     // Send an accepted response
-    ws.sendResponse("Accepted",{})
-    
+    ws.sendResponse("Accepted",{});
+    // Send game info.
+    // ws.sendResponse()
 }

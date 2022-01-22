@@ -59,15 +59,17 @@ function checkGameStatus(){
 function guessCharacter(char){
     let gameWordLower = gameWord.toLowerCase();
     char = char.toLowerCase();
+
     while(true){
         let idx = gameWordLower.indexOf(char);
         if(idx === -1) {
             break;
         }
-
-        if(characters[char] !== undefined){
+        console.log(char);
+        if(characters[char] === undefined){
             const inWord = idx != -1;
             characters[char] = inWord;
+            console.log("setting character!")
         }
 
         if(currentWordState[idx] === char){
@@ -78,9 +80,11 @@ function guessCharacter(char){
         currentWordState[idx] = char;
         gameWordLower = swapCharAtIndex(gameWordLower, idx);
     }
-    
+
+    console.log(characters[char])
     if(!characters[char]){
         incrementHangmanState();
     }
+
     checkGameStatus();
 }

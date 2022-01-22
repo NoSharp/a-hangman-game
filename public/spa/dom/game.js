@@ -162,7 +162,7 @@ function setHangmanState(stage){
     drawingContext.lineWidth = oldLineWidth;
 }
 
-let currentHangmanState = -1;
+let currentHangmanState = 0;
 
 function incrementHangmanState(){
     currentHangmanState++;

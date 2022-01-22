@@ -10,12 +10,13 @@ function connectToGameWs(gameCode){
     ws.onmessage = (ev) =>{
         console.log("ON MESSAGE");
         let messageData = JSON.parse(ev.data);
-        if(messageData)
+        console.log(messageData);
     };
 
     ws.onopen = () =>{
         console.log("Connected!");
     };
+    
     ws.send(JSON.stringify({
         "message": "Join",
         "payload": {
