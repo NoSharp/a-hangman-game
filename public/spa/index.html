@@ -24,7 +24,7 @@
                 <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
             </section>
 
-            <section class="game-modal-create" style="display: none;">
+            <section class="game-modal-create" style="display: none">
                 <h2>Game Name</h2>
                 <input type="text" class="text-box-modal-format" id="game-name-create">
                 <h2>Player Count</h2>
@@ -109,14 +109,14 @@
             gameJoin = document.getElementsByClassName("game-modal-join")[0];
             selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
             backButton = document.getElementsByClassName("back-to-selection")[0];
-            document.getElementsByClassName("home-container")[0].setVisible(false);
-            backButton.setVisible(false);
+            // document.getElementsByClassName("home-container")[0].setVisible(false);
+            // backButton.setVisible(false);
             // setWordToGuess("aaaahhh");
-            setupGame("Flood");
+            // setupGame("Flood");
 
             
-            setWordToGuess(getWordState());
-            generateKeys();
+            // setWordToGuess(getWordState());
+            // generateKeys();
         }
     </script>
 </body>
