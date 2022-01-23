@@ -121,7 +121,7 @@ The messages supported by the websocket are as follows:
             {
                 "message": "GameData",
                 "payload": {
-                    "gameInfo": {
+                    "gameData": {
                         "name": "{{GAME_NAME}}",
                         "guessedLetters": "{{Concatenated_Game_Letters}}",
                         "currentWordMask": "{{Current_word_mask}}",
