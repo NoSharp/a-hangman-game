@@ -1,5 +1,8 @@
 # Hangman.
 
+## How the game works:
+Normal Hangman, 
+
 ## Also cool version:
 
 the cool version of this app: https://github.com/nosharp/hangman-rs
@@ -38,11 +41,15 @@ The messages supported by the websocket are as follows:
     - "Join":
             This message is used to connect a player in a game.
             It's expected to have a name attached.
+            The first person who joins a "non-computer generated game" will be
+            automatically put as the Word Maker.
+            If it's a computer generated game then the player will be a guesser.
 ```json
                 {
                     "message": "Join",
                     "payload": {
-                        "name": "{{NAME_HERE}}"
+                        "name": "{{NAME_HERE}}",
+                        "playerName": "{{PLAYER_NAME_HERE}}",
                     }
                 }
 ```
@@ -93,13 +100,12 @@ The messages supported by the websocket are as follows:
             
 ```json
             {
-                "message": "GameInfo",
+                "message": "PlayerData",
                 "payload": {
                     "players": [
                         {
                             "name": "{{PLAYER_NAME}}",
-                            "role": {{PLAYER_ROLE}},
-                            "score": {{PLAYER_SCORE}}
+                            "role": {{PLAYER_ROLE}}
                         }
                     ]
                 }
