@@ -2,9 +2,8 @@ import { Role } from "./role.js";
 
 export class Player{
 
-    constructor(socket, gameCookie, name, role){
+    constructor(socket, name, role){
         this.socket = socket;
-        this.gameCookie = gameCookie;
         this.name = name;
         this.role = role;
     }
