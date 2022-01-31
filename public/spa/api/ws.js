@@ -1,4 +1,4 @@
-let ws = new WebSocket(`${location.href.replace("http", "ws")}`);
+let ws = undefined;
 
 const messagesHandles = {};
 
@@ -7,20 +7,25 @@ function messageHandler(){
 }
 
 function connectToGameWs(gameCode){
+
+    ws = new WebSocket(`${location.href.replace("http", "ws")}`);
+
     ws.onmessage = (ev) =>{
-        console.log("ON MESSAGE");
         let messageData = JSON.parse(ev.data);
         console.log(messageData);
     };
 
     ws.onopen = () =>{
-        console.log("Connected!");
+            
+        ws.send(JSON.stringify({
+            "message": "Join",
+            "payload": {
+                "name": gameCode
+            }
+        }));
     };
-    
-    ws.send(JSON.stringify({
-        "message": "Join",
-        "payload": {
-            "name": gameCode
-        }
-    }));
+
+    ws.onerror = (err)=>{
+        console.log(err);
+    }
 }
