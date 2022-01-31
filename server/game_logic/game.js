@@ -41,14 +41,27 @@ export class Game{
  
     /**
      * 
-     * @param {string} code 
-     * @param {Player} creator 
+     * @param {string} code
      * @param {number} roomSize
      */
     constructor(code, roomSize){
         this.code = code;
         this.roomSize = roomSize;
-        this.word = generateWord();
+        
+        /* The word they'll be guessing */
+        this.targetWord = generateWord();
+        this.guessedCharacters = {};
+        
+        // Used to tell the client how to draw the current state of the word
+        // a space will be ignored by the client as a missing character
+        // anything else will be taken as a successful guess.
+        this.currentWordState = "";
+
+        // Used to count the amount of failed guesses.
+        // Also used on the client to draw the hangman once networked.
+        this.hangmanState = 0;
+
+        this.players = [];
     }
 
     getCode(){
@@ -59,12 +72,38 @@ export class Game{
         return this.creator;
     }
 
+    addPlayer(player){
+        this.players.push(player);
+    }
+
     /**
      * Converts the game data into an object
      * that the websocket server will send the client.
      * @returns {Object} The payload to send to the client
      */
-    serialize(){
-        
+    serializeGameInfo(){
+        return {
+            code: this.code,
+            roomSize: this.roomSize,
+            wordState: this.serializeWordStateInfo(),
+            hangmanState: this.hangmanState
+        }
+    }
+
+    /**
+     * 
+     * @returns {Object} the hangman state
+     */
+    serializeHangmanState(){
+        return {
+            hangmanState: this.hangmanState
+        };
+    }
+
+    serializeWordStateInfo(){
+        return {
+            currentWordState: this.currentWordState,
+            guessedCharacters: this.guessedCharacters,
+        }
     }
 }

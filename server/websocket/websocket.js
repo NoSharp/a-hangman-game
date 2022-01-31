@@ -13,7 +13,7 @@ function unknownMessage(sender, payload){
  * @param {WebSocket} ws 
  */
 function initiateWebSocket(ws){
-
+    console.log("Got here?");
     ws.on("message",(rawData)=>{
         const data = JSON.parse(rawData);
         if(!isValidRequest(data)){
@@ -23,7 +23,13 @@ function initiateWebSocket(ws){
             console.log(data.message, getActioner(data.message));
             (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
         }
-    })
+    });
+
+    ws.on("open", ()=>{ console.log("Connected!")});
+
+    ws.on("error", (err)=>{ console.log(`err ${err}`)});
+
+    ws.on("close", () => {console.log("closed!")});
 }
 
 /**
