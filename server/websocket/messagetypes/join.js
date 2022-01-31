@@ -1,4 +1,5 @@
-import { gameExists } from "../../game/game.js";
+import { gameExists, findGameByRoomCode } from "../../game_logic/game.js";
+import { Player } from "../../game_logic/player.js";
 import {isValidJoinRequest} from "../requestValidation.js";
 
 export const messageName = "Join";
@@ -10,15 +11,20 @@ export function onMessage(ws, data){
         return;
     }
 
-    if(!gameExists(data.name)){
+    const roomCode = data.name;
+    if(!gameExists(roomCode)){
         ws.sendResponse("Kick", {
             "reason": "NO_GAME_FOUND"
         });
         return;
     }
 
+    const game = findGameByRoomCode(data.name);
+
+    game.addPlayer(new Player(ws, data.playerName))
+
     // Send an accepted response
     ws.sendResponse("Accepted",{});
     // Send game info.
-    // ws.sendResponse()
+    ws.sendResponse("GameInfo", game.serializeGameInfo());
 }

@@ -31,19 +31,24 @@ const postSchemaValidator = ajv.compile({
         },
         name: {
             type: "string"
+        },
+        computerGeneratedWord: {
+            type: "boolean"
         }
     },
     required: [
         "playerCount",
         "name",
+        "computerGeneratedWord"
     ]
 });
 
 
 router.post("/", (req,res)=>{
-    let gameName = req.body?.name;
-    let playerCount = req.body?.playerCount;
-  
+    const gameName = req.body?.name;
+    const playerCount = req.body?.playerCount;
+    const isComputerGeneratedGame = req.body?.computerGeneratedWord;  
+    
     if(!postSchemaValidator(req.body)){
         res.status(400).send("invalid request body.");
         return;

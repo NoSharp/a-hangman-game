@@ -1,6 +1,7 @@
 // 🎷🐛
 
 import { Player } from "./player.js";
+import { Role } from "./role.js";
 
 /**
  * This can be constant, however as its mutable. because js.
@@ -29,8 +30,8 @@ export function findGameByCreator(creator){
 
 }
 
-export function addGame(gameCode, playerCount){
-    games[gameCode] = new Game(gameCode, playerCount);
+export function addGame(gameCode, playerCount, isComputerGeneratedGame){
+    games[gameCode] = new Game(gameCode, playerCount, isComputerGeneratedGame);
 }
 
 function generateWord(){
@@ -43,11 +44,14 @@ export class Game{
      * 
      * @param {string} code
      * @param {number} roomSize
+     * @param {boolean} isComputerGeneratedGame
      */
-    constructor(code, roomSize){
+    constructor(code, roomSize, isComputerGeneratedGame){
+        
         this.code = code;
         this.roomSize = roomSize;
-        
+        this.isComputerGeneratedGame = isComputerGeneratedGame;
+
         /* The word they'll be guessing */
         this.targetWord = generateWord();
         this.guessedCharacters = {};
@@ -60,6 +64,8 @@ export class Game{
         // Used to count the amount of failed guesses.
         // Also used on the client to draw the hangman once networked.
         this.hangmanState = 0;
+
+        this.currentGuesserIdx = 0;
 
         this.players = [];
     }
@@ -74,6 +80,22 @@ export class Game{
 
     addPlayer(player){
         this.players.push(player);
+
+        if(this.players.length-1 >= this.roomSize){
+            this.startGame();
+            this.broadcastPayloadToClients("")
+        }
+    }
+
+    startGame(){
+        this.setupGameRoles();
+        
+    }
+
+    setupGameRoles(){
+        if(!this.isComputerGeneratedGame){
+            this.players[0].updateRole(Role.WORD_MAKER);
+        }
     }
 
     /**
@@ -100,10 +122,26 @@ export class Game{
         };
     }
 
+    serializePlayers(){
+        let players = [];
+        
+        for(const player of this.players){
+            players.push(player.serialize());
+        }
+
+        return players;
+    }
+
     serializeWordStateInfo(){
         return {
             currentWordState: this.currentWordState,
             guessedCharacters: this.guessedCharacters,
         }
+    }
+
+    broadcastPayloadToClients(name, payload){
+        this.players.forEach((ply)=>{
+            ply.sendPayload(name, payload);
+        });
     }
 }

@@ -8,6 +8,16 @@ export class Player{
         this.role = role;
     }
 
+    constructor(socket, name){
+        this.socket = socket;
+        this.name = name;
+        this.role = Role.IDLE;
+    }
+
+    sendPayload(name, payload){
+        this.socket.sendResponse(name, payload);
+    }
+
     updateRole(newRole){
         this.role = newRole;
         // TODO: Send message to websocket.
@@ -19,5 +29,12 @@ export class Player{
 
     getName(){
         return this.name;
+    }
+
+    serialize(){
+        return {
+            name: this.name,
+            role: this.role
+        }
     }
 }
