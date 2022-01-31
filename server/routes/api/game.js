@@ -1,5 +1,5 @@
 import { Router, text } from "express";
-import { addGame, findGameByRoomCode, gameExists } from "../../game/game.js";
+import { addGame, findGameByRoomCode, gameExists } from "../../game_logic/game.js";
 import Ajv from "ajv";
 
 const ajv = new Ajv();
