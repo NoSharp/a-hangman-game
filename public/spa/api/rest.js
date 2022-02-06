@@ -4,7 +4,8 @@ function createGame(gameName, playerCount){
     newGameCreate.setRequestHeader("Content-Type", "application/json");
     newGameCreate.send(JSON.stringify({
         name: gameName,
-        playerCount: playerCount
+        playerCount: playerCount,
+        computerGeneratedWord: true
     }));
     
     newGameCreate.onreadystatechange = () => {
