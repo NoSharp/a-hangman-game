@@ -1,12 +1,16 @@
 let ws = undefined;
 
-const messagesHandles = {};
+const messagesHandlers = {
+    "Accepted": function(data){
+     
+    }
+};
 
 function messageHandler(){
 
 }
 
-function connectToGameWs(gameCode){
+export function connectToGameWs(gameCode){
 
     ws = new WebSocket(`${location.href.replace("http", "ws")}`);
 

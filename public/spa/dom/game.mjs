@@ -10,7 +10,7 @@ function createCharacterElementForCharacter(content){
     return char;
 }
 
-function setWordToGuess(word){
+export function setWordToGuess(word){
     const keysElement = document.querySelector(".word-status");
     
     for(const char of word){
@@ -51,8 +51,6 @@ function generateKeys() {
         keysElement.append(button);
     }
 }
-
-
 
 let canvas;
 const vh = (y) => canvas.height * (y / 100);

@@ -21,7 +21,7 @@
             <section class="game-modal-join" style="display: none">
                 <h2>Room Code</h2>
                 <input type="text" class="room-code" id="game-name-join">
-                <button name="button" class="game-modal-submit" type="button" onclick="gameCreationJoin()">Join</button>
+                <button name="button" class="game-modal-submit" type="button" >Join</button>
             </section>
 
             <section class="game-modal-create" style="display: none">
@@ -29,17 +29,16 @@
                 <input type="text" class="text-box-modal-format" id="game-name-create">
                 <h2>Player Count</h2>
                 <input type="text" class="text-box-modal-format" id="player-count">
-                <button class="game-modal-submit" type="button" onclick="gameCreationSubmit()">Submit</button>
+                <button class="game-modal-submit" type="button">Submit</button>
             </section>
 
             <section class="game-modal-selection">
-                <button class="game-modal-create-option" type="button"
-                    onclick="setCreateModalVisible(true)">Create</button>
-                <button class="game-modal-join-option" type="button" onclick="setJoinModalVisible(true)">Join</button>
+                <button class="game-modal-create-option" type="button">Create</button>
+                <button class="game-modal-join-option" type="button" >Join</button>
             </section>
 
             <div class="button-container">
-                <button class="back-to-selection" type="button" onclick="setSelectionPanelVisible(true)">Back</button>
+                <button class="back-to-selection" type="button" >Back</button>
             </div>
         </div>
     </div>
@@ -59,14 +58,22 @@
         </div>
     </div>
     
-    <script src="game_logic/game.js"></script>
-    <script src="dom/game.js"></script>
-    <script src="dom/gameCreation.js"></script>
-    <script src="dom/domMediator.js"></script>
-    <script src="api/rest.js"></script>
-    <script src="api/ws.js"></script>
+    <script src="game_logic/game.mjs" type="module"></script>
+    <script src="dom/game.mjs" type="module"></script>
+    <script src="dom/gameCreation.mjs"type="module"></script>
+    <script src="dom/domMediator.mjs" type="module"></script>
+    <script src="api/rest.mjs" type="module"></script>
+    <script src="api/ws.mjs" type="module"></script>
 
-    <script>
+    <script type="module" >
+        console.log("yo?")
+
+    </script>
+    <script type="module">
+
+        import {removeCharAtIndex} from "/game_logic/game.mjs";
+        import {setWordToGuess} from "/dom/game.mjs";
+        import {gameCreationSubmit, gameCreationJoin} from "/dom/gameCreation.mjs";
 
         let gameCreate = undefined;
         let gameJoin = undefined;
@@ -103,15 +110,36 @@
         }
 
 
-        console.log(removeCharAtIndex("hello", 0));
+        console.log("window loaded?")
         window.onload = () => {
-            gameCreate = document.getElementsByClassName("game-modal-create")[0];
-            gameJoin = document.getElementsByClassName("game-modal-join")[0];
-            selectionPanel = document.getElementsByClassName("game-modal-selection")[0];
-            backButton = document.getElementsByClassName("back-to-selection")[0];
-            // document.getElementsByClassName("home-container")[0].setVisible(false);
-            // backButton.setVisible(false);
-            // setWordToGuess("aaaahhh");
+            console.log("window loaded?")
+            gameCreate = document.querySelector(".game-modal-create");
+            gameJoin = document.querySelector(".game-modal-join");
+            selectionPanel = document.querySelector(".game-modal-selection");
+            backButton = document.querySelector(".back-to-selection");
+            
+            document.querySelector(".game-modal-join>.game-modal-submit")
+                .addEventListener("click", gameCreationSubmit);
+
+            document.querySelector(".game-modal-join>.game-modal-submit")
+                .addEventListener("click", gameCreationJoin);
+            
+            document.querySelector(".game-modal-selection>.game-modal-join-option")
+                .addEventListener("click", ()=> {
+                    setJoinModalVisible(true);
+                });
+
+            document.querySelector(".game-modal-selection>.game-modal-create-option")
+                .addEventListener("click", ()=>{
+                    console.log("Game createD?")
+                    setCreateModalVisible(true);
+                });
+
+            document.querySelector(".button-container>.back-to-selection")
+                .addEventListener("click", ()=> {
+                    setSelectionPanelVisible(true);
+                });
+            backButton.setVisible(false);
             // setupGame("Flood");
 
             

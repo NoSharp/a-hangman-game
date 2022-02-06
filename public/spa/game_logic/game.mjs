@@ -33,7 +33,7 @@ function isCharacterGuessed(character){
 }
 
 
-function removeCharAtIndex(str, idx){
+export function removeCharAtIndex(str, idx){
     return str.substring(0,idx) + str.substring(idx+1);
 }
 

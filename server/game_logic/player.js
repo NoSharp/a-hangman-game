@@ -2,12 +2,6 @@ import { Role } from "./role.js";
 
 export class Player{
 
-    constructor(socket, name, role){
-        this.socket = socket;
-        this.name = name;
-        this.role = role;
-    }
-
     constructor(socket, name){
         this.socket = socket;
         this.name = name;
