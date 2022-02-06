@@ -1,14 +1,13 @@
 let ws = undefined;
 
-const messagesHandlers = {
+const messageHandlers = {
     "Accepted": function(data){
-     
+        
+    },
+    "GameInfo": function(data){
+        
     }
 };
-
-function messageHandler(){
-
-}
 
 export function connectToGameWs(gameCode){
 
@@ -17,6 +16,19 @@ export function connectToGameWs(gameCode){
     ws.onmessage = (ev) =>{
         let messageData = JSON.parse(ev.data);
         console.log(messageData);
+        const messageName = messageData.message;
+        
+        if(messageName === undefined){
+            console.log(`Error handling packet: ${ev.data}`);
+            return;
+        }
+        
+        if(messageHandlers[messageName] === undefined){
+            console.log(`No handler defined for: ${messageName}`);
+            return;
+        }
+
+        messageHandlers[messageName](messageData.payload);
     };
 
     ws.onopen = () =>{
