@@ -109,16 +109,13 @@
             this.style.display = show ? "" : "none";
         }
 
-
-        console.log("window loaded?")
         window.onload = () => {
-            console.log("window loaded?")
             gameCreate = document.querySelector(".game-modal-create");
             gameJoin = document.querySelector(".game-modal-join");
             selectionPanel = document.querySelector(".game-modal-selection");
             backButton = document.querySelector(".back-to-selection");
             
-            document.querySelector(".game-modal-join>.game-modal-submit")
+            document.querySelector(".game-modal-create>.game-modal-submit")
                 .addEventListener("click", gameCreationSubmit);
 
             document.querySelector(".game-modal-join>.game-modal-submit")
@@ -131,7 +128,6 @@
 
             document.querySelector(".game-modal-selection>.game-modal-create-option")
                 .addEventListener("click", ()=>{
-                    console.log("Game createD?")
                     setCreateModalVisible(true);
                 });
 

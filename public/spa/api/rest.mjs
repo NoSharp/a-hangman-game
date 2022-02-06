@@ -1,4 +1,6 @@
-function createGame(gameName, playerCount){
+import {connectToGameWs} from "./ws.mjs"
+
+export function createGame(gameName, playerCount){
     const newGameCreate = new XMLHttpRequest();
     newGameCreate.open("POST", `/api/game/`);
     newGameCreate.setRequestHeader("Content-Type", "application/json");
@@ -16,7 +18,7 @@ function createGame(gameName, playerCount){
     };
 }
 
-function joinGame(gameCode){
+export function joinGame(gameCode){
     const joinGame = new XMLHttpRequest();
     joinGame.open("GET", `/api/game/?room=${gameCode}`);
     joinGame.onreadystatechange = () => {

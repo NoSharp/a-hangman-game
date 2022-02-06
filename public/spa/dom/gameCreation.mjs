@@ -1,3 +1,5 @@
+import {createGame, joinGame} from "../api/rest.mjs"
+
 export function gameCreationSubmit() {
     const gameName = document.getElementById("game-name-create");
     const playerCount = document.getElementById("player-count");
