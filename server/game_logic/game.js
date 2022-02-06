@@ -59,7 +59,7 @@ export class Game{
         // Used to tell the client how to draw the current state of the word
         // a space will be ignored by the client as a missing character
         // anything else will be taken as a successful guess.
-        this.currentWordState = "";
+        this.currentWordState = this.createWordStateForTargetWord();
 
         // Used to count the amount of failed guesses.
         // Also used on the client to draw the hangman once networked.
@@ -76,6 +76,14 @@ export class Game{
 
     getCreator(){
         return this.creator;
+    }
+
+    createWordStateForTargetWord(){
+        let word = "";
+        for(let i = 0; i < this.targetWord.length; i++){
+            word += " ";
+        }
+        return word;
     }
 
     addPlayer(player){
