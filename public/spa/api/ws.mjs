@@ -1,11 +1,23 @@
 let ws = undefined;
 
+let shouldRenderOnNextGameInfo = false;
+
+let currentGameInfo = {};
+
 const messageHandlers = {
+    
     "Accepted": function(data){
-        
+        shouldRenderOnNextGameInfo = true;
     },
+
     "GameInfo": function(data){
+        currentGameInfo = data.payload;
+        if(!shouldRenderOnNextGameInfo){
+            return;
+        }
+
         
+
     }
 };
 
@@ -45,3 +57,9 @@ export function connectToGameWs(gameCode){
         console.log(err);
     }
 }
+
+/**
+ * - Single POST request for handling the order placement
+ * - API then prompts server (person not machine) to create Ice cream
+ * - 
+ */
