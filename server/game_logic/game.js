@@ -1,5 +1,7 @@
 // 🎷🐛
 
+import { invertArray } from "../utils/arrayUtils.js";
+import { getCharacterIndexes } from "../utils/stringUtils.js";
 import { Player } from "./player.js";
 import { Role } from "./role.js";
 
@@ -104,6 +106,72 @@ export class Game{
         if(!this.isComputerGeneratedGame){
             this.players[0].updateRole(Role.WORD_MAKER);
         }
+    }
+
+    canGuessLetter(letter){
+        return this.guessedCharacters[letter] === undefined;
+    }    
+
+    
+    playerGuessLetter(playerIdx, letter){
+        // this is a fail safe, canGuessLetter should be ran before this.
+        if(!this.canGuessLetter(letter)) return;
+
+        const letterPositions = this.getCharacterIndexes(letter);
+
+        if(letterPositions.length === 0){
+            // Invalid guess
+            // Tell client of unsuccessful guess
+        }else{
+            // Valid guess
+            this.displayLettersInWordState(letterPositions);
+
+            // Update word state
+            // Tell client of a sucessful guess
+        }
+    }
+
+    getCharacterIndexes(letter){
+        return getCharacterIndexes(letter, this.targetWord);       
+    }
+
+    displayLettersInWordState(letterIndexes){
+        let newWordState = "";
+        // If the letter indexes length is 0
+        // the return the targetWord because
+        // there's nothing to modify.
+        if(letterIndexes.length == 0){
+            return this.currentWordState;
+        }
+     
+        const character = this.targetWord.charAt(letterIndexes[0]);
+
+        const firstIndex = letterIndexes[0];
+        const lastIndex = letterIndexes[letterIndexes.length - 1];
+
+        // If it's only 1, then all we need to do is replace
+        // a single character.
+        if(letterIndexes.length == 1){
+            return this.currentWordState.slice(firstIndex, firstIndex+1) + 
+                character + this.currentWordState.slice(firstIndex+1);
+        }
+
+        newWordState = this.currentWordState.slice(0, firstIndex);
+
+        const invertedArray = invertArray(letterIndexes);
+
+        // We don't need to always itterate over the entire word
+        // So we can just itterate from the range of the first to last index.
+        for(let wordStateIdx = firstIndex; wordStateIdx <= lastIndex; wordStateIdx++){
+            const index = invertedArray[wordStateIdx];
+            if(index === undefined){
+                newWordState += this.currentWordState.charAt(index);
+            }else{
+                newWordState += this.targetWord.charAt(index);
+            }
+        }
+        
+        this.wordState = newWordState;
     }
 
     /**
