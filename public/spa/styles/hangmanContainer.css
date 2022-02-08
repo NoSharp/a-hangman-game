@@ -1,8 +1,6 @@
 .game-container{
     display: flex;
     height: auto;
-    margin-top: auto;
-    margin-bottom: auto;
     width: 100%;
     justify-content: left;
     align-content: stretch;
@@ -24,12 +22,8 @@
     height: 25vw;
 }
 
-.game-container > .keyboard{
-    width: 70vw;
-    height: 75vh;
+.keyboard{
     background-color: white;
-    margin-left: 5vw;
-    margin-right: 5vw;
 }
 
 .keyboard > .keys {
@@ -94,6 +88,8 @@
         flex-grow: 1;
         height: fit-content !important;
         margin-bottom: 5vh;
+        margin-left: 5vw;
+        margin-right: 5vw;
     }
     .keys{
         margin-top: 5vh;
@@ -102,20 +98,73 @@
     }
 }
 
+@media screen and (min-width: 1000px) {
+
+    .game-container{
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        width: 1000px !important;
+    }
+
+    .keyboard-word-container{
+        width: 600px !important;
+        /* margin-right: 50px; */
+    }
+
+    .hangman-container{
+        width: 250px !important;
+        margin-right: 50px !important;
+        margin-left: 50px !important;
+    }
+}
+
+@media screen and (min-height: 600px) {
+    .game-container{
+        margin-top: auto;
+        margin-bottom: auto;
+        position: relative;
+        height: 600px !important;
+    }
+
+    .hangman-container{
+        height: 540px !important;
+    }
+
+    .keyboard-word-container{
+        height: 600px !important;
+    }
+
+}
+
 @media screen and (min-width: 900px) {
     
+    .game-container{
+        margin-bottom: auto;
+        position: relative;
+        flex-direction: row ;
+        align-content: center;
+        height: 100%;
+        padding-top: 0vh;
+    }
+
     .hangman-container {
-        margin-bottom: 10vh;
-        flex-grow: 2;
-        margin-top: 5vh;
-        height: 50vh !important;
         margin-right: 5vw;
+        height: 90vh;
+        position: relative;
+        width: 25vw;
+    }
+
+    .word-status{
+        float: right;
+        width: auto ;
+        margin-right: auto;
+        margin-left: auto;
     }
 
     .keyboard{
-        flex-grow: 1;
-        height: fit-content !important;
         margin-bottom: 5vh;
+        background-color: white;
     }
     
     .keys{
@@ -123,5 +172,35 @@
         margin-bottom: 5vh;
         height: fit-content !important;
     }
+
+    .keyboard-word-container{
+        display: flex;
+        width: 60vw;
+        flex-direction: column;
+    }
+
+}
+
+
+@media screen and (max-width:556px) {
+    .word-status > .char {
+        width: 48px;
+        height: 48px;
+        font-size: 48px;
+        margin: 8px;
+    }
+
+    .hangman-container{
+        height: 275px !important
+    }
+
+    .keyboard{
+        width: 90vw;
+        height: 75vh;
+        background-color: white;
+        margin-left: 5vw;
+        margin-right: 5vw;
+    }
+    
 
 }
