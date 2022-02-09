@@ -54,7 +54,26 @@ export function mountWebSocketManager(wss){
             "payload": payload
         });
     }
+
+    WebSocket.prototype.setGameCode = function(game){
+        this.gameCode = game;
+    }
+
+    WebSocket.prototype.getGameCode = function(){
+        return this.gameCode;
+    }
+
+    WebSocket.prototype.setPlayerInstance = function(player){
+        this.playerInstance = player;
+    }
+
+    WebSocket.prototype.getPlayerInstance = function(){
+        return this.playerInstance;
+    }
     
+    
+
+
     wss.on("connection", (ws) => {
         console.log("Got connection?");
         initiateWebSocket(ws);
