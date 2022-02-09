@@ -1,3 +1,5 @@
+import { makeGuess } from "../api/ws.mjs";
+
 function createCharacterElementForCharacter(content){
     const char = document.createElement("div");
     if(char === undefined){
@@ -11,13 +13,34 @@ function createCharacterElementForCharacter(content){
 }
 
 export function setWordToGuess(word){
-    const keysElement = document.querySelector(".word-status");
+
+    const wordStatusElement = document.querySelector(".word-status");
+    if(wordStatusElement.children.length == word.length ){
+        for(let idx = 0; idx < wordStatusElement.children.length; idx++){
+            wordStatusElement.children[idx].innerText = word.charAt(idx);
+        }
+    }else{
     
-    for(const char of word){
-        const button = createCharacterElementForCharacter(char);
-        keysElement.append(button);
+        for(const char of word){
+            const button = createCharacterElementForCharacter(char);
+            wordStatusElement.append(button);
+        }
     }
 }
+
+
+export function coverKeyboard(msg){
+    const noGuessingPrompt = document.querySelector(".notguessing");
+    const noGuessingValue = document.querySelector(".notguessing>h1");
+    noGuessingValue.innerText = msg;
+    noGuessingPrompt.setVisible(true);
+}
+
+export function showKeyboard(){
+    const noGuessingPrompt = document.querySelector(".notguessing");
+    noGuessingPrompt.setVisible(false);
+}
+
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -32,9 +55,9 @@ function createKeyButton(key){
         this.style.background = "linear-gradient(#00000000, #0000000) !important";
     }
 
-    button.onclick = function(){
-        guessCharacter(button.innerText);
-    }
+    button.addEventListener("click", ()=> {
+        makeGuess(button.innerText);
+    });
 
     button.className = "key";
     button.textContent = key;
@@ -169,4 +192,12 @@ function incrementHangmanState(){
 
 function getHangmanState(){
     return currentHangmanState;
+}
+
+
+export function displayGameSection(){
+    document.querySelector(".game-container").setVisible(true);
+    document.querySelector(".home-container").setVisible(false);
+    generateKeys();
+    // setWordToGuess("flood");
 }
