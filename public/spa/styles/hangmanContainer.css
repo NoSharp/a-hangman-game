@@ -30,6 +30,7 @@
     width: 90%;
     margin-left: 5%;
     height: 25%;
+    position: relative;
     display: flex;
     align-content: center;
     justify-content: center;
@@ -201,6 +202,27 @@
         margin-left: 5vw;
         margin-right: 5vw;
     }
-    
 
+}
+
+
+.notguessing>h1{
+    position: relative;
+    font-family: "montserrat", sans-serif;
+    font-weight: 900;
+    text-align: center;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+}
+.notguessing{
+    display: flex;
+    align-content: center;
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #FFF;
 }
