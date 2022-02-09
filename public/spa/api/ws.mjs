@@ -1,8 +1,14 @@
+import {displayGameSection, setWordToGuess} from "../dom/game.mjs";
+
 let ws = undefined;
 
 let shouldRenderOnNextGameInfo = false;
 
 let currentGameInfo = {};
+
+function getCurrentWordState(){
+    return currentGameInfo?.wordState?.currentWordState ?? "";
+}
 
 const messageHandlers = {
     
@@ -11,15 +17,28 @@ const messageHandlers = {
     },
 
     "GameInfo": function(data){
-        currentGameInfo = data.payload;
-        if(!shouldRenderOnNextGameInfo){
-            return;
+        currentGameInfo = data;
+    
+        if(shouldRenderOnNextGameInfo){
+            displayGameSection();
+            shouldRenderOnNextGameInfo = false;
         }
 
-        
+        setWordToGuess(getCurrentWordState());
+    },
 
+    "WordState": function(data){
+        currentGameInfo.wordState = data;
+        setWordToGuess(getCurrentWordState());
     }
 };
+
+export function sendPayload(payloadName, data){
+    ws.send(JSON.stringify({
+        "message": payloadName,
+        "payload": data
+    }));
+}
 
 export function connectToGameWs(gameCode){
 
@@ -56,6 +75,12 @@ export function connectToGameWs(gameCode){
     ws.onerror = (err)=>{
         console.log(err);
     }
+}
+
+export function makeGuess(char){
+    sendPayload("MakeGuess", {
+        "guess": char
+    });
 }
 
 /**
