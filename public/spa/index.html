@@ -43,17 +43,24 @@
         </div>
     </div>
 
-    <div class="game-container">
+    <div class="game-container" style="display: none">
         <div class="hangman-container">
             <!-- TODO: swap to SVG -->
-            <canvas class="hangman-canvas"></canvas>
+            <!-- <canvas class="hangman-canvas"></canvas> -->
         </div>
-        <div class="word-status">
-            <!-- This is dyanmically generated based on the setWordToGuess function -->
-        </div>
-        <div class="keyboard">
-            <div class="keys">  
-                <!-- This is dyanmically generated at runtime. -->
+        <div class="keyboard-word-container">
+            <div class="word-status">
+                <!-- This is dyanmically generated based on the setWordToGuess function -->
+            </div>
+            <div class="keyboard" >
+                <div class="keys">  
+                    <div class="notguessing" style="display: none">  
+                        <!-- Used to denote that the player is not guessing and the reason for it. -->
+                        <h1> X is now guessing </h1>
+                    </div>
+                    <!-- This is dyanmically generated at runtime. -->
+                </div>
+               
             </div>
         </div>
     </div>
@@ -71,8 +78,7 @@
     </script>
     <script type="module">
 
-        import {removeCharAtIndex} from "/game_logic/game.mjs";
-        import {setWordToGuess} from "/dom/game.mjs";
+        import {setWordToGuess, displayGameSection} from "/dom/game.mjs";
         import {gameCreationSubmit, gameCreationJoin} from "/dom/gameCreation.mjs";
 
         let gameCreate = undefined;
@@ -137,9 +143,6 @@
                 });
                 
             backButton.setVisible(false);
-            
-            // setWordToGuess(getWordState());
-            // generateKeys();
         }
     </script>
 </body>
