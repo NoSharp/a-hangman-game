@@ -5,7 +5,8 @@ export class Player{
     constructor(socket, name){
         this.socket = socket;
         this.name = name;
-        this.role = Role.IDLE;
+        this.role = Role.GUESSING;
+        this.socket.setPlayerInstance(this);
     }
 
     sendPayload(name, payload){
@@ -15,6 +16,10 @@ export class Player{
     updateRole(newRole){
         this.role = newRole;
         // TODO: Send message to websocket.
+    }
+
+    canMakeGuess(){
+        return this.role == Role.GUESSING;
     }
 
     getRole(){
