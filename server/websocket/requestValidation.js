@@ -46,6 +46,30 @@ export function isValidJoinRequest(req){
     return validateJoinRequest(req);
 }
 
+
+const validateGuess = ajv.compile({
+    type: "object",
+    properties: {
+        guess:{
+            type: "string",
+            maxLength: 1,
+            minLength: 1
+        }
+    },
+    required: [
+        "guess"
+    ]
+})
+
+
+/**
+ * Used to validate the join request.
+ * @param {any} req
+ */
+ export function isValidMakeGuessRequest(req){
+    return validateGuess(req);
+}
+
 /**
  * Creates an invalid payload message to respond
  * to the client, when the message is invalid.
