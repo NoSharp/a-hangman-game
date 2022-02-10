@@ -115,19 +115,25 @@ export class Game{
     playerGuessLetter(player, letter){
         // this is a fail safe, canGuessLetter should be ran before this.
         if(!this.canGuessLetter(letter)) return;
+        this.addLetterGuess(letter);
 
         const letterPositions = this.getCharacterIndexes(letter);
-        console.log(letterPositions);
+        
+
         if(letterPositions.length === 0){
             // Invalid guess
             // Tell client of unsuccessful guess
         }else{
             // Valid guess
             this.currentWordState = this.displayLettersInWordState(letterPositions);
-            this.broadcastWordStateUpdate();
             // Update word state
             // Tell client of a sucessful guess
         }
+        this.broadcastWordStateUpdate();
+    }
+
+    addLetterGuess(letter){
+        this.guessedCharacters[letter] = true;
     }
 
     getCharacterIndexes(letter){
@@ -162,7 +168,7 @@ export class Game{
 
         // invert the array to make the keys the value of this new object
         // and the indexes as the values.
-        // This is faster because indexing an object is faster that itterating over an
+        // This is used because indexing an object is faster that itterating over an
         // array.
         const invertedArray = invertArray(letterIndexes);
 
@@ -177,7 +183,8 @@ export class Game{
             }
         }
 
-        newWordState += this.currentWordState.slice(lastIndex+1)
+        newWordState += this.currentWordState.slice(lastIndex+1);
+
         return newWordState;
     }
 

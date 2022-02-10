@@ -8,7 +8,8 @@ export const Role = {
      */
     IDLE: 1,
     /**
-     * Whoever created the word for that round.
+     * Whoever created the word for that round,
+     * depends on game mode.
      */
     WORD_MAKER: 2
 }
