@@ -1,4 +1,4 @@
-import {displayGameSection, setWordToGuess} from "../dom/game.mjs";
+import {displayGameSection, setWordToGuess, setCharactersGuessed} from "../dom/game.mjs";
 
 let ws = undefined;
 
@@ -8,6 +8,14 @@ let currentGameInfo = {};
 
 function getCurrentWordState(){
     return currentGameInfo?.wordState?.currentWordState ?? "";
+}
+
+function updateWordState(){
+    setWordToGuess(getCurrentWordState());
+    const chars = currentGameInfo.wordState.guessedCharacters;
+    for(const char in chars){
+        setCharactersGuessed(char);
+    }
 }
 
 const messageHandlers = {
@@ -25,11 +33,12 @@ const messageHandlers = {
         }
 
         setWordToGuess(getCurrentWordState());
+        updateWordState();
     },
 
     "WordState": function(data){
         currentGameInfo.wordState = data;
-        setWordToGuess(getCurrentWordState());
+        updateWordState();
     }
 };
 

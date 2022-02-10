@@ -117,3 +117,10 @@
 .button-container>button{
     align-self: center;
 }
+
+.key-used{
+    background-color:  rgb(35,35,35) !important;
+    background: linear-gradient(#151515, #151515) !important;
+    color: #454545aa;
+    pointer-events: none;
+}

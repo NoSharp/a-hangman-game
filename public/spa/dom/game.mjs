@@ -1,5 +1,7 @@
 import { makeGuess } from "../api/ws.mjs";
 
+let keyMapping = {};
+
 function createCharacterElementForCharacter(content){
     const char = document.createElement("div");
     if(char === undefined){
@@ -41,6 +43,10 @@ export function showKeyboard(){
     noGuessingPrompt.setVisible(false);
 }
 
+export function setCharactersGuessed(char){
+    keyMapping[char].makeInactive();
+}
+
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -50,9 +56,9 @@ function createKeyButton(key){
         alert("Failed to create element, please try refreshing the page.");
         return undefined;
     }
-    button.setUsed = function(used){
-        this.style.backgroundColor = "rgb(35,35,35)";
-        this.style.background = "linear-gradient(#00000000, #0000000) !important";
+    button.makeInactive = function(){
+        this.classList.add("key-used");
+        //console.log("INACTIVE!!!", this, this.style);
     }
 
     button.addEventListener("click", ()=> {
@@ -65,12 +71,13 @@ function createKeyButton(key){
 }
 
 
+
 function generateKeys() {
     const keysElement = document.querySelector(".keyboard>.keys");
     
     for(const char of alphabet){
         const button = createKeyButton(char);
-        button.setUsed(true);
+        keyMapping[char] = button;
         keysElement.append(button);
     }
 }
