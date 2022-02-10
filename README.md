@@ -156,37 +156,18 @@ The messages supported by the websocket are as follows:
 
 ```
 - S -> C:
-    - "GuessWrong":
-        This message responds if the guess is incorrect.
-
-        This should be used to increment the game round counter, and change guesser.
+    - "GuessStatus":
+        Broadcast to everyone stating whether or not the guess was correct.
 ```json
     {
-        "message": "GuessWrong",
+        "message": "GuessStatus",
         "payload": {
-            "guessedLetters": "{{Concatenated_Guessed_Letters}}"
+            "correct": true | false
         }
     }
 
 ```
 
-- S -> C:
-    - "GuessCorrect":
-        This message responds if the guess is correct.
-
-        This should be used to increment the game round counter, and change guesser.
-        
-        It will send a new work mask. and the new concatenated string of guessed letters.
-```json
-    {
-        "message": "GuessCorrect",
-        "payload": {
-            "wordMask": "{{NEW_WORD_MASK}}",
-            "guessedLetters": "{{Concatenated_Guessed_Letters}}"
-        }
-    }
-
-```
 
 - S -> C:
     - "HangManState":

@@ -111,14 +111,19 @@ export class Game{
         return this.guessedCharacters[letter] === undefined;
     }
 
-    
+    broadcastGuessStatus(wasGuessCorrect){
+        this.broadcastPayloadToClients("GuessStatus", {
+            correct: wasGuessCorrect
+        })
+    }
+
     playerGuessLetter(player, letter){
         // this is a fail safe, canGuessLetter should be ran before this.
         if(!this.canGuessLetter(letter)) return;
         this.addLetterGuess(letter);
 
         const letterPositions = this.getCharacterIndexes(letter);
-        
+        let correctGuess = false;
 
         if(letterPositions.length === 0){
             // Invalid guess
@@ -126,9 +131,11 @@ export class Game{
         }else{
             // Valid guess
             this.currentWordState = this.displayLettersInWordState(letterPositions);
+            correctGuess = true;
             // Update word state
             // Tell client of a sucessful guess
         }
+        this.broadcastGuessStatus(correctGuess);
         this.broadcastWordStateUpdate();
     }
 
