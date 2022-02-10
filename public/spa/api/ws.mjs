@@ -39,7 +39,13 @@ const messageHandlers = {
     "WordState": function(data){
         currentGameInfo.wordState = data;
         updateWordState();
-    }
+    },
+
+    "GuessStatus": function(data){
+        // TODO: Actually do something here.
+        console.log(data.correct);
+    },
+
 };
 
 export function sendPayload(payloadName, data){

@@ -20,7 +20,7 @@ router.get("/", (req, res)=>{
         return;
     }
 
-    res.send(JSON.stringify(findGameByRoomCode(targetGame)))
+    res.sendStatus(200);//JSON.stringify(findGameByRoomCode(targetGame)))
 });
 
 const postSchemaValidator = ajv.compile({

@@ -28,6 +28,7 @@ export function joinGame(gameCode){
                 return;
             }
             console.log(`Got response : ${joinGame.response}`);
+            connectToGameWs(gameCode);
         }
     };
     joinGame.send();

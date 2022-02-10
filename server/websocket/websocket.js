@@ -13,14 +13,13 @@ function unknownMessage(sender, payload){
  * @param {WebSocket} ws 
  */
 function initiateWebSocket(ws){
-    console.log("Got here?");
+    
     ws.on("message",(rawData)=>{
         const data = JSON.parse(rawData);
         if(!isValidRequest(data)){
             ws.send(JSON.stringify(createInvalidPayloadMessage("Invalid Request")));
-            console.log("DATA: %s", JSON.parse(data));
         }else{
-            console.log(data.message, getActioner(data.message));
+            console.log(`[RECV]: ${data.message} -> ${data.payload}`);
             (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
         }
     });
