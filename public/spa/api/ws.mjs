@@ -1,4 +1,5 @@
 import {displayGameSection, setWordToGuess, setCharactersGuessed} from "../dom/game.mjs";
+import { Role } from "../game_logic/game.mjs";
 
 let ws = undefined;
 
@@ -45,6 +46,10 @@ const messageHandlers = {
         // TODO: Actually do something here.
         console.log(data.correct);
     },
+
+    "GameComplete": function(){
+        Role
+    }
 
 };
 
