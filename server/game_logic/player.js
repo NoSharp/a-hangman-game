@@ -30,6 +30,10 @@ export class Player{
         return this.name;
     }
 
+    closeWebSocket(){
+        this.socket.close();
+    }
+
     serialize(){
         return {
             name: this.name,

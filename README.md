@@ -185,6 +185,20 @@ The messages supported by the websocket are as follows:
     } 
 ```
 
+- S -> C:
+    - "GameComplete":
+        this message sends whether or not if the game was won or lost.
+
+```json
+    {
+        "message": "GameComplete",
+        "payload":{
+            "winningTeam": RoleHere
+        }
+    }
+
+```
+
 ## API Endpoints
 - GET /
     - Returns the index page/SPA.

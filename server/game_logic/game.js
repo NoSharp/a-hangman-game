@@ -28,8 +28,8 @@ export function gameExists(roomCode){
     return games[roomCode] !== undefined;
 }
 
-export function findGameByCreator(creator){
-
+export function destroyGame(gameCode){
+    games[gameCode] = undefined;
 }
 
 export function addGame(gameCode, playerCount, isComputerGeneratedGame){
@@ -126,8 +126,7 @@ export class Game{
         let correctGuess = false;
 
         if(letterPositions.length === 0){
-            // Invalid guess
-            // Tell client of unsuccessful guess
+            this.incrementHangmanState();
         }else{
             // Valid guess
             this.currentWordState = this.displayLettersInWordState(letterPositions);
@@ -135,8 +134,12 @@ export class Game{
             // Update word state
             // Tell client of a sucessful guess
         }
+        
         this.broadcastGuessStatus(correctGuess);
         this.broadcastWordStateUpdate();
+        if(this.isGameComplete()){
+            this.finishGame();
+        }
     }
 
     addLetterGuess(letter){
@@ -145,6 +148,37 @@ export class Game{
 
     getCharacterIndexes(letter){
         return getCharacterIndexes(letter, this.targetWord);       
+    }
+
+    isGameComplete(){
+        return this.didSetterWin() || this.didGuessersWin();
+    }
+
+    didSetterWin(){
+        return this.hangmanState === 7;
+    }
+    
+    didGuessersWin(){
+        return this.targetWord === this.currentWordState;
+    }
+
+    finishGame(){
+        this.broadcastPayloadToClients("GameComplete", {
+            "winningTeam": this.didSetterWin() ? Role.WORD_MAKER : Role.GUESSING,
+        });
+
+        for(const player of this.players){
+            player.closeWebSocket();
+        }
+        // Remove all of the possibly reference counted properties
+        // of the object to make sure it's GC'd.
+        // Over kill, but w/e.
+        delete this.players;
+        destroyGame(this.gameCode);
+    }
+
+    incrementHangmanState(){
+
     }
 
     displayLettersInWordState(letterIndexes){
