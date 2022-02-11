@@ -56,7 +56,6 @@ const messageHandlers = {
     },
 
     "GameComplete": function(data){
-        console.log(data);
 
         coverKeyboard(`${getNameFromRole(data.winningTeam)} Won the game`);
     },
