@@ -124,3 +124,8 @@
     color: #454545aa;
     pointer-events: none;
 }
+
+.hangman-display>line{
+    stroke:black;
+    stroke-width:1%
+}
