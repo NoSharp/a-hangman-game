@@ -22,7 +22,7 @@ export function onMessage(ws, data){
     const game = findGameByRoomCode(data.name);
 
     ws.setGameCode(data.name);
-
+    
     game.addPlayer(new Player(ws, data.playerName))
 
     // Send an accepted response

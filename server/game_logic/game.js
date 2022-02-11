@@ -29,7 +29,7 @@ export function gameExists(roomCode){
 }
 
 export function destroyGame(gameCode){
-    games[gameCode] = undefined;
+    delete games[gameCode];
 }
 
 export function addGame(gameCode, playerCount, isComputerGeneratedGame){
@@ -174,7 +174,7 @@ export class Game{
         // of the object to make sure it's GC'd.
         // Over kill, but w/e.
         delete this.players;
-        destroyGame(this.gameCode);
+        destroyGame(this.code);
     }
 
     incrementHangmanState(){
