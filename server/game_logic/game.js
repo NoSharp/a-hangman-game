@@ -136,7 +136,9 @@ export class Game{
         }
         
         this.broadcastGuessStatus(correctGuess);
-        this.broadcastWordStateUpdate();
+        this.broadcastWordState();
+        this.broadcastHangmanState();
+
         if(this.isGameComplete()){
             this.finishGame();
         }
@@ -155,7 +157,7 @@ export class Game{
     }
 
     didSetterWin(){
-        return this.hangmanState === 7;
+        return this.hangmanState >= 10;
     }
     
     didGuessersWin(){
@@ -178,7 +180,7 @@ export class Game{
     }
 
     incrementHangmanState(){
-
+        this.hangmanState += 1;
     }
 
     displayLettersInWordState(letterIndexes){
@@ -229,7 +231,11 @@ export class Game{
         return newWordState;
     }
 
-    broadcastWordStateUpdate(){
+    broadcastHangmanState(){
+        this.broadcastPayloadToClients("HangManState", this.serializeHangmanState());
+    }
+
+    broadcastWordState(){
         this.broadcastPayloadToClients("WordState", this.serializeWordStateInfo());
     }
 
