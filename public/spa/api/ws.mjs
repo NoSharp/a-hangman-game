@@ -1,5 +1,5 @@
-import {displayGameSection, setWordToGuess, setCharactersGuessed} from "../dom/game.mjs";
-import { Role } from "../game_logic/game.mjs";
+import {displayGameSection, setWordToGuess, setCharactersGuessed, coverKeyboard} from "../dom/game.mjs";
+import { Role,getNameFromRole } from "../game_logic/game.mjs";
 
 let ws = undefined;
 
@@ -47,8 +47,10 @@ const messageHandlers = {
         console.log(data.correct);
     },
 
-    "GameComplete": function(){
-        Role
+    "GameComplete": function(data){
+        console.log(data);
+
+        coverKeyboard(`${getNameFromRole(data.winningTeam)} Won the game`);
     }
 
 };
