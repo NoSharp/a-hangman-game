@@ -43,14 +43,15 @@
         </div>
     </div>
 
-    <div class="game-container" style="display: none;">
+    <div class="game-container" style="">
         <div class="hangman-container">
+            <!-- TODO: Scaling on wide-ish mobile devices looks odd. -->
             <svg width="100%" height="100%" class="hangman-display">
-                <circle cx="25%" cy="15%" r="5%" stroke="black" stroke-width="1%" fill="none" id="hangman-1" style="display: none" />
-                <rect x="5%" y="50%" width="50%" height="1%" id="hangman-2" style="display: none" />
+                <rect x="5%" y="50%" width="50%" height="1%" id="hangman-1" style="display: none" />
+                <rect x="5%" y="5%" width="2%" height="45%" id="hangman-2" style="display: none" />
                 <rect x="5%" y="5%" width="20%" height="1%" id="hangman-3" style="display: none" />
                 <rect x="24%" y="5%" width="2%" height="6%" id="hangman-4" style="display: none" />
-                <rect x="5%" y="5%" width="2%" height="45%" id="hangman-5" style="display: none" />
+                <circle cx="25%" cy="15%" r="5%" stroke="black" stroke-width="1%" fill="none" id="hangman-5" style="display: none" />
                 <rect x="24%" y="19%" width="2%" height="15%" id="hangman-6" style="display: none" />
                 <line x1="25%" y1="34%" x2="30%" y2="40%" id="hangman-7" style="display: none" />
                 <line x1="25%" y1="34%" x2="20%" y2="40%" id="hangman-8" style="display: none" />
