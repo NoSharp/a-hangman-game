@@ -1,4 +1,4 @@
-import {displayGameSection, setWordToGuess, setCharactersGuessed, coverKeyboard} from "../dom/game.mjs";
+import {displayGameSection, setWordToGuess, setCharactersGuessed, coverKeyboard, showHangmanPart} from "../dom/game.mjs";
 import { Role,getNameFromRole } from "../game_logic/game.mjs";
 
 let ws = undefined;
@@ -19,6 +19,13 @@ function updateWordState(){
     }
 }
 
+function updateHangmanState(){
+    const curState = currentGameInfo.hangmanState;
+    for(let i = 1; i <= curState; i++ ){
+        showHangmanPart(i);
+    }
+}
+
 const messageHandlers = {
     
     "Accepted": function(data){
@@ -35,6 +42,7 @@ const messageHandlers = {
 
         setWordToGuess(getCurrentWordState());
         updateWordState();
+        updateHangmanState();
     },
 
     "WordState": function(data){
@@ -51,8 +59,11 @@ const messageHandlers = {
         console.log(data);
 
         coverKeyboard(`${getNameFromRole(data.winningTeam)} Won the game`);
+    },
+    "HangManState": function(data){
+        currentGameInfo.hangmanState = data.hangmanState;
+        updateHangmanState();
     }
-
 };
 
 export function sendPayload(payloadName, data){
