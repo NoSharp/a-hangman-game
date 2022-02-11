@@ -43,9 +43,10 @@
         </div>
     </div>
 
-    <div class="game-container" style="">
+    <div class="game-container" style="display:none">
         <div class="hangman-container">
             <!-- TODO: Scaling on wide-ish mobile devices looks odd. -->
+            <!-- TODO: Make this HALF of the hangman container height so we can fit player info beneath. -->
             <svg width="100%" height="100%" class="hangman-display">
                 <rect x="5%" y="50%" width="50%" height="1%" id="hangman-1" style="display: none" />
                 <rect x="5%" y="5%" width="2%" height="45%" id="hangman-2" style="display: none" />
@@ -71,7 +72,6 @@
                     </div>
                     <!-- This is dyanmically generated at runtime. -->
                 </div>
-
             </div>
         </div>
     </div>
