@@ -26,3 +26,16 @@ export function getRoleFromNetwork(networkedNum){
             return undefined;
     }
 }
+
+export function getNameFromRole(role){
+    switch(role){
+        case 0:
+            return "Guessers";
+        case 1:
+            return "Idles";
+        case 2: 
+            return "Word Makers";
+        default:
+            return "UNKNOWN";
+    }
+}

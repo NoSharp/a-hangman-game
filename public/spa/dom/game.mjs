@@ -31,6 +31,11 @@ export function setWordToGuess(word){
 }
 
 
+export function showHangmanPart(partNum){
+    const hangmanElemnt = document.querySelector(`#hangman-${partNum}`);
+    hangmanElemnt.setVisible(true);
+}
+
 export function coverKeyboard(msg){
     const noGuessingPrompt = document.querySelector(".notguessing");
     const noGuessingValue = document.querySelector(".notguessing>h1");
