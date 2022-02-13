@@ -28,12 +28,12 @@ export function gameExists(roomCode){
     return games[roomCode] !== undefined;
 }
 
-export function destroyGame(gameCode){
-    delete games[gameCode];
+export function destroyGame(roomCode){
+    delete games[roomCode];
 }
 
-export function addGame(gameCode, playerCount, isComputerGeneratedGame){
-    games[gameCode] = new Game(gameCode, playerCount, isComputerGeneratedGame);
+export function addGame(roomCode, playerCount, isComputerGeneratedGame){
+    games[roomCode] = new Game(roomCode, playerCount, isComputerGeneratedGame);
 }
 
 function generateWord(){

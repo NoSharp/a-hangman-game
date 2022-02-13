@@ -72,7 +72,7 @@ export function sendPayload(payloadName, data){
     }));
 }
 
-export function connectToGameWs(gameCode){
+export function connectToGameWs(roomCode){
 
     ws = new WebSocket(`${location.href.replace("http", "ws")}`);
 
@@ -99,7 +99,7 @@ export function connectToGameWs(gameCode){
         ws.send(JSON.stringify({
             "message": "Join",
             "payload": {
-                "name": gameCode
+                "name": roomCode
             }
         }));
     };

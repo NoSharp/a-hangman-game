@@ -54,12 +54,12 @@ export function mountWebSocketManager(wss){
         });
     }
 
-    WebSocket.prototype.setGameCode = function(game){
-        this.gameCode = game;
+    WebSocket.prototype.setRoomCode = function(game){
+        this.roomCode = game;
     }
 
-    WebSocket.prototype.getGameCode = function(){
-        return this.gameCode;
+    WebSocket.prototype.getRoomCode = function(){
+        return this.roomCode;
     }
 
     WebSocket.prototype.setPlayerInstance = function(player){

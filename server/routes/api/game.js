@@ -29,7 +29,7 @@ const postSchemaValidator = ajv.compile({
         playerCount: {
             type: "number"
         },
-        name: {
+        roomCode: {
             type: "string"
         },
         computerGeneratedWord: {
@@ -38,14 +38,14 @@ const postSchemaValidator = ajv.compile({
     },
     required: [
         "playerCount",
-        "name",
+        "roomCode",
         "computerGeneratedWord"
     ]
 });
 
 
 router.post("/", (req,res)=>{
-    const gameName = req.body?.name;
+    const roomCode = req.body?.roomCode;
     const playerCount = req.body?.playerCount;
     const isComputerGeneratedGame = req.body?.computerGeneratedWord;  
     
@@ -54,12 +54,12 @@ router.post("/", (req,res)=>{
         return;
     }
         
-    if(findGameByRoomCode(gameName) !== undefined) {
+    if(findGameByRoomCode(roomCode) !== undefined) {
         res.status(400).send("Game Name already exists");
         return;
     }
 
-    addGame(gameName, playerCount);
+    addGame(roomCode, playerCount);
     res.sendStatus(200);
 })
 

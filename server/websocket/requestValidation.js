@@ -29,12 +29,12 @@ export function isValidRequest(req){
 const validateJoinRequest = ajv.compile({
     type: "object",
     properties: {
-        name: {
+        roomCode: {
             type: "string"
         }
     },
     required: [
-        "name"
+        "roomCode"
     ]
 });
 

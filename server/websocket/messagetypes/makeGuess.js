@@ -10,7 +10,7 @@ export function onMessage(ws, data){
         ws.sendInvalidResponse("Invalid Make Guess Body");
         return;
     }
-    const game = findGameByRoomCode(ws.getGameCode());
+    const game = findGameByRoomCode(ws.getRoomCode());
     if(game === undefined) return;
 
     const player = ws.getPlayerInstance();

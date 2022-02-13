@@ -1,11 +1,11 @@
 import {connectToGameWs} from "./ws.mjs"
 
-export function createGame(gameName, playerCount){
+export function createGame(roomCode, playerCount){
     const newGameCreate = new XMLHttpRequest();
     newGameCreate.open("POST", `/api/game/`);
     newGameCreate.setRequestHeader("Content-Type", "application/json");
     newGameCreate.send(JSON.stringify({
-        name: gameName,
+        roomCode: roomCode,
         playerCount: playerCount,
         computerGeneratedWord: true
     }));
@@ -13,14 +13,14 @@ export function createGame(gameName, playerCount){
     newGameCreate.onreadystatechange = () => {
         if(newGameCreate.readyState === 4){
             console.log(`Got response : ${newGameCreate.response}`);
-            connectToGameWs(gameName);
+            connectToGameWs(roomCode);
         }
     };
 }
 
-export function joinGame(gameCode){
+export function joinGame(roomCode){
     const joinGame = new XMLHttpRequest();
-    joinGame.open("GET", `/api/game/?room=${gameCode}`);
+    joinGame.open("GET", `/api/game/?room=${roomCode}`);
     joinGame.onreadystatechange = () => {
         if(joinGame.readyState === 4){
             if(joinGame.status !== 200){
@@ -28,7 +28,7 @@ export function joinGame(gameCode){
                 return;
             }
             console.log(`Got response : ${joinGame.response}`);
-            connectToGameWs(gameCode);
+            connectToGameWs(roomCode);
         }
     };
     joinGame.send();
@@ -48,20 +48,4 @@ class Player {
     getRole(){
         return this.role;
     }
-}
-
-class GameState {
-
-    constructor(name){
-        this.name = name;
-        this.players = {};
-    }
-
-    addPlayer(name, role){
-        this.players[name] = new Player(name, role);
-    }
-}
-
-function setupGameState(){
-
 }

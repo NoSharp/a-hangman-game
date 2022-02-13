@@ -11,7 +11,7 @@ export function onMessage(ws, data){
         return;
     }
 
-    const roomCode = data.name;
+    const roomCode = data.roomCode;
     if(!gameExists(roomCode)){
         ws.sendResponse("Kick", {
             "reason": "NO_GAME_FOUND"
@@ -19,9 +19,9 @@ export function onMessage(ws, data){
         return;
     }
 
-    const game = findGameByRoomCode(data.name);
+    const game = findGameByRoomCode(roomCode);
 
-    ws.setGameCode(data.name);
+    ws.setRoomCode(roomCode);
     
     game.addPlayer(new Player(ws, data.playerName))
 
