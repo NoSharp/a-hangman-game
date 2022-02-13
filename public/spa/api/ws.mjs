@@ -99,7 +99,7 @@ export function connectToGameWs(roomCode){
         ws.send(JSON.stringify({
             "message": "Join",
             "payload": {
-                "name": roomCode
+                "roomCode": roomCode
             }
         }));
     };
