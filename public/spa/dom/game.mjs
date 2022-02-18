@@ -42,7 +42,7 @@ export function showHangmanPart(partNum){
     hangmanElemnt.setVisible(true);
 }
 
-export function coverKeyboard(msg){
+export function setCoverKeyboardText(msg){
     const noGuessingPrompt = document.querySelector(".notguessing");
     const noGuessingValue = document.querySelector(".notguessing>h1");
     noGuessingValue.innerText = msg;

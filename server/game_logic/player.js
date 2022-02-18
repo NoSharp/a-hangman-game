@@ -34,7 +34,7 @@ export class Player{
         this.socket.close();
     }
 
-    serialize(){
+    generateDTO(){
         return {
             name: this.name,
             role: this.role
