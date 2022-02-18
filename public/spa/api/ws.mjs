@@ -1,4 +1,4 @@
-import {displayGameSection, setWordToGuess, setCharactersGuessed, coverKeyboard, showHangmanPart} from "../dom/game.mjs";
+import {displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart} from "../dom/game.mjs";
 import { Role,getNameFromRole } from "../game_logic/game.mjs";
 
 let ws = undefined;
@@ -56,13 +56,18 @@ const messageHandlers = {
     },
 
     "GameComplete": function(data){
-
-        coverKeyboard(`${getNameFromRole(data.winningTeam)} Won the game`);
+        setCoverKeyboardText(`${getNameFromRole(data.winningTeam)} Won the game`);
     },
+
     "HangManState": function(data){
         currentGameInfo.hangmanState = data.hangmanState;
         updateHangmanState();
-    }
+    },
+
+    "PlayerJoin": function(data){
+        console.log(data);
+    },
+
 };
 
 export function sendPayload(payloadName, data){
@@ -99,7 +104,8 @@ export function connectToGameWs(roomCode){
         ws.send(JSON.stringify({
             "message": "Join",
             "payload": {
-                "name": roomCode
+                "roomCode": roomCode,
+                "playerName" : "N/A"
             }
         }));
     };

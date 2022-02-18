@@ -95,8 +95,7 @@ The messages supported by the websocket are as follows:
         This message is used to bring a client up to date with information
         about the game.
         
-        It will send a message with all of the players, their associated data
-        and another things like current guessed letters and their associated data.
+        It will send a message with all of the players, their associated data.
             
 ```json
             {

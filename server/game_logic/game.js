@@ -88,12 +88,15 @@ export class Game{
         return word;
     }
 
-    addPlayer(player){
+    addPlayer(ws, name){
+        const player = new Player(ws, name);
         this.players.push(player);
 
         if(this.players.length-1 >= this.roomSize){
             this.startGame();
             this.broadcastPayloadToClients("")
+        }else{
+            // TODO: Broadcast a player join event.
         }
     }
 
@@ -141,7 +144,9 @@ export class Game{
 
         if(this.isGameComplete()){
             this.finishGame();
+            return;
         }
+        // TODO: turn logic.
     }
 
     addLetterGuess(letter){
@@ -225,7 +230,7 @@ export class Game{
                 newWordState += this.targetWord.charAt(wordStateIdx);
             }
         }
-
+        //
         newWordState += this.currentWordState.slice(lastIndex+1);
 
         return newWordState;
@@ -239,6 +244,10 @@ export class Game{
         this.broadcastPayloadToClients("WordState", this.serializeWordStateInfo());
     }
 
+    broadcastPlayerJoin(){
+        this.broadcastPayloadToClients("PlayerJoin", this.serializePlayers());
+    }
+
     /**
      * Converts the game data into an object
      * that the websocket server will send the client.
@@ -249,7 +258,8 @@ export class Game{
             code: this.code,
             roomSize: this.roomSize,
             wordState: this.serializeWordStateInfo(),
-            hangmanState: this.hangmanState
+            hangmanState: this.hangmanState,
+            players: this.serializePlayers()
         }
     }
 
@@ -267,7 +277,7 @@ export class Game{
         let players = [];
         
         for(const player of this.players){
-            players.push(player.serialize());
+            players.push(player.generateDTO());
         }
 
         return players;
