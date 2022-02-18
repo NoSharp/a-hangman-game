@@ -1,39 +1,48 @@
+"use strict";
+
 import {connectToGameWs} from "./ws.mjs"
-//TODO: switch to fetch.
-export function createGame(roomCode, playerCount){
-    const newGameCreate = new XMLHttpRequest();
-    newGameCreate.open("POST", `/api/game/`);
-    newGameCreate.setRequestHeader("Content-Type", "application/json");
-    newGameCreate.send(JSON.stringify({
-        roomCode: roomCode,
-        playerCount: playerCount,
-        computerGeneratedWord: true
-    }));
+export async function createGame(roomCode, playerCount){
+
+    const newGameCreate = await fetch("/api/game/",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            roomCode: roomCode,
+            playerCount: playerCount,
+            computerGeneratedWord: true
+        })
+    });
+
+    const status = newGameCreate.status;
+
+    if(status !== 200){
+        // TODO: work out another form of user input.
+        alert("Cannot create a game, try joining instead.");
+        return;
+    }
     
-    newGameCreate.onreadystatechange = () => {
-        if(newGameCreate.readyState === 4){
-            console.log(`Got response : ${newGameCreate.response}`);
-            connectToGameWs(roomCode);
-        }
-    };
+    connectToGameWs(roomCode);
+
 }
 
-//TODO: switch to fetch.
-export function joinGame(roomCode){
-    const joinGame = new XMLHttpRequest();
-    joinGame.open("GET", `/api/game/?room=${roomCode}`);
-    joinGame.onreadystatechange = () => {
-        if(joinGame.readyState === 4){
-            if(joinGame.status !== 200){
-                // TODO: Swap from alert, probably display feed back in the 
-                alert("Game not found! Try a different game code or create a game.");
-                return;
-            }
-            console.log(`Got response : ${joinGame.response}`);
-            connectToGameWs(roomCode);
-        }
-    };
-    joinGame.send();
+export async function joinGame(roomCode){
+    const res = await fetch(`/api/game/?room=${roomCode}`);
+    
+    const resStatus = res.status;
+    if(resStatus !== 200){
+        // TODO: Swap from alert, probably display feed back in the 
+        alert("Game not found! Try a different game code or create a game.");
+        return;
+    }
+
+    res.json()
+        .then(dat=> console.log(dat))
+        .catch(err=> console.log(err));
+
+    connectToGameWs(roomCode);
 }
 
 class Player {
