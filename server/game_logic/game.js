@@ -195,13 +195,11 @@ export class Game{
         const character = this.targetWord.charAt(letterIndexes[0]);
         const firstIndex = letterIndexes[0];
 
-        // We grab the first part of the string that hasn't been altered.
         // If the index is 0, then we don't need to do anything and can just set
         // an empty string.
         newWordState = firstIndex > 0 ? this.currentWordState.slice(0, firstIndex) : "";
 
-        // If it's only 1, then all we need to do is replace
-        // a single character.
+        // If it's only 1, then all we need to do is replace a single character.
         if(letterIndexes.length == 1){
             return newWordState + character + this.currentWordState.slice(firstIndex+1);
         }
@@ -209,14 +207,10 @@ export class Game{
         // We don't need this index unless the length is > 1.
         const lastIndex = letterIndexes[letterIndexes.length - 1];
 
-        // invert the array to make the keys the value of this new object
-        // and the indexes as the values.
-        // This is used because indexing an object is faster that itterating over an
-        // array.
+        // This is used because indexing an object is faster that itterating over an array.
         const invertedArray = invertArray(letterIndexes);
 
-        // We don't need to always itterate over the entire word
-        // So we can just itterate from the first to last index.
+        // We don't need to always itterate over the entire word so we can just itterate from the first to last index.
         for(let wordStateIdx = firstIndex; wordStateIdx <= lastIndex; wordStateIdx++){
             const index = invertedArray[wordStateIdx];
             if(index === undefined){

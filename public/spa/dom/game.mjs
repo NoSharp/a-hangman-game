@@ -30,6 +30,12 @@ export function setWordToGuess(word){
     }
 }
 
+export function addPlayerToList(playerName){
+    const targetElement = document.querySelector(".player-list");
+    // Stop the h4x0rz using xss on this amazing game.
+    const name = document.createTextNode(playerName);
+    targetElement.appendChild(name);
+}
 
 export function showHangmanPart(partNum){
     const hangmanElemnt = document.querySelector(`#hangman-${partNum}`);
