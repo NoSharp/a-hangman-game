@@ -1,5 +1,5 @@
 import {connectToGameWs} from "./ws.mjs"
-
+//TODO: switch to fetch.
 export function createGame(roomCode, playerCount){
     const newGameCreate = new XMLHttpRequest();
     newGameCreate.open("POST", `/api/game/`);
@@ -18,12 +18,14 @@ export function createGame(roomCode, playerCount){
     };
 }
 
+//TODO: switch to fetch.
 export function joinGame(roomCode){
     const joinGame = new XMLHttpRequest();
     joinGame.open("GET", `/api/game/?room=${roomCode}`);
     joinGame.onreadystatechange = () => {
         if(joinGame.readyState === 4){
             if(joinGame.status !== 200){
+                // TODO: Swap from alert, probably display feed back in the 
                 alert("Game not found! Try a different game code or create a game.");
                 return;
             }
