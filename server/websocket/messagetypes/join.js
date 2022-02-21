@@ -23,10 +23,11 @@ export function onMessage(ws, data){
 
     ws.setRoomCode(roomCode);
     
-    game.addPlayer(ws, data.playerName)
+    game.addPlayer(ws, data.playerName);
 
     // Send an accepted response
     ws.sendResponse("Accepted",{});
+
     // Send game info.
     ws.sendResponse("GameInfo", game.serializeGameInfo());
 }
