@@ -190,9 +190,7 @@ export class Game{
 
     displayLettersInWordState(letterIndexes){
         let newWordState = "";
-        // If the letter indexes length is 0
-        // the return the targetWord because
-        // there's nothing to modify.
+
         if(letterIndexes.length == 0){
             return this.currentWordState;
         }
@@ -218,13 +216,11 @@ export class Game{
         // We don't need to always itterate over the entire word so we can just itterate from the first to last index.
         for(let wordStateIdx = firstIndex; wordStateIdx <= lastIndex; wordStateIdx++){
             const index = invertedArray[wordStateIdx];
-            if(index === undefined){
-                newWordState += this.currentWordState.charAt(wordStateIdx);
-            }else{
-                newWordState += this.targetWord.charAt(wordStateIdx);
-            }
+            newWordState += index === undefined ? 
+                this.currentWordState.charAt(wordStateIdx) : 
+                this.targetWord.charAt(wordStateIdx);
+                
         }
-        //
         newWordState += this.currentWordState.slice(lastIndex+1);
 
         return newWordState;
