@@ -1,11 +1,13 @@
 import {displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart} from "../dom/game.mjs";
-import { Role,getNameFromRole } from "../game_logic/game.mjs";
+import { Role,getNameFromRole, Player } from "../game_logic/game.mjs";
 
 let ws = undefined;
 
 let shouldRenderOnNextGameInfo = false;
 
 let currentGameInfo = {};
+
+let players = {};
 
 function getCurrentWordState(){
     return currentGameInfo?.wordState?.currentWordState ?? "";
@@ -24,6 +26,15 @@ function updateHangmanState(){
     for(let i = 1; i <= curState; i++ ){
         showHangmanPart(i);
     }
+}
+
+function runPlayerUpdate(){
+    const curPlayers = currentGameInfo.players;
+    players = [];
+    for(const player in curPlayers){
+        players.push(Player.fromDTO(player));
+    }
+    console.log(players);
 }
 
 const messageHandlers = {
@@ -65,7 +76,8 @@ const messageHandlers = {
     },
 
     "PlayerJoin": function(data){
-        console.log(data);
+        currentGameInfo.players = data;
+        runPlayerUpdate();
     },
 
 };
@@ -105,7 +117,7 @@ export function connectToGameWs(roomCode){
             "message": "Join",
             "payload": {
                 "roomCode": roomCode,
-                "playerName" : "N/A"
+                "playerName" : (Math.random() * 100).toString()
             }
         }));
     };

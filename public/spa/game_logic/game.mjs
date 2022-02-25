@@ -1,3 +1,25 @@
+export class Player {
+
+    constructor(name, role){
+        this.name = name;
+        this.role = role;
+    }
+
+    getName(){
+        return this.name;
+    }
+
+    getRole(){
+        return this.role;
+    }
+
+    static fromDTO(playerObj){
+        
+        const player = new Player(playerObj.name, playeRObj.role)
+        return player;
+    }
+}
+
 export const Role = {
     /**
      * The person currently guessing a letter.

@@ -49,10 +49,11 @@ export class Game{
      * @param {boolean} isComputerGeneratedGame
      */
     constructor(code, roomSize, isComputerGeneratedGame){
-        
         this.code = code;
         this.roomSize = roomSize;
         this.isComputerGeneratedGame = isComputerGeneratedGame;
+
+        this.currentGuessingPlayerIndex = 0;
 
         /* The word they'll be guessing */
         this.targetWord = generateWord();
@@ -89,14 +90,14 @@ export class Game{
     }
 
     addPlayer(ws, name){
-        const player = new Player(ws, name);
+        const player = new Player(ws, name, this.players.length);
         this.players.push(player);
 
         if(this.players.length-1 >= this.roomSize){
             this.startGame();
             this.broadcastPayloadToClients("")
         }else{
-            // TODO: Broadcast a player join event.
+            this.broadcastPlayerJoin();
         }
     }
 
@@ -107,7 +108,10 @@ export class Game{
     setupGameRoles(){
         if(!this.isComputerGeneratedGame){
             this.players[0].updateRole(Role.WORD_MAKER);
+        }else{
+            this.players[this.currentGuesserIdx].updateRole(Role.GUESSING);
         }
+
     }
 
     canGuessLetter(letter){
@@ -120,7 +124,24 @@ export class Game{
         })
     }
 
+    updatePlayerRole(index, newRole){
+        const player = this.players[index];
+        player.setRole(newRole);
+        this.broadcastPayloadToClients("PlayerData", {
+            name: player.getName(),
+            role: player.getRole()
+        })
+    }
+
+    incrementNextGuess(){
+        const curGuesserId = this.currentGuesserIdx;
+        updatePlayerRole(curGuesserId, Role.IDLE);
+        this.currentGuesserIdx = (curGuesserId + 1 % (this.players.length-1));
+        updatePlayerRole(this.currentGuesserIdx, Role.GUESSING);
+    }
+
     playerGuessLetter(player, letter){
+        if(player.getRole() !== Role.GUESSING) return;
         // this is a fail safe, canGuessLetter should be ran before this.
         if(!this.canGuessLetter(letter)) return;
         this.addLetterGuess(letter);
@@ -146,7 +167,8 @@ export class Game{
             this.finishGame();
             return;
         }
-        // TODO: turn logic.
+        
+        this.incrementNextGuess();
     }
 
     addLetterGuess(letter){
@@ -221,6 +243,7 @@ export class Game{
                 this.targetWord.charAt(wordStateIdx);
                 
         }
+        
         newWordState += this.currentWordState.slice(lastIndex+1);
 
         return newWordState;
@@ -264,10 +287,10 @@ export class Game{
     }
 
     serializePlayers(){
-        let players = [];
+        let players = {};
         
         for(const player of this.players){
-            players.push(player.generateDTO());
+            players[player.getId()] = player.generateDTO();
         }
 
         return players;

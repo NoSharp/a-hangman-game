@@ -2,10 +2,11 @@ import { Role } from "./role.js";
 
 export class Player{
 
-    constructor(socket, name){
+    constructor(socket, name, id){
         this.socket = socket;
         this.name = name;
-        this.role = Role.GUESSING;
+        this.id = id;
+        this.role = Role.IDLE;
         this.socket.setPlayerInstance(this);
     }
 
@@ -13,9 +14,9 @@ export class Player{
         this.socket.sendResponse(name, payload);
     }
 
-    updateRole(newRole){
+    updateRole(newRole, nonUpdate){
         this.role = newRole;
-        // TODO: Send message to websocket.
+
     }
 
     canMakeGuess(){
@@ -30,12 +31,17 @@ export class Player{
         return this.name;
     }
 
+    getId(){
+        return this.id;
+    }
+
     closeWebSocket(){
         this.socket.close();
     }
 
     generateDTO(){
         return {
+            id: this.id,
             name: this.name,
             role: this.role
         }
