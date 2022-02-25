@@ -1,4 +1,4 @@
-import {displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart} from "../dom/game.mjs";
+import {displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart, showKeyboard} from "../dom/game.mjs";
 import { Role,getNameFromRole, Player } from "../game_logic/game.mjs";
 
 let ws = undefined;
@@ -8,6 +8,8 @@ let shouldRenderOnNextGameInfo = false;
 let currentGameInfo = {};
 
 let players = {};
+
+let currentUserName = (Math.random() * 100).toString();
 
 function getCurrentWordState(){
     return currentGameInfo?.wordState?.currentWordState ?? "";
@@ -30,11 +32,11 @@ function updateHangmanState(){
 
 function runPlayerUpdate(){
     const curPlayers = currentGameInfo.players;
-    players = [];
+    players = {};
     for(const player in curPlayers){
-        players.push(Player.fromDTO(player));
+        const plyObj = Player.fromDTO(player);
+        players[plyObj.getName()] = plyObj;
     }
-    console.log(players);
 }
 
 const messageHandlers = {
@@ -80,6 +82,20 @@ const messageHandlers = {
         runPlayerUpdate();
     },
 
+    "PlayerData": function(data){
+        if(players[data.name] === undefined){
+            players[data.name] = Player.fromDTO(data);
+        }else{
+            players[data.name].setRole(data.role);
+        }
+        
+        if(data.name !== currentUserName && data.role === Role.GUESSING){
+            setCoverKeyboardText(`${data.name} is currently guessing`);
+        }else{
+            showKeyboard();
+        }
+    }
+
 };
 
 export function sendPayload(payloadName, data){
@@ -117,7 +133,7 @@ export function connectToGameWs(roomCode){
             "message": "Join",
             "payload": {
                 "roomCode": roomCode,
-                "playerName" : (Math.random() * 100).toString()
+                "playerName" : currentUserName
             }
         }));
     };
