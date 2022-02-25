@@ -13,9 +13,13 @@ export class Player {
         return this.role;
     }
 
+    setRole(role){
+        this.role = role;
+    }
+
     static fromDTO(playerObj){
         
-        const player = new Player(playerObj.name, playeRObj.role)
+        const player = new Player(playerObj.name, playerObj.role)
         return player;
     }
 }
