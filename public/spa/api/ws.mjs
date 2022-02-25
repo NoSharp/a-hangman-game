@@ -33,14 +33,11 @@ function updateHangmanState(){
 function runPlayerUpdate(){
     const curPlayers = currentGameInfo.players;
     players = {};
-    console.log(currentGameInfo);
     let isGuessingThisRound = true;
     for(const player in curPlayers){
-        console.log(player, curPlayers[player]);
         const plyObj = Player.fromDTO(curPlayers[player]);
         players[plyObj.getName()] = plyObj;
-        console.log(plyObj, plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING);
-        if(plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING){
+       if(plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING){
             setCoverKeyboardText(`${plyObj.getName()} is currently guessing`);
             isGuessingThisRound = false;
         }
