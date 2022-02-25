@@ -33,7 +33,7 @@ export function destroyGame(roomCode){
 }
 
 export function addGame(roomCode, playerCount, isComputerGeneratedGame){
-    games[roomCode] = new Game(roomCode, playerCount, isComputerGeneratedGame);
+    games[roomCode] = new Game(roomCode, playerCount, isComputerGeneratedGame ?? true);
 }
 
 function generateWord(){
@@ -53,7 +53,6 @@ export class Game{
         this.roomSize = roomSize;
         this.isComputerGeneratedGame = isComputerGeneratedGame;
 
-        this.currentGuessingPlayerIndex = 0;
 
         /* The word they'll be guessing */
         this.targetWord = generateWord();
@@ -92,8 +91,8 @@ export class Game{
     addPlayer(ws, name){
         const player = new Player(ws, name, this.players.length);
         this.players.push(player);
-
-        if(this.players.length-1 >= this.roomSize){
+        // console.log(this.players.length, this.roomSize, );
+        if(this.players.length >= this.roomSize){
             this.startGame();
             this.broadcastPayloadToClients("")
         }else{
@@ -106,8 +105,10 @@ export class Game{
     }
 
     setupGameRoles(){
+        console.log(this.isComputerGeneratedGame, "STARTED");
         if(!this.isComputerGeneratedGame){
             this.players[0].updateRole(Role.WORD_MAKER);
+            this.currentGuesserIdx = 0;
         }else{
             this.players[this.currentGuesserIdx].updateRole(Role.GUESSING);
         }
@@ -121,12 +122,13 @@ export class Game{
     broadcastGuessStatus(wasGuessCorrect){
         this.broadcastPayloadToClients("GuessStatus", {
             correct: wasGuessCorrect
-        })
+        });
     }
 
     updatePlayerRole(index, newRole){
         const player = this.players[index];
-        player.setRole(newRole);
+        //console.log(index, this.players[index]);
+        player.updateRole(newRole);
         this.broadcastPayloadToClients("PlayerData", {
             name: player.getName(),
             role: player.getRole()
@@ -135,9 +137,9 @@ export class Game{
 
     incrementNextGuess(){
         const curGuesserId = this.currentGuesserIdx;
-        updatePlayerRole(curGuesserId, Role.IDLE);
-        this.currentGuesserIdx = (curGuesserId + 1 % (this.players.length-1));
-        updatePlayerRole(this.currentGuesserIdx, Role.GUESSING);
+        this.updatePlayerRole(curGuesserId, Role.IDLE);
+        this.currentGuesserIdx = (curGuesserId + 1) % (this.players.length);
+        this.updatePlayerRole(this.currentGuesserIdx, Role.GUESSING);
     }
 
     playerGuessLetter(player, letter){
@@ -199,10 +201,12 @@ export class Game{
         for(const player of this.players){
             player.closeWebSocket();
         }
+
         // Remove all of the possibly reference counted properties
         // of the object to make sure it's GC'd.
         // Over kill, but w/e.
         delete this.players;
+
         destroyGame(this.code);
     }
 
