@@ -59,7 +59,7 @@ router.post("/", (req,res)=>{
         return;
     }
 
-    addGame(roomCode, playerCount);
+    addGame(roomCode, playerCount, isComputerGeneratedGame);
     res.sendStatus(200);
 })
 
