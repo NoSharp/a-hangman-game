@@ -33,11 +33,24 @@ function updateHangmanState(){
 function runPlayerUpdate(){
     const curPlayers = currentGameInfo.players;
     players = {};
+    console.log(currentGameInfo);
+    let isGuessingThisRound = true;
     for(const player in curPlayers){
-        const plyObj = Player.fromDTO(player);
+        console.log(player, curPlayers[player]);
+        const plyObj = Player.fromDTO(curPlayers[player]);
         players[plyObj.getName()] = plyObj;
+        console.log(plyObj, plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING);
+        if(plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING){
+            setCoverKeyboardText(`${plyObj.getName()} is currently guessing`);
+            isGuessingThisRound = false;
+        }
+    }
+
+    if(isGuessingThisRound){
+        showKeyboard();
     }
 }
+
 
 const messageHandlers = {
     
@@ -56,6 +69,8 @@ const messageHandlers = {
         setWordToGuess(getCurrentWordState());
         updateWordState();
         updateHangmanState();
+        runPlayerUpdate();
+
     },
 
     "WordState": function(data){
@@ -88,7 +103,7 @@ const messageHandlers = {
         }else{
             players[data.name].setRole(data.role);
         }
-        
+
         if(data.name !== currentUserName && data.role === Role.GUESSING){
             setCoverKeyboardText(`${data.name} is currently guessing`);
         }else{
