@@ -53,6 +53,7 @@ const messageHandlers = {
     
     "Accepted": function(data){
         shouldRenderOnNextGameInfo = true;
+        currentUserName = data.name;
     },
 
     "GameInfo": function(data){
@@ -161,8 +162,10 @@ export function makeGuess(char){
     });
 }
 
-/**
- * - Single POST request for handling the order placement
- * - API then prompts server (person not machine) to create Ice cream
- * - 
- */
+export function setName(name){
+    currentUserName = name;
+}
+
+export function getName(){
+    return currentUserName;
+}
