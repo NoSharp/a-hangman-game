@@ -1,6 +1,6 @@
 import path from "path";
 import { readdirSync } from "fs";
-import { __dirname} from "./commonJsPassthrough.cjs";
+import { __dirname} from "../utils/commonJsPassthrough.cjs";
 
 const basePath = path.join(__dirname, "messagetypes");
 const contents = readdirSync(basePath);
