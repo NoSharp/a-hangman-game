@@ -1,20 +1,20 @@
-import Ajv from "ajv";
+import Ajv from 'ajv';
 const ajv = new Ajv();
 
 const validateGeneralRequest = ajv.compile({
-    type: "object",
-    properties: {
-        message: {
-            type: "string"
-        },
-        payload: {
-            type: "object"
-        }
+  type: 'object',
+  properties: {
+    message: {
+      type: 'string',
     },
-    required: [
-        "message",
-        "payload",
-    ]
+    payload: {
+      type: 'object',
+    },
+  },
+  required: [
+    'message',
+    'payload',
+  ],
 });
 
 /**
@@ -22,57 +22,57 @@ const validateGeneralRequest = ajv.compile({
  * does not validate payload.
  * @param {any} req
  */
-export function isValidRequest(req){
-    return validateGeneralRequest(req);
+export function isValidRequest(req) {
+  return validateGeneralRequest(req);
 }
 
 const validateJoinRequest = ajv.compile({
-    type: "object",
-    properties: {
-        roomCode: {
-            type: "string",
-            minLength: 1
-        },
-        playerName: {
-            type: "string"
-        }
+  type: 'object',
+  properties: {
+    roomCode: {
+      type: 'string',
+      minLength: 1,
     },
-    required: [
-        "roomCode",
-        "playerName"
-    ]
+    playerName: {
+      type: 'string',
+    },
+  },
+  required: [
+    'roomCode',
+    'playerName',
+  ],
 });
 
 /**
  * Used to validate the join request.
  * @param {any} req
  */
-export function isValidJoinRequest(req){
-    return validateJoinRequest(req);
+export function isValidJoinRequest(req) {
+  return validateJoinRequest(req);
 }
 
 
 const validateGuess = ajv.compile({
-    type: "object",
-    properties: {
-        guess:{
-            type: "string",
-            maxLength: 1,
-            minLength: 1
-        }
+  type: 'object',
+  properties: {
+    guess: {
+      type: 'string',
+      maxLength: 1,
+      minLength: 1,
     },
-    required: [
-        "guess"
-    ]
-})
+  },
+  required: [
+    'guess',
+  ],
+});
 
 
 /**
  * Used to validate the join request.
  * @param {any} req
  */
- export function isValidMakeGuessRequest(req){
-    return validateGuess(req);
+export function isValidMakeGuessRequest(req) {
+  return validateGuess(req);
 }
 
 /**
@@ -81,11 +81,11 @@ const validateGuess = ajv.compile({
  * @param reason {String}
  * @returns {any}
  */
-export function createInvalidPayloadMessage(reason){
-    return {
-        "message": "Error",
-        "payload": {
-            "reason": reason
-        }
-    }
+export function createInvalidPayloadMessage(reason) {
+  return {
+    message: 'Error',
+    payload: {
+      reason,
+    },
+  };
 }

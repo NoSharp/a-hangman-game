@@ -1,6 +1,0 @@
-[server]
-port = 8080
-ip_addr = "localhost"
-
-[routes]
-    

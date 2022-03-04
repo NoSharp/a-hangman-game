@@ -1,7 +1,10 @@
 # Hangman.
 
+# Word List
+Gotten from http://www.mieliestronk.com/wordlist.html
+
 ## How the game works:
-Normal Hangman, 
+
 
 ## Also cool version:
 

@@ -4,6 +4,13 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "eslintConfig": {
+    "extends": "portsoc",
+    "root": true,
+    "env": {
+      "browser": true
+    }
+  },
   "scripts": {
     "start": "node server/index.js --harmony",
     "test": "echo \"Error: no test specified\" && exit 1"

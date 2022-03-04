@@ -1,34 +1,31 @@
-import {WebSocketServer, WebSocket} from "ws";
-import { isValidRequest, createInvalidPayloadMessage } from "./requestValidation.js";
-import {getActioner} from "./messageTypes.js";
+import { WebSocket } from 'ws';
+import { isValidRequest, createInvalidPayloadMessage } from './requestValidation.js';
+import { getActioner } from './messageTypes.js';
 
-const wsConnections = {};
-
-function unknownMessage(sender, payload){
-    sender.sendInvalidResponse(createInvalidPayloadMessage("Unknown Message"));
+function unknownMessage(sender) {
+  sender.sendInvalidResponse(createInvalidPayloadMessage('Unknown Message'));
 }
 
 /**
  * Handle websocket connection
- * @param {WebSocket} ws 
+ * @param {WebSocket} ws
  */
-function initiateWebSocket(ws){
-    
-    ws.on("message",(rawData)=>{
-        const data = JSON.parse(rawData);
-        if(!isValidRequest(data)){
-            ws.send(JSON.stringify(createInvalidPayloadMessage("Invalid Request")));
-        }else{
-            console.log(`[RECV]: ${data.message} -> ${data.payload}`);
-            (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
-        }
-    });
+function initiateWebSocket(ws) {
+  ws.on('message', (rawData) => {
+    const data = JSON.parse(rawData);
+    if (!isValidRequest(data)) {
+      ws.send(JSON.stringify(createInvalidPayloadMessage('Invalid Request')));
+    } else {
+      console.log(`[RECV]: ${data.message} -> ${data.payload}`);
+      (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
+    }
+  });
 
-    ws.on("open", ()=>{ console.log("Connected!")});
+  ws.on('open', () => { console.log('Connected!'); });
 
-    ws.on("error", (err)=>{ console.log(`err ${err}`)});
+  ws.on('error', (err) => { console.log(`err ${err}`); });
 
-    ws.on("close", () => {console.log("closed!")});
+  ws.on('close', () => { console.log('closed!'); });
 }
 
 /**
@@ -37,45 +34,42 @@ function initiateWebSocket(ws){
  * manage on the websocket.
  * @param wss {WebSocketServer}
  */
-export function mountWebSocketManager(wss){
+export function mountWebSocketManager(wss) {
+  WebSocket.prototype.sendObject = function (obj) {
+    this.send(JSON.stringify(obj));
+  };
 
-    WebSocket.prototype.sendObject = function(obj){
-        this.send(JSON.stringify(obj));
-    }
+  WebSocket.prototype.sendInvalidResponse = function (err) {
+    this.sendObject(createInvalidPayloadMessage(err));
+  };
 
-    WebSocket.prototype.sendInvalidResponse = function (err){
-        this.sendObject(createInvalidPayloadMessage(err));
-    }
-
-    WebSocket.prototype.sendResponse = function(message, payload){
-        this.sendObject({
-            "message": message,
-            "payload": payload
-        });
-    }
-
-    WebSocket.prototype.setRoomCode = function(game){
-        this.roomCode = game;
-    }
-
-    WebSocket.prototype.getRoomCode = function(){
-        return this.roomCode;
-    }
-
-    WebSocket.prototype.setPlayerInstance = function(player){
-        this.playerInstance = player;
-    }
-
-    WebSocket.prototype.getPlayerInstance = function(){
-        return this.playerInstance;
-    }
-    
-    
-
-
-    wss.on("connection", (ws) => {
-        console.log("Got connection?");
-        initiateWebSocket(ws);
+  WebSocket.prototype.sendResponse = function (message, payload) {
+    this.sendObject({
+      message,
+      payload,
     });
-    // wss.on("close")
+  };
+
+  WebSocket.prototype.setRoomCode = function (game) {
+    this.roomCode = game;
+  };
+
+  WebSocket.prototype.getRoomCode = function () {
+    return this.roomCode;
+  };
+
+  WebSocket.prototype.setPlayerInstance = function (player) {
+    this.playerInstance = player;
+  };
+
+  WebSocket.prototype.getPlayerInstance = function () {
+    return this.playerInstance;
+  };
+
+
+  wss.on('connection', (ws) => {
+    console.log('Got connection?');
+    initiateWebSocket(ws);
+  });
+  // wss.on("close")
 }
