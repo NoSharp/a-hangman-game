@@ -30,12 +30,22 @@ function updateHangmanState() {
   }
 }
 
+function ensurePlayersMap() {
+  if (typeof (currentGameInfo.players) === 'object' && currentGameInfo.players.keys === undefined) {
+    currentGameInfo.players = new Map(Object.entries(currentGameInfo.players));
+  }
+}
+
 function runPlayerUpdate() {
-  const curPlayers = currentGameInfo.players;
+  ensurePlayersMap();
+
+  const curPlayers = currentGameInfo.players ?? new Map();
   players = {};
   let isGuessingThisRound = true;
-  for (let player = 0; player < curPlayers.Length; player++) {
-    const plyObj = Player.fromDTO(curPlayers[player]);
+  for (const playerIdx of curPlayers.keys()) {
+    const player = curPlayers.get(playerIdx);
+    const plyObj = Player.fromDTO(player);
+
     players[plyObj.getName()] = plyObj;
     if (plyObj.getName() !== currentUserName && plyObj.getRole() === Role.GUESSING) {
       setCoverKeyboardText(`${plyObj.getName()} is currently guessing`);
@@ -51,9 +61,9 @@ function runPlayerUpdate() {
 
 const messageHandlers = {
 
-  Accepted: function () {
+  Accepted: function (data) {
     shouldRenderOnNextGameInfo = true;
-    // currentUserName = data.name;
+    currentUserName = data.name;
   },
 
   GameInfo: function (data) {
