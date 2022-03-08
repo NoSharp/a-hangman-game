@@ -291,7 +291,7 @@ export class Game {
     const players = {};
 
     for (const player of this.players) {
-      players[player.getId()] = player.generateDTO();
+      players[player.id] = player.generateDTO();
     }
 
     return players;
