@@ -1,14 +1,9 @@
 # Hangman.
 
 # Word List
-Gotten from http://www.mieliestronk.com/wordlist.html
+Gotten from http://www.mieliestronk.com/corncob_lowercase.txt
 
 ## How the game works:
-
-
-## Also cool version:
-
-the cool version of this app: https://github.com/nosharp/hangman-rs
 
 ## Libraries (✅ approved, ❌ denied, 🔃 TBC ):
 - Baretest ✅
@@ -20,21 +15,20 @@ the cool version of this app: https://github.com/nosharp/hangman-rs
 - ws ✅
 
 ## Structure:
-- hangman/server Handles the "web server" aspect of this. :
-
-- hangman/server/routes Used to handle the actual endpoints that the client can request:
-- hangman/server/routes/api For the REST API aspect of this project, containing things like the GameState and other parts:
-- hangman/server/routes/client For the part of the webserver that the client will directly query, typically just "/" or "/index.html"
-
-- hangman/server/data For the data part of the project, stuff like Redis and PostgreSQL interaction.
-- hangman/server/data/dto Used to construct/define Data Transport Objects which represent something in the database.
+- **hangman/server** Handles the "web server" aspect of this:
+    - **hangman/server/routes** Used to handle the actual endpoints that the client can request:
+    - **hangman/server/game_logic** used for handling, turns win-states, character guessing etc.
+    - **hangman/server/utils** used for miscelaneous utilities.
+    - **hangman/server/words** used for ingesting and handling the words list.
+    - **hangman/server/websocket** used for handling the websocket:
+        - **hangman/server/websocket/messagetypes** a file is used for each message the client sends to the server, they follow a generic structure
 
 
 ## Websocket Structure:
 The website is a SPA (Single Page Application), where the content on the webpage updates when the user joins/creates a room.
 
 A room is wrappper for the Game object which handles the current game state such as hangman status, guesses etc.
-Each game can have 2 < n < 10 players, a Player is created when they initiate a connection with the websocket.
+Each game can have n > 0 players, a Player is created when they initiate a connection with the websocket.
 
 The current flow of the websocket:
 https://i.imgur.com/rdE6gZ1.png
