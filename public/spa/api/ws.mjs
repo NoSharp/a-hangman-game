@@ -63,6 +63,7 @@ const messageHandlers = {
 
   Accepted: function (data) {
     shouldRenderOnNextGameInfo = true;
+    // TODO: Bug regression here. We need to set a name from the server.
     currentUserName = data.name;
   },
 
@@ -132,7 +133,6 @@ export function connectToGameWs(roomCode) {
 
   ws.onmessage = (ev) => {
     const messageData = JSON.parse(ev.data);
-    console.log(messageData);
     const messageName = messageData.message;
 
     if (messageName === undefined) {
@@ -140,7 +140,7 @@ export function connectToGameWs(roomCode) {
       return;
     }
 
-    if (messageHandlers[messageName] === undefined) {
+    if (messageHandlers[messageName] == null) {
       console.log(`No handler defined for: ${messageName}`);
       return;
     }
