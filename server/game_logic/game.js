@@ -2,6 +2,7 @@
 
 import { invertArray } from '../utils/arrayUtils.js';
 import { getCharacterIndexes } from '../utils/stringUtils.js';
+import { getRandomWord } from '../utils/wordList.js';
 import { Player } from './player.js';
 import { Role } from './role.js';
 
@@ -37,7 +38,7 @@ export function addGame(roomCode, playerCount, isComputerGeneratedGame) {
 }
 
 function generateWord() {
-  return 'flood';
+  return getRandomWord();
 }
 
 export class Game {
@@ -55,7 +56,7 @@ export class Game {
 
     /* The word they'll be guessing */
     this.targetWord = generateWord();
-    this.guessedCharacters = {};
+    this.guessedCharacters = new Map();
 
     // Used to tell the client how to draw the current state of the word
     // a space will be ignored by the client as a missing character
@@ -172,7 +173,7 @@ export class Game {
   }
 
   addLetterGuess(letter) {
-    this.guessedCharacters[letter] = true;
+    this.guessedCharacters.set(letter, true);
   }
 
   getCharacterIndexes(letter) {
@@ -278,9 +279,9 @@ export class Game {
   }
 
   /**
-     *
-     * @returns {Object} the hangman state
-     */
+   *
+   * @returns {Object} the hangman state
+   */
   serializeHangmanState() {
     return {
       hangmanState: this.hangmanState,
@@ -300,8 +301,16 @@ export class Game {
   serializeWordStateInfo() {
     return {
       currentWordState: this.currentWordState,
-      guessedCharacters: this.guessedCharacters,
+      guessedCharacters: this.serializeGuessedCharacters(),
     };
+  }
+
+  serializeGuessedCharacters() {
+    const guessedChars = [];
+    for (const val of this.guessedCharacters.keys()) {
+      guessedChars.push(val);
+    }
+    return guessedChars;
   }
 
   broadcastPayloadToClients(name, payload) {
