@@ -1,9 +1,11 @@
-import express from 'express';
 import { WebSocketServer } from 'ws';
 import { cookieMiddlewear } from './cookieHelper.js';
 import { mountWebSocketManager } from './websocket/websocket.js';
+import { parseFile } from './utils/wordList.js';
+
 import gameRouter from './routes/api/game.js';
 import http from 'http';
+import express from 'express';
 
 const app = express();
 
@@ -42,8 +44,11 @@ httpServer.on('upgrade', (req, socket, head) => {
   wss.handleUpgrade(req, socket, head, (client, req) => wss.emit('connection', client, req));
 });
 
-mountWebSocketManager(wss);
+(async () => {
+  await parseFile();
+  mountWebSocketManager(wss);
 
-httpServer.listen(8080, () => {
-  console.log('Hangman is online.');
-});
+  httpServer.listen(8080, () => {
+    console.log('Hangman is online.');
+  });
+})();
