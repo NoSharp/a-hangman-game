@@ -31,169 +31,125 @@ A room is wrappper for the Game object which handles the current game state such
 Each game can have n > 0 players, a Player is created when they initiate a connection with the websocket.
 
 The current flow of the websocket:
-https://i.imgur.com/rdE6gZ1.png
 
-The messages supported by the websocket are as follows:
-- C -> S:
-    - "Join":
-            This message is used to connect a player in a game.
-            It's expected to have a name attached.
-            The first person who joins a "non-computer generated game" will be
-            automatically put as the Word Maker.
-            If it's a computer generated game then the player will be a guesser.
+S2C - Kick
+
+Description: Used to display a message to the user once they've been kicked.
+
 ```json
-                {
-                    "message": "Join",
-                    "payload": {
-                        "name": "{{NAME_HERE}}",
-                        "playerName": "{{PLAYER_NAME_HERE}}",
-                    }
-                }
-```
-    
-- S -> C:
-    - "Accepted":
-        This message is expected after the player has been successfully loaded into the game.
-```json
-                {
-                    "message": "Accepted",
-                    "payload": {}
-                }
-```
-- S -> C:
-    - "Kick":
-        This message is ran if a player has been removed from a game.
-        The reason of the kick should follow a language string from the lang.toml file.
-        And should also follow i18n.
-```json
-                {
-                    "message": "Kick",
-                    "payload": {
-                        "reason": "{{REASON_LANG_STRING}}"
-                    }
-                }
-``` 
-
-- S -> C:
-    - "RoleUpdate":
-        This message is sent from the server to set a player's role.
-        There will be a role attached, and the players name/id number.
-```json
-            {
-                "message": "RoleUpdate",
-                "payload": {
-                    "playerName": "{{PLAYER_NAME_HERE}}",
-                    "newRole": {{PLAYER_ROLE}}
-                }
-            }
-```
-- S -> C:
-    - "PlayerData":
-        This message is used to bring a client up to date with information
-        about the game.
-        
-        It will send a message with all of the players, their associated data.
-            
-```json
-            {
-                "message": "PlayerData",
-                "payload": {
-                    "players": [
-                        {
-                            "name": "{{PLAYER_NAME}}",
-                            "role": {{PLAYER_ROLE}}
-                        }
-                    ]
-                }
-            }
-```
-- S -> C:
-    - "GameData":
-        This message is used to bring thge client up to date about the game.
-        This has guessed letters, current word mask, and hangman state.
-
-        All guessed letters are concatenated into one string to save space when
-        transmitting.
-
-        The current word mask (e.g "CA_T" or "DOGG_Y").
-
-        The currentGuesser is the name of the player currently guessing (duh.)
-```json
-
-            {
-                "message": "GameData",
-                "payload": {
-                    "gameData": {
-                        "name": "{{GAME_NAME}}",
-                        "guessedLetters": "{{Concatenated_Game_Letters}}",
-                        "currentWordMask": "{{Current_word_mask}}",
-                        "currentGuesser": "{{Current_guesser}}"
-                    }
-                }
-            }
-```
-- C -> S:
-    - "MakeGuess":
-        This message makes the actual guess.
-
-        And is tied to the "GuessWrong" message and "GuessCorrect" message.
-
-        It is expected for the client to check if the letter has been guessed already.
-        If it is already guessed, it'll receive a GuessWrong message after.
-        If the guess is correct then it'll send the GuessCorrect message.
-```json
-
-    {
-        "message": "MakeGuess",
-        "payload": {
-            "guess": "{{GUESSED_LETTER}}"
-        }
-    }
-
-```
-- S -> C:
-    - "GuessStatus":
-        Broadcast to everyone stating whether or not the guess was correct.
-```json
-    {
-        "message": "GuessStatus",
-        "payload": {
-            "correct": true | false
-        }
-    }
-
+{
+    message: "I18N_MESSAGE"
+}
 ```
 
+C2S - Join
 
-- S -> C:
-    - "HangManState":
-        This message sends the current state of the hangman.
-        
-        This is the current stage of hangman.
-        1 <= n <= 7
-        if the state is at 7 then the game will be lost.
+Description: Used to connect to a game.
 ```json
-    {
-        "message": "HangManState",
-        "payload": {
-            "hangmanState": 7
-        }
-    } 
+{
+    gameCode: "GAME_CODE"
+}
 ```
 
-- S -> C:
-    - "GameComplete":
-        this message sends whether or not if the game was won or lost.
+S2C - Accepted
+
+Description: Used to tell a client they've been accepted.
+```json
+{
+    name: "Randomly Generated Name"
+}
+```
+
+S2C - Word Status
+
+Description: Used to tell the clients what to display. Each missing character is replaced with a space.
 
 ```json
-    {
-        "message": "GameComplete",
-        "payload":{
-            "winningTeam": RoleHere
-        }
-    }
-
+{
+    wordState: "FL  D"
+}
 ```
+
+S2C - Guess
+
+Description: Used to network the status of a guess, to reduce data duplication, only a character will be networked and a true/false value for if it exists.
+
+```json
+{
+    guessedCharacter: "char",
+    found: false
+}
+```
+
+S2C - Game Complete
+
+Description: Used to tell clients who won the game, winnerTeam is one of team enums.
+
+```json
+{
+    winnerTeam: "GUESSERS"
+}
+```
+
+S2C - Hangman State
+
+Description: Used to update the hangman, and tell clients, (1-7).
+
+```json
+{
+    hangmanState: 7
+}
+```
+
+S2C - Player Join Game
+Description: Used to tell the clients when a player connects.
+
+```json
+{
+    id: playerId,
+    name: Name
+}
+```
+
+S2C - Player Guessing
+
+Description: tells the client who's currently guessing.
+
+```json
+{
+    id: playerId
+}
+```
+
+S2C - Deep Synchronise
+
+Description: Used to fully scynhronise the client with the current game state, this will contain:
+- previously guessed characters
+- the current word state 
+- all of the players in the game.
+- hangman state
+- who's currently guessing (Player Id)
+```json
+{
+    guessedCharacters: [],
+    currentWordState: "FL OD",
+    players: [],
+    hangmanState: 7,
+    currentGuesser: playerId
+}
+```
+
+## Data transfer objects (DTO's)
+
+### Player
+- `id` 
+    - The id of the player in the game.
+    - It's a little endian encoded unsigned 16 bit integer (when networked)
+
+- `name`
+    - The name of the player.
+    - It's a 32 character long string.
+
 
 ## API Endpoints
 - GET /
