@@ -9,7 +9,7 @@ let currentGameInfo = {};
 
 let players = {};
 
-let currentUserName = (Math.random() * 100).toString();
+let currentUserName = '';
 
 function getCurrentWordState() {
   return currentGameInfo?.wordState?.currentWordState ?? '';
@@ -18,8 +18,8 @@ function getCurrentWordState() {
 function updateWordState() {
   setWordToGuess(getCurrentWordState());
   const chars = currentGameInfo.wordState.guessedCharacters;
-  for (let char = 0; char < chars.Length; char++) {
-    setCharactersGuessed(char);
+  for (let idx = 0; idx < chars.length; idx++) {
+    setCharactersGuessed(chars[idx]);
   }
 }
 
@@ -65,6 +65,7 @@ const messageHandlers = {
     shouldRenderOnNextGameInfo = true;
     // TODO: Bug regression here. We need to set a name from the server.
     currentUserName = data.name;
+    console.log(currentUserName);
   },
 
   GameInfo: function (data) {
@@ -144,7 +145,7 @@ export function connectToGameWs(roomCode) {
       console.log(`No handler defined for: ${messageName}`);
       return;
     }
-
+    console.log(messageData.payload);
     messageHandlers[messageName](messageData.payload);
   };
 
@@ -176,3 +177,6 @@ export function setName(name) {
 export function getName() {
   return currentUserName;
 }
+
+
+// TODO: Handle disconnection and no one being in the game correctly.
