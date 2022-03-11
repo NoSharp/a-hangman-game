@@ -1,38 +1,28 @@
-// import { randomInt } from 'crypto';
-// import { createReadStream } from 'fs';
-// import path from 'path';
-// import { MessageChannel } from 'worker_threads';
-// import { __dirname } from './commonJsPassthrough.cjs';
-// /**
-//  * @type {readStream?}
-//  */
-// let readStream;
-// let worker;
-// let messageChannel;
-// export function init() {
-//   const worker = new Worker(path.join(__dirname, 'wordListWorker.js'));
-//   const messageChannel = new MessageChannel();
-//   // worker.postMessage({ wordLength: 3, cookie: randomInt() }, [messageChannel.port1]);
-// }
+import fs from 'fs';
+import assert from 'assert';
+import path from 'path';
+import { __dirname } from './commonJsPassthrough.cjs';
 
-// /**
-//  * Sends a message to the worker thread
-//  * inorder to get the words concurrently.
-//  * @param {number} wordAmount
-//  * @returns {Promise<string[wordAmount]>} the result of the function.
-//  */
-// export function getWordSelection() {
-//   if (readStream !== undefined) {
-//     readStream.close();
-//   }
+let cachedFile = [];
 
-//   readStream = readStream ?? createReadStream(`${__dirname}/../../wrodslist.txt`);
+const wordDir = path.join(__dirname, '../', '../', 'wordslist.txt');
 
-//   // const promise = new Promise((resolve, reject) => {
-//   //   readStream.on('readable', () => {
-//   //     readStream.read();
-//   //   });
-//   // });
+export function parseFile() {
+  const promise = new Promise((resolve, reject) => {
+    assert(cachedFile.keys.length === 0, 'Cached file is already loaded, but being loaded again.');
+    fs.readFile(wordDir, 'utf8', (err, buffer) => {
+      if (err != null) {
+        reject(err);
+        return;
+      }
+      cachedFile = buffer.split(/[\r\n]+/);
 
-//   // return promise;
-// }
+      resolve();
+    });
+  });
+  return promise;
+}
+
+export const getWord = (idx) => cachedFile[idx];
+
+export const getRandomWord = () => cachedFile[Math.floor(Math.random() * cachedFile.length)];
