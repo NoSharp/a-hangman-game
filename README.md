@@ -160,8 +160,7 @@ Description: Used to fully scynhronise the client with the current game state, t
     - Status Codes:
         - 404, Room not found
         - 400, Missing room_name
-        - 200, Game found, request successful.
-            This object will have information abuot the websocket, game name, player data etc.
+        - 200, Game found, request successful. The client is then expected to proceed and establish a connection with the websocket.
 ```json
     {
         "game": {
@@ -189,24 +188,9 @@ Description: Used to fully scynhronise the client with the current game state, t
     }
 
 ```
-    - Status Codes:
-        - 200, Success full request:
-```json
-    {
-        "game": {
-            "name": "{{GAME_NAME}}",
-            "maxPlayers": 10,
-            "code": "{{GAME_CODE}}",
-            "players": [
-                {
-                    "name": "{{PLAYER_NAME}}",
-                    "role": "{{PLAYER_ROLE_ENUM}}"
-                }
-            ]
-        },
-        "websocketUrl": "http://localhost:8080/ws/game_code"
-    }
-```
+- Status Codes:
+    - 200, Success full request
+
     - 400, Invalid body:
 ```json
     {
