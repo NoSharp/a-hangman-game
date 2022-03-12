@@ -64,13 +64,6 @@ export class Game {
     this.playerIterator = this.players.values();
   }
 
-  getCode() {
-    return this.code;
-  }
-
-  getCreator() {
-    return this.creator;
-  }
 
   createWordStateForTargetWord() {
     let word = '';
@@ -107,7 +100,7 @@ export class Game {
     this.currentGuesserId = id;
     const player = this.players.get(this.currentGuesserId);
     this.broadcastPayloadToClients('Guesser', {
-      name: player.id,
+      id: player.id,
     });
   }
 
@@ -115,12 +108,10 @@ export class Game {
     const player = this.playerIterator.next().value;
     // reset our iterator.
     if (player == null) {
-      console.log(player, 'is null');
       this.playerIterator = this.players.values();
       this.incrementGuesser();
       return;
     }
-    console.log(player);
     this.setCurrentGuesserId(player.id);
   }
 
