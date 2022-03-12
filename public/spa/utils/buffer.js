@@ -34,7 +34,7 @@ export class Buffer {
   }
 
   writeChar(char) {
-    this.writeUInt(char.charCodeAt(0), 1);
+    this.writeInt(char.charCodeAt(0), 1);
   }
 
   // Write until null termination
@@ -47,8 +47,10 @@ export class Buffer {
   }
 
   // Write it in little endian format.
-  writeUInt(num, byteSize) {
+  writeInt(num, byteSize) {
     let lastMaxValue = 0;
+    // we get the 2's complement unsigned form of the number
+    num = num >>> 0;
     for (let byteIdx = 0; byteIdx < byteSize; byteIdx++) {
       // get our max value for this amount of bits (-1 because we include 0).
       const maxValue = 2 ** ((byteIdx + 1) * 8) - 1;
@@ -63,18 +65,21 @@ export class Buffer {
       // mask the byte, we've just bit shifted then
       // append to our array.
       const byteData = num >> (byteIdx * 8) & 0xFF;
+      // console.log(byteData);
       this.buffer.push(byteData);
       lastMaxValue = maxValue;
     }
+    console.log(this.buffer);
   }
 
   // read little endian of n size bytes.
-  readUInt(size) {
+  readInt(size) {
     let curNumber = 0;
     for (let byteIdx = 0; byteIdx < size; byteIdx++) {
       const byte = this.buffer[this.curPos];
       // bit shift left our byte to convert back from little endian format.
       // use Or= to combine it back into the initial number.
+      // Javascript deals with the two's complement for us.
       curNumber |= byte << (byteIdx * 8);
       this.curPos++;
     }
@@ -84,12 +89,13 @@ export class Buffer {
 
 
 // const buffer = new Buffer();
-// const t1 = -15;
-// const t2 = 4000;
-// buffer.writeUInt(t1, 16);
-// buffer.writeUInt(t2, 16);
+// const t1 = -2147483647;
+// const t2 = 2147483647;
+// buffer.writeInt(t1, 4);
+// buffer.writeInt(t2, 4);
 // buffer.writeString('HELLO WORLD!');
-// const num1 = buffer.readUInt(16);
-// const num2 = buffer.readUInt(16);
+// const num1 = buffer.readInt(4);
+// const num2 = buffer.readInt(4);
 // console.log(buffer.readString());
-// console.log(num1, num1 === t1, num2 === t2);
+// console.log(t2, num2);
+// console.log(num1, num2, num1 === t1, num2 === t2);
