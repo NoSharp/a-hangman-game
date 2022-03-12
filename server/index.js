@@ -17,7 +17,8 @@ const wss = new WebSocketServer({
 
 app.use(express.json());
 
-app.use(express.static('public/spa'));
+app.use('/', express.static('public/spa'));
+app.use('/', express.static('shared'));
 
 app.use(cookieMiddlewear);
 
