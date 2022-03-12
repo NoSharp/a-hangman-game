@@ -1,10 +1,10 @@
-import { isValidMakeGuessRequest } from '../requestValidation.js';
 import { findGameByRoomCode } from '../../game_logic/game.js';
 export const messageName = 'MakeGuess';
 
-export function onMessage(ws, data) {
-  if (!isValidMakeGuessRequest(data)) {
-    ws.sendInvalidResponse('Invalid Make Guess Body');
+export function onMessage(ws, buffer) {
+  const character = buffer.readChar();
+  if (character === undefined) {
+    console.log('Character is undefined. ignoring.');
     return;
   }
   const game = findGameByRoomCode(ws.getRoomCode());
@@ -12,7 +12,7 @@ export function onMessage(ws, data) {
 
   const player = ws.getPlayerInstance();
   if (player === undefined) return;
-  if (!game.canPlayerGuess(player) || !game.canGuessLetter(data.guess)) return;
+  if (!game.canPlayerGuess(player) || !game.canGuessLetter(character)) return;
 
-  game.playerGuessLetter(player, data.guess);
+  game.playerGuessLetter(player, character);
 }

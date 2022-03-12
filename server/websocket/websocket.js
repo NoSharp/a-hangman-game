@@ -1,10 +1,8 @@
 import { WebSocket } from 'ws';
-import { isValidRequest, createInvalidPayloadMessage } from './requestValidation.js';
+import { createInvalidPayloadMessage } from './requestValidation.js';
 import { getActioner } from './messageTypes.js';
-
-function unknownMessage(sender) {
-  sender.sendInvalidResponse(createInvalidPayloadMessage('Unknown Message'));
-}
+import { BufferReader, BufferWriter } from '../../shared/buffer.js';
+import { getPacketName, PacketIdentifiers } from '../../shared/netIdentifiers.js';
 
 /**
  * Handle websocket connection
@@ -12,13 +10,28 @@ function unknownMessage(sender) {
  */
 function initiateWebSocket(ws) {
   ws.on('message', (rawData) => {
-    const data = JSON.parse(rawData);
-    if (!isValidRequest(data)) {
-      ws.send(JSON.stringify(createInvalidPayloadMessage('Invalid Request')));
-    } else {
-      console.log(`[RECV]: ${data.message} -> ${data.payload}`);
-      (getActioner(data.message) ?? unknownMessage)(ws, data.payload);
+    const buffer = BufferReader.fromString(rawData.toString());
+    const packetId = buffer.readInt(1);
+
+    if (packetId == null) {
+      console.log(`Packet ID: ${packetId} is not defined. `);
+      return;
     }
+
+    const packetName = getPacketName(packetId);
+    if (packetName == null) {
+      console.log(`Packet ID: ${packetId} has no name.`);
+      return;
+    }
+
+    const actioner = getActioner(packetName);
+    if (actioner == null) {
+      console.log(`Packet ID: ${packetName} has no actioner.`);
+      return;
+    }
+
+    console.log(`[RECV]: ${packetName} Size: ${rawData.byteLength}b`);
+    actioner(ws, buffer);
   });
 
   ws.on('open', () => { console.log('Connected!'); });
@@ -26,6 +39,13 @@ function initiateWebSocket(ws) {
   ws.on('error', (err) => { console.log(`err ${err}`); });
 
   ws.on('close', () => { console.log('closed!'); });
+}
+
+export function kickWebsocket(ws, reason) {
+  const buffer = new BufferWriter();
+  buffer.writeInt(PacketIdentifiers.get('Kick'), 1);
+  buffer.writeString(reason);
+  ws.sendBuffer(buffer);
 }
 
 /**
@@ -43,12 +63,6 @@ export function mountWebSocketManager(wss) {
     this.sendObject(createInvalidPayloadMessage(err));
   };
 
-  WebSocket.prototype.sendResponse = function (message, payload) {
-    this.sendObject({
-      message,
-      payload,
-    });
-  };
 
   WebSocket.prototype.setRoomCode = function (game) {
     this.roomCode = game;
@@ -66,6 +80,9 @@ export function mountWebSocketManager(wss) {
     return this.playerInstance;
   };
 
+  WebSocket.prototype.sendBuffer = function (buffer) {
+    this.send(buffer.getBufferAsString());
+  };
 
   wss.on('connection', (ws) => {
     console.log('Got connection?');
