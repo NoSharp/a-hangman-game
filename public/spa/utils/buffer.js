@@ -2,6 +2,8 @@
  * Used to manipulate an array of bytes.
  * Utility is trimmed down and only does what we need
  * so no writing or reading floating point numbers etc.
+ * I never deal with signed numbers so we only have utilities
+ * for dealing with unsigned numbers.
  */
 
 export class Buffer {
