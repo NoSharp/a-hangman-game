@@ -52,6 +52,10 @@ export class BufferWriter {
     this.buffer.push(0x00);
   }
 
+  writeBoolean(bool) {
+    this.writeInt(bool ? 1 : 0, 1);
+  }
+
   // Write it in little endian format.
   writeInt(num, byteSize) {
     let lastMaxValue = 0;
@@ -75,18 +79,6 @@ export class BufferWriter {
       lastMaxValue = maxValue;
     }
   }
-
-  /**
-   * puts two numbers into one byte.
-   * totalBitCount should be a single byte.
-   */
-  bitPack(a, b, totalBitCount, aBitWidth) {
-    return (a << totalBitCount - aBitWidth) | b;
-    //     let combine = (a, b) =>  a << 3 | b;
-    // undefined
-    // let decombine = (c) => [c >> 3 & 0b11111, c & 0b111 ]
-  }
-
 
   getBufferAsString() {
     let str = '';
@@ -115,6 +107,14 @@ export class BufferReader {
     const byte = this.buffer[this.curPos];
     this.curPos++;
     return byte;
+  }
+
+  readChar() {
+    return String.fromCharCode(this.readInt(1));
+  }
+
+  readBoolean() {
+    return this.readInt(1) === 1;
   }
 
   // Reads until null termination.
