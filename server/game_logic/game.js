@@ -1,5 +1,8 @@
 // 🎷🐛
 
+import { bitPack, BufferWriter } from '../../shared/buffer.js';
+import { PacketIdentifiers } from '../../shared/netIdentifiers.js';
+import { TeamIdentifiers } from '../../shared/teamIdentifiers.js';
 import { invertArray } from '../utils/arrayUtils.js';
 import { getCharacterIndexes } from '../utils/stringUtils.js';
 import { getRandomWord } from '../utils/wordList.js';
@@ -76,7 +79,6 @@ export class Game {
   addPlayer(ws, name) {
     const player = new Player(ws, name, this.players.size);
     this.players.set(player.id, player);
-    player.generateDTO();
     this.broadcastPlayerJoin(player);
     if (this.players.size >= this.roomSize) {
       this.startGame();
@@ -98,13 +100,13 @@ export class Game {
 
   setCurrentGuesserId(id) {
     this.currentGuesserId = id;
-    this.broadcastPayloadToClients('Guesser', {
-      id: this.currentGuesserId,
-    });
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('Guesser'), 1);
+    buffer.writeInt(this.currentGuesserId, 1);
+    this.broadcastBufferToClients(buffer);
   }
 
   incrementGuesser() {
-    console.log('Increment Guessed!');
     const player = this.playerIterator.next().value;
     // reset our iterator.
     if (player == null) {
@@ -113,7 +115,6 @@ export class Game {
       return;
     }
 
-    console.log('Increment Guessed!', player.id);
     this.setCurrentGuesserId(player.id);
   }
 
@@ -165,18 +166,11 @@ export class Game {
   }
 
   finishGame() {
-    this.broadcastPayloadToClients('GameComplete', {
-      winningTeam: this.didSetterWin() ? 'CPU' : 'PLAYERS',
-    });
+    this.broadcastGameComplete(this.didSetterWin() ? 'CPU' : 'PLAYERS');
 
     for (const player of this.players.values()) {
       player.closeWebSocket();
     }
-
-    // Remove all of the possibly reference counted properties
-    // of the object to make sure it's GC'd.
-    // Over kill, but w/e.
-    delete this.players;
 
     destroyGame(this.code);
   }
@@ -224,24 +218,40 @@ export class Game {
     return newWordState;
   }
 
+  broadcastGameComplete(winningTeam) {
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('GameComplete'), 1);
+    buffer.writeInt(TeamIdentifiers.get(winningTeam), 1);
+    this.broadcastBufferToClients(buffer);
+  }
 
   broadcastGuess(char, wasGuessCorrect) {
-    this.broadcastPayloadToClients('Guess', {
-      guessedCharacter: char,
-      correct: wasGuessCorrect,
-    });
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('Guess'), 1);
+    buffer.writeChar(char);
+    buffer.writeBoolean(wasGuessCorrect);
+    this.broadcastBufferToClients(buffer);
   }
 
   broadcastHangmanState() {
-    this.broadcastPayloadToClients('HangManState', this.generateHangmanDTO());
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('HangmanState'), 1);
+    this.generateHangmanDTO(buffer);
+    this.broadcastBufferToClients(buffer);
   }
 
   broadcastWordState() {
-    this.broadcastPayloadToClients('WordState', this.generateWordStateDTO());
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('WordState'), 1);
+    this.generateWordStateDTO(buffer);
+    this.broadcastBufferToClients(buffer);
   }
 
   broadcastPlayerJoin(player) {
-    this.broadcastPayloadToClients('PlayerJoin', player.generateDTO());
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('Player Join'), 1);
+    player.generateDTO(buffer);
+    this.broadcastBufferToClients(buffer);
   }
 
   /**
@@ -249,40 +259,31 @@ export class Game {
    * Used on Synchronise requests sent by the client.
    * @returns {Object} The payload to send to the client
    */
-  generateDTO() {
-    return {
-      code: this.code,
-      roomSize: this.roomSize,
-      wordState: this.generateWordStateDTO(),
-      hangmanState: this.hangmanState,
-      players: this.generatePlayersDTO(),
-    };
+  generateDTO(buffer) {
+    buffer.writeInt(PacketIdentifiers.get('Synchronise'), 1);
+    buffer.writeInt(bitPack(this.roomSize, this.hangmanState, 4, 8), 1);
+    buffer.writeString(this.code);
+    this.generateWordStateDTO(buffer);
+    this.generatePlayersDTO(buffer);
   }
 
   /**
    *
    * @returns {Object} the hangman state
    */
-  generateHangmanDTO() {
-    return {
-      hangmanState: this.hangmanState,
-    };
+  generateHangmanDTO(buffer) {
+    buffer.writeInt(this.hangmanState, 1);
   }
 
-  generatePlayersDTO() {
-    const players = [];
-
+  generatePlayersDTO(buffer) {
+    buffer.writeInt(this.players.size, 1);
     for (const player of this.players.values()) {
-      players.push(player.generateDTO());
+      player.generateDTO(buffer);
     }
-
-    return players;
   }
 
-  generateWordStateDTO() {
-    return {
-      currentWordState: this.currentWordState,
-    };
+  generateWordStateDTO(buffer) {
+    buffer.writeString(this.currentWordState);
   }
 
   generateGuessedCharactersDTO() {
@@ -293,9 +294,9 @@ export class Game {
     return guessedChars;
   }
 
-  broadcastPayloadToClients(name, payload) {
+  broadcastBufferToClients(buffer) {
     this.players.forEach((ply) => {
-      ply.sendPayload(name, payload);
+      ply.sendBuffer(buffer);
     });
   }
 }
