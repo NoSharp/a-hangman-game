@@ -29,18 +29,18 @@ Terms:
 - S2C - Sent from the server to the client
 - C2S - Sent from the client to the server
 - A2A - Sent from either the client to the server or server to the client.
-
-### Byte Buffer
-The byte buffer is a non-standard method of serializing messages across
+- b (when in context of a unit) - one 8 bit byte.
+### Buffer
+The buffer is a non-standard method of serializing messages across
 the websocket. 
 
 The goal of this approach is to reduce wasted data being networked (like key name etc.),
 and improve speed of data serialization, as there is a standard packet structure and layout as defined below. 
 
-The library (as found in `shared/buffer.js`) doesn't need to have handling for a lot of data types
-so they're not implemented.
+The library (as found in `shared/buffer.js`) 
+doesn't need to have handling for a lot of data types so they're not implemented.
 
-Each integer has a given maximum length (in bytes) and is encoded in little-endian(least significant number first). 
+Each integer has a given maximum length (in bytes) and is encoded in little-endian(least significant number first).
 
 **Bit Packing** 
 For lack of a better term, when two numbers get combined
@@ -59,7 +59,12 @@ output:
  +++ +++++
   A    B
 ```
-The alternative to this is to write two bytes. 
+The alternative to this is to write two bytes which is far less efficient. 
+
+**Size When Networked**
+
+A comparison of the size of the payload of the previous JSON based approach and the new buffer approach. 
+There will be (where applicable) a note about how those results were computed.
 
 S2C - Kick
 
