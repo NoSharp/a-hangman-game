@@ -33,13 +33,9 @@ const validateJoinRequest = ajv.compile({
       type: 'string',
       minLength: 1,
     },
-    playerName: {
-      type: 'string',
-    },
   },
   required: [
     'roomCode',
-    'playerName',
   ],
 });
 

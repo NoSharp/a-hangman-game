@@ -4,12 +4,8 @@ import { invertArray } from '../utils/arrayUtils.js';
 import { getCharacterIndexes } from '../utils/stringUtils.js';
 import { getRandomWord } from '../utils/wordList.js';
 import { Player } from './player.js';
-import { Role } from './role.js';
 
 /**
- * This can be constant, however as its mutable. because js.
- * For readability I'd prefer the use of let.
- *
  * This is a list of key-values, used to represent rooms.
  * The key is a string, the room code.
  * The value is a Game Object.
@@ -46,14 +42,10 @@ export class Game {
    *
    * @param {string} code
    * @param {number} roomSize
-   * @param {boolean} isComputerGeneratedGame
    */
-  constructor(code, roomSize, isComputerGeneratedGame) {
+  constructor(code, roomSize) {
     this.code = code;
     this.roomSize = roomSize;
-    this.isComputerGeneratedGame = isComputerGeneratedGame;
-
-
     /* The word they'll be guessing */
     this.targetWord = generateWord();
     this.guessedCharacters = new Map();
@@ -67,9 +59,9 @@ export class Game {
     // Also used on the client to draw the hangman once networked.
     this.hangmanState = 0;
 
-    this.currentGuesserIdx = 0;
-
-    this.players = [];
+    this.currentGuesserId = 0;
+    this.players = new Map();
+    this.playerIterator = this.players.values();
   }
 
   getCode() {
@@ -89,60 +81,51 @@ export class Game {
   }
 
   addPlayer(ws, name) {
-    const player = new Player(ws, name, this.players.length);
-    this.players.push(player);
-    // console.log(this.players.length, this.roomSize, );
+    const player = new Player(ws, name, this.players.size);
+    this.players.set(player.id, player);
+    player.generateDTO();
+    this.broadcastPlayerJoin();
     if (this.players.length >= this.roomSize) {
       this.startGame();
-      this.broadcastPayloadToClients('');
-    } else {
-      this.broadcastPlayerJoin();
     }
+    return player;
   }
 
   startGame() {
-    this.setupGameRoles();
-  }
-
-  setupGameRoles() {
-    console.log(this.isComputerGeneratedGame, 'STARTED');
-    if (!this.isComputerGeneratedGame) {
-      this.players[0].updateRole(Role.WORD_MAKER);
-      this.currentGuesserIdx = 0;
-    } else {
-      this.players[this.currentGuesserIdx].updateRole(Role.GUESSING);
-    }
+    this.setCurrentGuesserId(0);
   }
 
   canGuessLetter(letter) {
     return this.guessedCharacters[letter] === undefined;
   }
 
-  broadcastGuessStatus(wasGuessCorrect) {
-    this.broadcastPayloadToClients('GuessStatus', {
-      correct: wasGuessCorrect,
+  canPlayerGuess(player) {
+    return this.currentGuesserId === player.id;
+  }
+
+  setCurrentGuesserId(id) {
+    this.currentGuesserId = id;
+    const player = this.players.get(this.currentGuesserId);
+    this.broadcastPayloadToClients('Guesser', {
+      name: player.id,
     });
   }
 
-  updatePlayerRole(index, newRole) {
-    const player = this.players[index];
-    // console.log(index, this.players[index]);
-    player.updateRole(newRole);
-    this.broadcastPayloadToClients('PlayerData', {
-      name: player.getName(),
-      role: player.getRole(),
-    });
-  }
-
-  incrementNextGuess() {
-    const curGuesserId = this.currentGuesserIdx;
-    this.updatePlayerRole(curGuesserId, Role.IDLE);
-    this.currentGuesserIdx = (curGuesserId + 1) % (this.players.length);
-    this.updatePlayerRole(this.currentGuesserIdx, Role.GUESSING);
+  incrementGuesser() {
+    const player = this.playerIterator.next().value;
+    // reset our iterator.
+    if (player == null) {
+      console.log(player, 'is null');
+      this.playerIterator = this.players.values();
+      this.incrementGuesser();
+      return;
+    }
+    console.log(player);
+    this.setCurrentGuesserId(player.id);
   }
 
   playerGuessLetter(player, letter) {
-    if (player.getRole() !== Role.GUESSING) return;
+    if (this.currentGuesserId !== player.id) return;
     // this is a fail safe, canGuessLetter should be ran before this.
     if (!this.canGuessLetter(letter)) return;
     this.addLetterGuess(letter);
@@ -153,23 +136,19 @@ export class Game {
     if (letterPositions.length === 0) {
       this.incrementHangmanState();
     } else {
-      // Valid guess
-      this.currentWordState = this.displayLettersInWordState(letterPositions);
+      this.currentWordState = this.replaceLettersInWordState(letterPositions);
       correctGuess = true;
-      // Update word state
-      // Tell client of a sucessful guess
+      this.broadcastWordState();
     }
 
-    this.broadcastGuessStatus(correctGuess);
-    this.broadcastWordState();
-    this.broadcastHangmanState();
+    this.broadcastGuess(letter, correctGuess);
 
     if (this.isGameComplete()) {
       this.finishGame();
       return;
     }
 
-    this.incrementNextGuess();
+    this.incrementGuesser();
   }
 
   addLetterGuess(letter) {
@@ -194,7 +173,7 @@ export class Game {
 
   finishGame() {
     this.broadcastPayloadToClients('GameComplete', {
-      winningTeam: this.didSetterWin() ? Role.WORD_MAKER : Role.GUESSING,
+      winningTeam: this.didSetterWin() ? 'CPU' : 'PLAYERS',
     });
 
     for (const player of this.players) {
@@ -211,9 +190,10 @@ export class Game {
 
   incrementHangmanState() {
     this.hangmanState += 1;
+    this.broadcastHangmanState();
   }
 
-  displayLettersInWordState(letterIndexes) {
+  replaceLettersInWordState(letterIndexes) {
     let newWordState = '';
 
     if (letterIndexes.length === 0) {
@@ -251,30 +231,38 @@ export class Game {
     return newWordState;
   }
 
+
+  broadcastGuess(char, wasGuessCorrect) {
+    this.broadcastPayloadToClients('Guess', {
+      guessedCharacter: char,
+      correct: wasGuessCorrect,
+    });
+  }
+
   broadcastHangmanState() {
-    this.broadcastPayloadToClients('HangManState', this.serializeHangmanState());
+    this.broadcastPayloadToClients('HangManState', this.generateHangmanDTO());
   }
 
   broadcastWordState() {
-    this.broadcastPayloadToClients('WordState', this.serializeWordStateInfo());
+    this.broadcastPayloadToClients('WordState', this.generateWordStateDTO());
   }
 
   broadcastPlayerJoin() {
-    this.broadcastPayloadToClients('PlayerJoin', this.serializePlayers());
+    this.broadcastPayloadToClients('PlayerJoin', this.generatePlayersDTO());
   }
 
   /**
-   * Converts the game data into an object
-   * that the websocket server will send the client.
+   * Converts the game data into a data transfer object
+   * Used on Synchronise requests sent by the client.
    * @returns {Object} The payload to send to the client
    */
-  serializeGameInfo() {
+  generateDTO() {
     return {
       code: this.code,
       roomSize: this.roomSize,
-      wordState: this.serializeWordStateInfo(),
+      wordState: this.generateWordStateDTO(),
       hangmanState: this.hangmanState,
-      players: this.serializePlayers(),
+      players: this.generatePlayersDTO(),
     };
   }
 
@@ -282,30 +270,30 @@ export class Game {
    *
    * @returns {Object} the hangman state
    */
-  serializeHangmanState() {
+  generateHangmanDTO() {
     return {
       hangmanState: this.hangmanState,
     };
   }
 
-  serializePlayers() {
+  generatePlayersDTO() {
     const players = {};
 
-    for (const player of this.players) {
-      players[player.id] = player.generateDTO();
+    for (const [id, player] of this.players.entries()) {
+      console.log(player);
+      players[id] = player.generateDTO();
     }
 
     return players;
   }
 
-  serializeWordStateInfo() {
+  generateWordStateDTO() {
     return {
       currentWordState: this.currentWordState,
-      guessedCharacters: this.serializeGuessedCharacters(),
     };
   }
 
-  serializeGuessedCharacters() {
+  generateGuessedCharactersDTO() {
     const guessedChars = [];
     for (const val of this.guessedCharacters.keys()) {
       guessedChars.push(val);

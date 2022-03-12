@@ -29,14 +29,12 @@ export function onMessage(ws, data) {
 
   ws.setRoomCode(roomCode);
 
-  data.playerName = getRandomWord();
-  game.addPlayer(ws, data.playerName);
+  const playerName = getRandomWord();
+  const player = game.addPlayer(ws, playerName);
 
   // Send an accepted response
-  ws.sendResponse('Accepted', {
-    name: data.playerName,
-  });
+  ws.sendResponse('Accepted', player.generateDTO());
 
   // Send game info.
-  ws.sendResponse('GameInfo', game.serializeGameInfo());
+  ws.sendResponse('Synchronise', game.generateDTO());
 }

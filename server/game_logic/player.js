@@ -1,11 +1,8 @@
-import { Role } from './role.js';
-
 export class Player {
   constructor(socket, name, id) {
     this.socket = socket;
     this.name = name;
     this.id = id;
-    this.role = Role.IDLE;
     this.socket.setPlayerInstance(this);
   }
 
@@ -13,17 +10,6 @@ export class Player {
     this.socket.sendResponse(name, payload);
   }
 
-  updateRole(newRole) {
-    this.role = newRole;
-  }
-
-  canMakeGuess() {
-    return this.role === Role.GUESSING;
-  }
-
-  getRole() {
-    return this.role;
-  }
 
   getName() {
     return this.name;
@@ -41,7 +27,6 @@ export class Player {
     return {
       id: this.id,
       name: this.name,
-      role: this.role,
     };
   }
 }

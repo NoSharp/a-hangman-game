@@ -12,8 +12,7 @@ export function onMessage(ws, data) {
 
   const player = ws.getPlayerInstance();
   if (player === undefined) return;
-  if (!player.canMakeGuess()) return;
-  if (!game.canGuessLetter(data.guess)) return;
+  if (!game.canPlayerGuess(player) || !game.canGuessLetter(data.guess)) return;
 
   game.playerGuessLetter(player, data.guess);
 }
