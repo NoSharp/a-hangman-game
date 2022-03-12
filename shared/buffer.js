@@ -6,7 +6,13 @@
  * for dealing with unsigned numbers.
  */
 
-export class Buffer {
+function assert(condition, errMessage) {
+  if (!condition) {
+    throw errMessage;
+  }
+}
+
+export class BufferWriter {
   constructor() {
     this.buffer = [];
     this.curPos = 0;
@@ -49,7 +55,7 @@ export class Buffer {
   // Write it in little endian format.
   writeInt(num, byteSize) {
     let lastMaxValue = 0;
-    // we get the 2's complement unsigned form of the number
+    // we get the 2's complement form of the number
     num = num >>> 0;
     for (let byteIdx = 0; byteIdx < byteSize; byteIdx++) {
       // get our max value for this amount of bits (-1 because we include 0).
@@ -61,15 +67,69 @@ export class Buffer {
         continue;
       }
 
-      // Bit shift across a 8 bits each iteration,
+      // Bit shift across 8 bits each iteration,
       // mask the byte, we've just bit shifted then
       // append to our array.
       const byteData = num >> (byteIdx * 8) & 0xFF;
-      // console.log(byteData);
       this.buffer.push(byteData);
       lastMaxValue = maxValue;
     }
-    console.log(this.buffer);
+  }
+
+  /**
+   * puts two numbers into one byte.
+   * totalBitCount should be a single byte.
+   */
+  bitPack(a, b, totalBitCount, aBitWidth) {
+    return (a << totalBitCount - aBitWidth) | b;
+    //     let combine = (a, b) =>  a << 3 | b;
+    // undefined
+    // let decombine = (c) => [c >> 3 & 0b11111, c & 0b111 ]
+  }
+
+
+  getBufferAsString() {
+    let str = '';
+    for (let i = 0; i < this.buffer.length; i++) {
+      str += String.fromCharCode(this.buffer[i]);
+    }
+    return str;
+  }
+}
+
+export class BufferReader {
+  constructor(buffer) {
+    this.buffer = buffer;
+    this.curPos = 0;
+  }
+
+  static fromString(str) {
+    const buffer = [];
+    for (let i = 0; i < str.length; i++) {
+      buffer[i] = str.charCodeAt(i);
+    }
+    return new BufferReader(buffer);
+  }
+
+  readByte() {
+    const byte = this.buffer[this.curPos];
+    this.curPos++;
+    return byte;
+  }
+
+  // Reads until null termination.
+  readString() {
+    let nullTerminated = false;
+    let curStr = '';
+    while (!nullTerminated) {
+      const char = this.readByte();
+      if (char === 0x00 || char == null) {
+        nullTerminated = true;
+      } else {
+        curStr += String.fromCharCode(char);
+      }
+    }
+    return curStr;
   }
 
   // read little endian of n size bytes.
@@ -87,8 +147,22 @@ export class Buffer {
   }
 }
 
+export function bitPack(a, b, bBitWidth, totalLength) {
+  assert(a >= 0, '[b] only unsigned numbers can be bit-packed.');
+  assert(b >= 0, '[a] only unsigned numbers can be bit-packed.');
 
-// const buffer = new Buffer();
+  const amountToShiftA = totalLength - bBitWidth;
+  return a << amountToShiftA | b;
+}
+
+export function unBitPack(num, bBitWidth, totalLength) {
+  const amountToShiftA = totalLength - bBitWidth;
+  const aBitMask = 2 ** amountToShiftA - 1;
+  const bBitMask = 2 ** bBitWidth - 1;
+  return [(num >> amountToShiftA & bBitMask), num & aBitMask];
+}
+
+// const buffer = new Buf fer();
 // const t1 = -2147483647;
 // const t2 = 2147483647;
 // buffer.writeInt(t1, 4);
