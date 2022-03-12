@@ -249,7 +249,7 @@ export class Game {
 
   broadcastPlayerJoin(player) {
     const buffer = new BufferWriter();
-    buffer.writeInt(PacketIdentifiers.get('Player Join'), 1);
+    buffer.writeInt(PacketIdentifiers.get('PlayerJoin'), 1);
     player.generateDTO(buffer);
     this.broadcastBufferToClients(buffer);
   }
@@ -261,10 +261,16 @@ export class Game {
    */
   generateDTO(buffer) {
     buffer.writeInt(PacketIdentifiers.get('Synchronise'), 1);
-    buffer.writeInt(bitPack(this.roomSize, this.hangmanState, 4, 8), 1);
-    buffer.writeString(this.code);
+    buffer.writeInt(bitPack(this.hangmanState, this.players.size, 5, 8), 1);
     this.generateWordStateDTO(buffer);
-    this.generatePlayersDTO(buffer);
+    for (const char of this.guessedCharacters.keys()) {
+      buffer.writeChar(char);
+    }
+    buffer.writeInt(0x00, 1); // null terminate the array
+    for (const player of this.players.values()) {
+      player.generateDTO(buffer);
+    }
+    buffer.writeInt(this.currentGuesserId, 1);
   }
 
   /**
@@ -273,13 +279,6 @@ export class Game {
    */
   generateHangmanDTO(buffer) {
     buffer.writeInt(this.hangmanState, 1);
-  }
-
-  generatePlayersDTO(buffer) {
-    buffer.writeInt(this.players.size, 1);
-    for (const player of this.players.values()) {
-      player.generateDTO(buffer);
-    }
   }
 
   generateWordStateDTO(buffer) {

@@ -15,8 +15,6 @@ let shouldRenderOnNextSynchronise = false;
 let currentWordState = '';
 let currentGuesserId = 0;
 let currentHangmanState = 0;
-// eslint-disable-next-line no-unused-vars
-let currentRoomSize = 0;
 
 const guessedCharacters = [];
 const players = new Map();
@@ -51,16 +49,24 @@ const messageHandlers = {
     const player = Player.fromBuffer(data);
     currentUserName = player.name;
     currentId = player.id;
+    players.set(currentId, new Player(currentUserName, currentId));
   },
 
   Synchronise: function (data) {
-    [currentRoomSize, currentHangmanState] = unBitPack(data.readInt(1), 4, 8);
-    data.readString();
+    let playerCount = 0;
+    [currentHangmanState, playerCount] = unBitPack(data.readInt(1), 5, 8);
+
     currentWordState = data.readString();
-    const playerLength = data.readInt(1);
-    for (let idx = 0; idx < playerLength; idx++) {
+    let curChar = data.readChar();
+    while (curChar !== String.fromCharCode(0x00) && curChar !== undefined) {
+      guessedCharacters.push(curChar);
+      curChar = data.readChar();
+    }
+
+    for (let idx = 0; idx < playerCount; idx++) {
       const id = data.readInt(1);
       const name = data.readString();
+      console.log('adding player: ', id, name);
       players.set(id, new Player(name, id));
     }
 
@@ -76,6 +82,7 @@ const messageHandlers = {
 
   WordState: function (data) {
     currentWordState = data.readString();
+    console.log(currentWordState);
     setWordToGuess(currentWordState);
   },
 
@@ -89,6 +96,7 @@ const messageHandlers = {
 
   Guesser: function (data) {
     currentGuesserId = data.readInt(1);
+    console.log(currentGuesserId);
     if (currentGuesserId !== currentId) {
       setCoverKeyboardText(`${players.get(currentGuesserId).name} is currently guessing`);
     } else {
@@ -106,6 +114,7 @@ const messageHandlers = {
 
   PlayerJoin: function (data) {
     const player = Player.fromBuffer(data);
+    console.log('player joined!', player.name);
     players.set(player.id, player);
     handleGuesserChange();
   },
@@ -119,7 +128,6 @@ export function connectToGameWs(roomCode) {
     const readBuffer = BufferReader.fromString(ev.data);
     const packetId = readBuffer.readInt(1);
     const messageName = getPacketName(packetId);
-    console.log(packetId);
     if (messageName === undefined) {
       console.log(`Error handling packet: ${ev.data}`);
       return;
