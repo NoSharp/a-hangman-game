@@ -25,12 +25,10 @@ Gotten from http://www.mieliestronk.com/corncob_lowercase.txt
 
 
 ## Websocket Structure:
-The website is a SPA (Single Page Application), where the content on the webpage updates when the user joins/creates a room.
-
-A room is wrappper for the Game object which handles the current game state such as hangman status, guesses etc.
-Each game can have n > 0 players, a Player is created when they initiate a connection with the websocket.
-
-The current flow of the websocket:
+Terms:
+    S2C - Sent from the server to the client
+    C2S - Sent from the client to the server
+    A2A - Sent from either the client to the server or server to the client.
 
 S2C - Kick
 
@@ -47,7 +45,7 @@ C2S - Join
 Description: Used to connect to a game.
 ```json
 {
-    gameCode: "GAME_CODE"
+    roomCode: "ROOM_CODE"
 }
 ```
 
@@ -76,8 +74,8 @@ Description: Used to network the status of a guess, to reduce data duplication, 
 
 ```json
 {
-    guessedCharacter: "char",
-    found: false
+    guessedCharacter: "c",
+    correct: false
 }
 ```
 
@@ -121,7 +119,7 @@ Description: tells the client who's currently guessing.
 }
 ```
 
-S2C - Deep Synchronise
+S2C - Synchronise
 
 Description: Used to fully scynhronise the client with the current game state, this will contain:
 - previously guessed characters
