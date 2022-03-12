@@ -30,6 +30,19 @@ Terms:
 - C2S - Sent from the client to the server
 - A2A - Sent from either the client to the server or server to the client.
 
+### Byte Buffer
+The byte buffer is a non-standard method of serializing messages across
+the websocket. 
+
+The goal of this approach is to reduce wasted data being networked (like key name etc.),
+and improve speed of data serialization, as there is a standard packet structure and layout as defined below. 
+
+The library (as found in `shared/buffer.js`) doesn't need to have handling for a lot of data types
+so they're not implemented.
+
+Each integer has a given maximum length (in bytes) and is encoded in little-endian(least significant number first). 
+
+
 S2C - Kick
 
 Description: Used to display a message to the user once they've been kicked.
