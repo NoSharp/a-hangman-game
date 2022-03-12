@@ -15,7 +15,7 @@ export function onMessage(ws, buffer) {
 
   const game = findGameByRoomCode(roomCode);
 
-  if (game.players.length >= game.roomSize) {
+  if (game.players.size() >= game.roomSize) {
     kickWebsocket(ws, 'GAME_TOO_MANY_PLAYERS');
     return;
   }
