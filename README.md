@@ -26,9 +26,9 @@ Gotten from http://www.mieliestronk.com/corncob_lowercase.txt
 
 ## Websocket Structure:
 Terms:
-    S2C - Sent from the server to the client
-    C2S - Sent from the client to the server
-    A2A - Sent from either the client to the server or server to the client.
+- S2C - Sent from the server to the client
+- C2S - Sent from the client to the server
+- A2A - Sent from either the client to the server or server to the client.
 
 S2C - Kick
 
