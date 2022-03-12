@@ -77,15 +77,15 @@ export class Game {
     const player = new Player(ws, name, this.players.size);
     this.players.set(player.id, player);
     player.generateDTO();
-    this.broadcastPlayerJoin();
-    if (this.players.length >= this.roomSize) {
+    this.broadcastPlayerJoin(player);
+    if (this.players.size >= this.roomSize) {
       this.startGame();
     }
     return player;
   }
 
   startGame() {
-    this.setCurrentGuesserId(0);
+    this.incrementGuesser();
   }
 
   canGuessLetter(letter) {
@@ -98,13 +98,13 @@ export class Game {
 
   setCurrentGuesserId(id) {
     this.currentGuesserId = id;
-    const player = this.players.get(this.currentGuesserId);
     this.broadcastPayloadToClients('Guesser', {
-      id: player.id,
+      id: this.currentGuesserId,
     });
   }
 
   incrementGuesser() {
+    console.log('Increment Guessed!');
     const player = this.playerIterator.next().value;
     // reset our iterator.
     if (player == null) {
@@ -112,6 +112,8 @@ export class Game {
       this.incrementGuesser();
       return;
     }
+
+    console.log('Increment Guessed!', player.id);
     this.setCurrentGuesserId(player.id);
   }
 
@@ -167,7 +169,7 @@ export class Game {
       winningTeam: this.didSetterWin() ? 'CPU' : 'PLAYERS',
     });
 
-    for (const player of this.players) {
+    for (const player of this.players.values()) {
       player.closeWebSocket();
     }
 
@@ -238,8 +240,8 @@ export class Game {
     this.broadcastPayloadToClients('WordState', this.generateWordStateDTO());
   }
 
-  broadcastPlayerJoin() {
-    this.broadcastPayloadToClients('PlayerJoin', this.generatePlayersDTO());
+  broadcastPlayerJoin(player) {
+    this.broadcastPayloadToClients('PlayerJoin', player.generateDTO());
   }
 
   /**
@@ -268,11 +270,10 @@ export class Game {
   }
 
   generatePlayersDTO() {
-    const players = {};
+    const players = [];
 
-    for (const [id, player] of this.players.entries()) {
-      console.log(player);
-      players[id] = player.generateDTO();
+    for (const player of this.players.values()) {
+      players.push(player.generateDTO());
     }
 
     return players;
