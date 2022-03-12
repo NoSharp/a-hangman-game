@@ -1,6 +1,8 @@
 import { displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart, showKeyboard } from '../dom/game.mjs';
 import { Role, getNameFromRole, Player } from '../game_logic/game.mjs';
 
+//TODO: FIX, store player info correcty
+// as it's now ID based, plus this entire storage mechanism is messy.
 let ws;
 
 let shouldRenderOnNextGameInfo = false;
@@ -10,7 +12,7 @@ let currentGameInfo = {};
 let players = {};
 
 let currentUserName = '';
-
+let currentId = 0;
 function getCurrentWordState() {
   return currentGameInfo?.wordState?.currentWordState ?? '';
 }
@@ -65,10 +67,11 @@ const messageHandlers = {
     shouldRenderOnNextGameInfo = true;
     // TODO: Bug regression here. We need to set a name from the server.
     currentUserName = data.name;
+    currentId = data.id;
     console.log(currentUserName);
   },
 
-  GameInfo: function (data) {
+  Synchronise: function (data) {
     currentGameInfo = data;
 
     if (shouldRenderOnNextGameInfo) {
@@ -87,11 +90,18 @@ const messageHandlers = {
     updateWordState();
   },
 
-  GuessStatus: function (data) {
+  Guess: function (data) {
     // TODO: Actually do something here.
-    console.log(data.correct);
+    setCharactersGuessed(data.guessedCharacter);
   },
-
+  Guesser: function (data) {
+    // TODO: Actually do something here.
+    if (data.id !== currentId) {
+      setCoverKeyboardText(`${data.name} is currently guessing`);
+    } else {
+      showKeyboard();
+    }
+  },
   GameComplete: function (data) {
     setCoverKeyboardText(`${getNameFromRole(data.winningTeam)} Won the game`);
   },
@@ -107,12 +117,6 @@ const messageHandlers = {
   },
 
   PlayerData: function (data) {
-    if (players[data.name] === undefined) {
-      players[data.name] = Player.fromDTO(data);
-    } else {
-      players[data.name].setRole(data.role);
-    }
-
     if (data.name !== currentUserName && data.role === Role.GUESSING) {
       setCoverKeyboardText(`${data.name} is currently guessing`);
     } else {
@@ -136,6 +140,7 @@ export function connectToGameWs(roomCode) {
     const messageData = JSON.parse(ev.data);
     const messageName = messageData.message;
 
+    console.log(messageData);
     if (messageName === undefined) {
       console.log(`Error handling packet: ${ev.data}`);
       return;
@@ -145,7 +150,6 @@ export function connectToGameWs(roomCode) {
       console.log(`No handler defined for: ${messageName}`);
       return;
     }
-    console.log(messageData.payload);
     messageHandlers[messageName](messageData.payload);
   };
 
@@ -154,7 +158,6 @@ export function connectToGameWs(roomCode) {
       message: 'Join',
       payload: {
         roomCode,
-        playerName: currentUserName,
       },
     }));
   };
