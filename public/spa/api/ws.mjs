@@ -36,6 +36,11 @@ function handleGuesserChange() {
   }
 }
 
+function deserializePlayers(playerDTOs) {
+  for (const playerDTO of playerDTOs) {
+    players.set(playerDTO.id, Player.fromDTO(playerDTO));
+  }
+}
 
 const messageHandlers = {
 
@@ -51,7 +56,7 @@ const messageHandlers = {
       displayGameSection();
       shouldRenderOnNextSynchronise = false;
     }
-
+    deserializePlayers(data.players);
     setWordToGuess(currentWordState);
     updateWordState();
     updateHangmanState();
@@ -60,6 +65,7 @@ const messageHandlers = {
 
   WordState: function (data) {
     currentWordState = data.currentWordState;
+    setWordToGuess(currentWordState);
   },
 
   Guess: function (data) {
@@ -70,8 +76,8 @@ const messageHandlers = {
 
   Guesser: function (data) {
     currentGuesserId = data.id;
-    if (data.id !== currentId) {
-      setCoverKeyboardText(`${data.name} is currently guessing`);
+    if (currentGuesserId !== currentId) {
+      setCoverKeyboardText(`${players.get(currentGuesserId).name} is currently guessing`);
     } else {
       showKeyboard();
     }
