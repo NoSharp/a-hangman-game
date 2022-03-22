@@ -254,6 +254,10 @@ Size When Networked(where all values are either empty or as small as possible):
 - buffer 4b
 - JSON 95b
 
+S2C - Game Started
+
+Description: Used to signify to the client that the game has begun.
+
 ## Data transfer objects (DTO's)
 
 ### Player
