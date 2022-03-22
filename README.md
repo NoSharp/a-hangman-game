@@ -267,7 +267,6 @@ Description: Used to signify to the client that the game has begun.
 
 - `name`
     - The name of the player.
-    - It's a 32 character long string.
 
 
 ## API Endpoints
@@ -283,6 +282,7 @@ Description: Used to signify to the client that the game has begun.
 
 - POST /game/
     - Used to create a game.
+    - Player count must be less than 24 players.
     - Request:
 ```json
 

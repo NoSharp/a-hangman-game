@@ -28,6 +28,8 @@ const postSchemaValidator = ajv.compile({
   properties: {
     playerCount: {
       type: 'number',
+      maximum: 24,
+      minimum: 1,
     },
     roomCode: {
       type: 'string',
