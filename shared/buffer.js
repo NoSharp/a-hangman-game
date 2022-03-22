@@ -5,7 +5,6 @@
  * I never deal with signed numbers so we only have utilities
  * for dealing with unsigned numbers.
  */
-
 function assert(condition, errMessage) {
   if (!condition) {
     throw errMessage;
@@ -18,27 +17,6 @@ export class BufferWriter {
     this.curPos = 0;
   }
 
-  readByte() {
-    const byte = this.buffer[this.curPos];
-    this.curPos++;
-    return byte;
-  }
-
-  // Reads until null termination.
-  readString() {
-    let nullTerminated = false;
-    let curStr = '';
-    while (!nullTerminated) {
-      const char = this.readByte();
-      if (char === 0x00 || char == null) {
-        nullTerminated = true;
-      } else {
-        curStr += String.fromCharCode(char);
-      }
-    }
-    return curStr;
-  }
-
   writeChar(char) {
     this.writeInt(char.charCodeAt(0), 1);
   }
@@ -46,11 +24,15 @@ export class BufferWriter {
   // Write until null termination
   // each string is ascii because we don't need to deal with non-unicode characters.
   writeString(str) {
-    for (const char of str) {
-      this.writeChar(char);
+    let strLength = str.length;
+
+    for(let i = 0; i < strLength; i++){
+      this.writeChar(str[i]);
     }
+
     this.buffer.push(0x00);
   }
+
 
   writeBoolean(bool) {
     this.writeInt(bool ? 1 : 0, 1);
@@ -160,14 +142,55 @@ export function unBitPack(num, bBitWidth, totalLength) {
   return [(num >> amountToShiftA & bBitMask), num & aBitMask];
 }
 
-// const buffer = new Buf fer();
-// const t1 = -2147483647;
-// const t2 = 2147483647;
-// buffer.writeInt(t1, 4);
-// buffer.writeInt(t2, 4);
-// buffer.writeString('HELLO WORLD!');
-// const num1 = buffer.readInt(4);
-// const num2 = buffer.readInt(4);
-// console.log(buffer.readString());
-// console.log(t2, num2);
-// console.log(num1, num2, num1 === t1, num2 === t2);
+// Benchmarking serialization.
+// JSON most likely will be more efficient than the results of the benchmark
+// in practice due  to how v8 handles objects. JSON.parse was used to force
+// javascript to re-compile the object and avoid any compiler optimisations.
+
+/*
+let beforeDate = Date.now();
+let b;
+for(let i = 0; i < 100000; i++){
+  let jsonStr = JSON.parse(`{
+    "hangmanState": 7,
+    "guessedCharacters": ["a","b","c"],
+    "currentWordState": "FL OD",
+    "players": [
+      {
+        "id": 1,
+        "name": "testtt"
+      },
+      {
+        "id": 2,
+        "name": "testtt"
+      },
+      {
+        "id": 3,
+        "name": "testtt"
+      }
+    ],
+    "currentGuesser": 1
+  }`);
+  b = JSON.stringify(jsonStr);
+}
+console.log(`JSON stringify: ${(Date.now() - beforeDate)}ms Size: ${b.length}b`)
+
+let oldB = b;
+beforeDate = Date.now();
+
+for(let i = 0; i < 100000; i++){
+  let buffer = new BufferWriter();
+  buffer.writeInt(bitPack(7, 3, 5, 8), 1);
+  buffer.writeString('abc');
+  buffer.writeString('FL OD');
+  for(let i = 0; i < 3; i++){
+    buffer.writeInt(i+1, 1);
+    buffer.writeString("testtt");
+  }
+  buffer.writeInt(1,1);
+  b = buffer.getBufferAsString();
+  
+}
+console.log(`buffer: ${(Date.now() - beforeDate)}ms Size: ${b.length}b`);
+console.log(`Buffer is ${ 100 - Math.floor((b.length/oldB.length) * 100) }% less than JSON`);
+*/
