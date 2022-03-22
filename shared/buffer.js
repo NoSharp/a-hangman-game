@@ -24,9 +24,9 @@ export class BufferWriter {
   // Write until null termination
   // each string is ascii because we don't need to deal with non-unicode characters.
   writeString(str) {
-    let strLength = str.length;
+    const strLength = str.length;
 
-    for(let i = 0; i < strLength; i++){
+    for (let i = 0; i < strLength; i++) {
       this.writeChar(str[i]);
     }
 
@@ -189,7 +189,7 @@ for(let i = 0; i < 100000; i++){
   }
   buffer.writeInt(1,1);
   b = buffer.getBufferAsString();
-  
+
 }
 console.log(`buffer: ${(Date.now() - beforeDate)}ms Size: ${b.length}b`);
 console.log(`Buffer is ${ 100 - Math.floor((b.length/oldB.length) * 100) }% less than JSON`);
