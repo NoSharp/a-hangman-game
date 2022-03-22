@@ -6,11 +6,6 @@ export class Player {
     this.socket.setPlayerInstance(this);
   }
 
-  sendPayload(name, payload) {
-    this.socket.sendResponse(name, payload);
-  }
-
-
   getName() {
     return this.name;
   }
@@ -23,10 +18,12 @@ export class Player {
     this.socket.close();
   }
 
-  generateDTO() {
-    return {
-      id: this.id,
-      name: this.name,
-    };
+  sendBuffer(buffer) {
+    this.socket.sendBuffer(buffer);
+  }
+
+  generateDTO(buffer) {
+    buffer.writeInt(this.id, 1);
+    buffer.writeString(this.name);
   }
 }

@@ -4,8 +4,10 @@ export class Player {
     this.id = id;
   }
 
-  static fromDTO(playerObj) {
-    const player = new Player(playerObj.name, playerObj.id);
+  static fromBuffer(buffer) {
+    const id = buffer.readInt(1);
+    const name = buffer.readString();
+    const player = new Player(name, id);
     return player;
   }
 }

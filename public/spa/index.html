@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div class="home-container">
+    <div class="home-container" style="display:none">
         <div class="game-modal">
             <div class="game-modal-title">
                 <h1>Enter or Create a Room</h1>
@@ -43,21 +43,26 @@
         </div>
     </div>
 
-    <div class="game-container" style="display:none">
+    <div class="game-container" >
         <div class="hangman-container">
             <!-- TODO: Scaling on wide-ish mobile devices looks odd. -->
             <!-- TODO: Make this HALF of the hangman container height so we can fit player info beneath. -->
-            <svg width="100%" height="100%" class="hangman-display">
-                <rect x="5%" y="50%" width="50%" height="1%" id="hangman-1" style="display: none" />
-                <rect x="5%" y="5%" width="2%" height="45%" id="hangman-2" style="display: none" />
-                <rect x="5%" y="5%" width="20%" height="1%" id="hangman-3" style="display: none" />
-                <rect x="24%" y="5%" width="2%" height="6%" id="hangman-4" style="display: none" />
-                <circle cx="25%" cy="15%" r="5%" stroke="black" stroke-width="1%" fill="none" id="hangman-5" style="display: none" />
-                <rect x="24%" y="19%" width="2%" height="15%" id="hangman-6" style="display: none" />
-                <line x1="25%" y1="34%" x2="30%" y2="40%" id="hangman-7" style="display: none" />
-                <line x1="25%" y1="34%" x2="20%" y2="40%" id="hangman-8" style="display: none" />
-                <line x1="25%" y1="25%" x2="30%" y2="30%" id="hangman-9" style="display: none" />
-                <line x1="25%" y1="25%" x2="20%" y2="30%" id="hangman-10" style="display: none" />
+            <svg width="50%" height="50%" class="hangman-display">
+                <rect x="5%" y="97.5%" width="50%" height=.75vh id="hangman-1" style="display: none1" />
+                <rect x="5%" y="5%" width=.75vh height="95%" id="hangman-2" style="display: none1" />
+                <rect x="5%" y="5%" width="50%" height=.75vh id="hangman-3" style="display: none1" />
+                <rect x="50%" y="5%" width=.75vh height="15%" id="hangman-4" style="display: none1" />
+                
+                <circle cx="51%" cy="25%" r="5%" stroke="black" stroke-width="1%" fill="none" id="hangman-5" style="display: none1" />
+                <!-- Body -->
+                <rect x="50%" y="30%" width=.5vh height="35%" id="hangman-6" style="display: none1" />
+                
+                <!-- arms -->
+                <line x1="51%" y1="45%" x2="60%" y2="50%" id="hangman-7" style="display: none1" />
+                <line x1="51%" y1="45%" x2="40%" y2="50%" id="hangman-8" style="display: none1" />
+                <!-- legs -->
+                <line x1="51%" y1="65%" x2="60%" y2="80%" id="hangman-9" style="display: none1" />
+                <line x1="51%" y1="65%" x2="40%" y2="80%" id="hangman-10" style="display: none1" />
             </svg>
         </div>
         <div class="keyboard-word-container">
@@ -79,7 +84,6 @@
     <script src="game_logic/game.mjs" type="module"></script>
     <script src="dom/game.mjs" type="module"></script>
     <script src="dom/gameCreation.mjs" type="module"></script>
-    <script src="dom/domMediator.mjs" type="module"></script>
     <script src="api/rest.mjs" type="module"></script>
     <script src="api/ws.mjs" type="module"></script>
 
