@@ -15,6 +15,11 @@ export function onMessage(ws, buffer) {
 
   const game = findGameByRoomCode(roomCode);
 
+  if (game.gameStarted) {
+    kickWebsocket(ws, 'GAME_ALREADY_STARTED');
+    return;
+  }
+
   if (game.players.size >= game.roomSize) {
     kickWebsocket(ws, 'GAME_TOO_MANY_PLAYERS');
     return;
@@ -23,6 +28,8 @@ export function onMessage(ws, buffer) {
   ws.setRoomCode(roomCode);
 
   const playerName = getRandomWord();
+
+
   const player = game.addPlayer(ws, playerName);
 
   // Send an accepted response

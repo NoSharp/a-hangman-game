@@ -11,6 +11,7 @@ export const PacketIdentifiers = new Map([
   ['GameComplete', 9],
   ['MakeGuess', 10],
   ['Join', 11],
+  ['GameStarted', 12],
 ]);
 
 export function getPacketName(num) {

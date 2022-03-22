@@ -1,5 +1,4 @@
 // 🎷🐛
-
 import { bitPack, BufferWriter } from '../../shared/buffer.js';
 import { PacketIdentifiers } from '../../shared/netIdentifiers.js';
 import { TeamIdentifiers } from '../../shared/teamIdentifiers.js';
@@ -63,6 +62,7 @@ export class Game {
     this.hangmanState = 0;
 
     this.currentGuesserId = 0;
+    this.gameStarted = false;
     this.players = new Map();
     this.playerIterator = this.players.values();
   }
@@ -80,6 +80,7 @@ export class Game {
     const player = new Player(ws, name, this.players.size);
     this.players.set(player.id, player);
     this.broadcastPlayerJoin(player);
+    console.log(this.players.size, this.roomSize);
     if (this.players.size >= this.roomSize) {
       this.startGame();
     }
@@ -87,6 +88,8 @@ export class Game {
   }
 
   startGame() {
+    this.gameStarted = true;
+    this.broadcastGameStart();
     this.incrementGuesser();
   }
 
@@ -251,6 +254,12 @@ export class Game {
     const buffer = new BufferWriter();
     buffer.writeInt(PacketIdentifiers.get('PlayerJoin'), 1);
     player.generateDTO(buffer);
+    this.broadcastBufferToClients(buffer);
+  }
+
+  broadcastGameStart() {
+    const buffer = new BufferWriter();
+    buffer.writeInt(PacketIdentifiers.get('GameStarted'), 1);
     this.broadcastBufferToClients(buffer);
   }
 

@@ -15,6 +15,7 @@ let shouldRenderOnNextSynchronise = false;
 let currentWordState = '';
 let currentGuesserId = 0;
 let currentHangmanState = 0;
+let gameStarted = false;
 
 const guessedCharacters = [];
 const players = new Map();
@@ -35,6 +36,7 @@ function updateHangmanState(hangmanState) {
 }
 
 function handleGuesserChange() {
+  if (!gameStarted) return;
   if (currentId !== currentGuesserId) {
     setCoverKeyboardText(`${players.get(currentGuesserId).name} is currently guessing`);
   } else {
@@ -97,11 +99,7 @@ const messageHandlers = {
   Guesser: function (data) {
     currentGuesserId = data.readInt(1);
     console.log(currentGuesserId);
-    if (currentGuesserId !== currentId) {
-      setCoverKeyboardText(`${players.get(currentGuesserId).name} is currently guessing`);
-    } else {
-      showKeyboard();
-    }
+    handleGuesserChange();
   },
 
   GameComplete: function (data) {
@@ -118,11 +116,19 @@ const messageHandlers = {
     players.set(player.id, player);
     handleGuesserChange();
   },
+
+  GameStarted: function () {
+    console.log('game started?');
+    gameStarted = true;
+    handleGuesserChange();
+  },
 };
 
 
 export function connectToGameWs(roomCode) {
   ws = new WebSocket(`${location.href.replace('http', 'ws')}`);
+
+  setCoverKeyboardText('Waiting for game to start');
 
   ws.onmessage = (ev) => {
     const readBuffer = BufferReader.fromString(ev.data);
