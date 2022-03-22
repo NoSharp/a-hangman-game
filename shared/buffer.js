@@ -59,8 +59,6 @@ export class BufferWriter {
   // Write it in little endian format.
   writeInt(num, byteSize) {
     let lastMaxValue = 0;
-    // we get the 2's complement form of the number
-    num = num >>> 0;
     for (let byteIdx = 0; byteIdx < byteSize; byteIdx++) {
       // get our max value for this amount of bits (-1 because we include 0).
       const maxValue = 2 ** ((byteIdx + 1) * 8) - 1;
@@ -139,7 +137,7 @@ export class BufferReader {
       const byte = this.buffer[this.curPos];
       // bit shift left our byte to convert back from little endian format.
       // use Or= to combine it back into the initial number.
-      // Javascript deals with the two's complement for us.
+      // Javascript Negative numbers are two's complement anyway.
       curNumber |= byte << (byteIdx * 8);
       this.curPos++;
     }
