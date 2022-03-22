@@ -33,3 +33,12 @@ button{
     z-index: 12;
     cursor: pointer;
 }
+
+
+@media screen and (max-height: 600px) {
+    .hangman-display {
+        padding-left: 25%;
+        padding-right: 25%;
+        position: relative;
+    }
+}
