@@ -128,6 +128,7 @@ export function connectToGameWs(roomCode) {
     const readBuffer = BufferReader.fromString(ev.data);
     const packetId = readBuffer.readInt(1);
     const messageName = getPacketName(packetId);
+    // console.log(`RECV: ${packetId}(${messageName})`);
     if (messageName === undefined) {
       console.log(`Error handling packet: ${ev.data}`);
       return;

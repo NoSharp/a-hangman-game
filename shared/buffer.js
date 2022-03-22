@@ -1,3 +1,10 @@
+
+function assert(condition, errMessage) {
+  if (!condition) {
+    throw errMessage;
+  }
+}
+
 /**
  * Used to manipulate an array of bytes.
  * Utility is trimmed down and only does what we need
@@ -5,12 +12,6 @@
  * I never deal with signed numbers so we only have utilities
  * for dealing with unsigned numbers.
  */
-function assert(condition, errMessage) {
-  if (!condition) {
-    throw errMessage;
-  }
-}
-
 export class BufferWriter {
   constructor() {
     this.buffer = [];
@@ -41,6 +42,7 @@ export class BufferWriter {
   // Write it in little endian format.
   writeInt(num, byteSize) {
     let lastMaxValue = 0;
+    num = num >>> 0;
     for (let byteIdx = 0; byteIdx < byteSize; byteIdx++) {
       // get our max value for this amount of bits (-1 because we include 0).
       const maxValue = 2 ** ((byteIdx + 1) * 8) - 1;
