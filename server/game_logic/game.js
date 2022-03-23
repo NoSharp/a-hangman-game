@@ -106,7 +106,7 @@ export class Game {
   setCurrentGuesserId(id) {
     this.currentGuesserId = id;
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('Guesser'), 1);
+    buffer.writeInt(getPacketId('S2CGuesser'), 1);
     buffer.writeInt(this.currentGuesserId, 1);
     this.broadcastBufferToClients(buffer);
   }
@@ -225,14 +225,14 @@ export class Game {
 
   broadcastGameComplete(winningTeam) {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('GameComplete'), 1);
+    buffer.writeInt(getPacketId('S2CGameComplete'), 1);
     buffer.writeInt(TeamIdentifiers.get(winningTeam), 1);
     this.broadcastBufferToClients(buffer);
   }
 
   broadcastGuess(char, wasGuessCorrect) {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('Guess'), 1);
+    buffer.writeInt(getPacketId('S2CGuess'), 1);
     buffer.writeChar(char);
     buffer.writeBoolean(wasGuessCorrect);
     this.broadcastBufferToClients(buffer);
@@ -240,28 +240,28 @@ export class Game {
 
   broadcastHangmanState() {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('HangmanState'), 1);
+    buffer.writeInt(getPacketId('S2CHangmanState'), 1);
     this.generateHangmanDTO(buffer);
     this.broadcastBufferToClients(buffer);
   }
 
   broadcastWordState() {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('WordState'), 1);
+    buffer.writeInt(getPacketId('S2CWordState'), 1);
     this.generateWordStateDTO(buffer);
     this.broadcastBufferToClients(buffer);
   }
 
   broadcastPlayerJoin(player) {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('PlayerJoin'), 1);
+    buffer.writeInt(getPacketId('S2CPlayerJoin'), 1);
     player.generateDTO(buffer);
     this.broadcastBufferToClients(buffer);
   }
 
   broadcastGameStart() {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('GameStarted'), 1);
+    buffer.writeInt(getPacketId('S2CGameStarted'), 1);
     this.broadcastBufferToClients(buffer);
   }
 
@@ -271,7 +271,7 @@ export class Game {
    * @returns {Object} The payload to send to the client
    */
   generateDTO(buffer) {
-    buffer.writeInt(getPacketId('Synchronise'), 1);
+    buffer.writeInt(getPacketId('S2CSynchronise'), 1);
     buffer.writeInt(bitPack(this.hangmanState, this.players.size, 5, 8), 1);
     this.generateWordStateDTO(buffer);
     for (const char of this.guessedCharacters.keys()) {

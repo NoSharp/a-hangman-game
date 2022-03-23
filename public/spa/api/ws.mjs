@@ -46,7 +46,7 @@ function handleGuesserChange() {
 
 const messageHandlers = {
 
-  Accepted: function (data) {
+  S2CAccepted: function (data) {
     shouldRenderOnNextSynchronise = true;
     const player = Player.fromBuffer(data);
     currentUserName = player.name;
@@ -54,7 +54,7 @@ const messageHandlers = {
     players.set(currentId, new Player(currentUserName, currentId));
   },
 
-  Synchronise: function (data) {
+  S2CSynchronise: function (data) {
     let playerCount = 0;
     [currentHangmanState, playerCount] = unBitPack(data.readInt(1), 5, 8);
 
@@ -82,13 +82,13 @@ const messageHandlers = {
     handleGuesserChange();
   },
 
-  WordState: function (data) {
+  S2CWordState: function (data) {
     currentWordState = data.readString();
     console.log(currentWordState);
     setWordToGuess(currentWordState);
   },
 
-  Guess: function (data) {
+  S2CGuess: function (data) {
     const char = data.readChar();
     // was guess correct?
     data.readBoolean();
@@ -96,29 +96,28 @@ const messageHandlers = {
     setCharactersGuessed(char);
   },
 
-  Guesser: function (data) {
+  S2CGuesser: function (data) {
     currentGuesserId = data.readInt(1);
     console.log(currentGuesserId);
     handleGuesserChange();
   },
 
-  GameComplete: function (data) {
+  S2CGameComplete: function (data) {
     setCoverKeyboardText(`${getTeamName(data.readInt(1))} Won the game`);
   },
 
-  HangmanState: function (data) {
+  S2CHangmanState: function (data) {
     updateHangmanState(data.readInt(1));
   },
 
-  PlayerJoin: function (data) {
+  S2CPlayerJoin: function (data) {
     const player = Player.fromBuffer(data);
     console.log('player joined!', player.name);
     players.set(player.id, player);
     handleGuesserChange();
   },
 
-  GameStarted: function () {
-    console.log('game started?');
+  S2CGameStarted: function () {
     gameStarted = true;
     handleGuesserChange();
   },
@@ -149,7 +148,7 @@ export function connectToGameWs(roomCode) {
 
   ws.onopen = () => {
     const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('Join'), 1);
+    buffer.writeInt(getPacketId('C2SJoin'), 1);
     buffer.writeString(roomCode);
     ws.send(buffer.getBufferAsString());
   };
@@ -161,7 +160,7 @@ export function connectToGameWs(roomCode) {
 
 export function makeGuess(char) {
   const buffer = new BufferWriter();
-  buffer.writeInt(getPacketId('MakeGuess'), 1);
+  buffer.writeInt(getPacketId('C2SMakeGuess'), 1);
   buffer.writeChar(char);
   ws.send(buffer.getBufferAsString());
 }

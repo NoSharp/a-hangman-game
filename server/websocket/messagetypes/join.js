@@ -4,7 +4,7 @@ import { getRandomWord } from '../../utils/wordList.js';
 import { getPacketId } from '../../../shared/netIdentifiers.js';
 import { kickWebsocket } from '../websocket.js';
 
-export const messageName = 'Join';
+export const messageName = 'C2SJoin';
 
 export function onMessage(ws, buffer) {
   const roomCode = buffer.readString();
@@ -34,7 +34,7 @@ export function onMessage(ws, buffer) {
 
   // Send an accepted response
   let bfWriter = new BufferWriter();
-  bfWriter.writeInt(getPacketId('Accepted'), 1);
+  bfWriter.writeInt(getPacketId('S2CAccepted'), 1);
   player.generateDTO(bfWriter);
   ws.sendBuffer(bfWriter);
 

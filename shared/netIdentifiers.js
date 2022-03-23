@@ -6,13 +6,13 @@ export const PacketIdentifiers = [
   'C2SJoin',
   'S2CAccepted',
   'S2CWordState',
-  'C2SGuess',
+  'S2CGuess',
   'S2CHangmanState',
   'S2CPlayerJoin',
   'S2CGuesser',
   'S2CSynchronise',
   'S2CGameComplete',
-  'S2CMakeGuess',
+  'C2SMakeGuess',
   'S2CGameStarted',
 ];
 

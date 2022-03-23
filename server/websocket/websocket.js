@@ -43,7 +43,7 @@ function initiateWebSocket(ws) {
 
 export function kickWebsocket(ws, reason) {
   const buffer = new BufferWriter();
-  buffer.writeInt(getPacketId('Kick'), 1);
+  buffer.writeInt(getPacketId('S2CKick'), 1);
   buffer.writeString(reason);
   ws.sendBuffer(buffer);
 }

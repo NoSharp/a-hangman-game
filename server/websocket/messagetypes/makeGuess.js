@@ -1,5 +1,5 @@
 import { findGameByRoomCode } from '../../game_logic/game.js';
-export const messageName = 'MakeGuess';
+export const messageName = 'C2SMakeGuess';
 
 export function onMessage(ws, buffer) {
   const character = buffer.readChar();
