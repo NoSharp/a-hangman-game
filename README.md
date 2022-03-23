@@ -32,7 +32,7 @@ Terms:
 - b (when in context of a unit) - one 8 bit byte.
 
 ### Buffer
-The buffer is a non-standard method of serializing messages across
+The buffer library is a non-standard method of serializing messages across
 the websocket.
 
 This system is inspired by data is networked is done in early source-engine 1 game titles like
@@ -44,7 +44,7 @@ and improve speed of data serialization, as there is a standard packet structure
 The library (as found in `shared/buffer.js`) 
 doesn't need to have handling for a lot of data types so they're not implemented.
 
-Each integer has a given maximum length (in bytes) and is encoded in little-endian(least significant number first).
+Each integer has a given maximum length (in bytes) and is encoded in little-endian(least significant bit first).
 
 **Bit Packing** 
 For lack of a better term, when two numbers get combined
@@ -59,9 +59,9 @@ b = 16 or 10000
 
 output:
 ```
-|111|10000|
- +++ +++++
-  A    B
+|11110000|
+ +++-----
+  A   B
 ```
 The alternative to this is to write two bytes which is far less efficient. 
 
