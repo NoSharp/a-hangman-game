@@ -2,26 +2,30 @@
 // TODO: add inverse of the packet identifer map.
 // TODO: make synchronise part of the acceptance packet.
 // TODO: add some sort of idenfitifer for packet direction.
-export const PacketIdentifiers = new Map([
-  ['Reject', 0],
-  ['Join', 1],
-  ['Accepted', 2],
-  ['WordState', 3],
-  ['Guess', 4],
-  ['HangmanState', 5],
-  ['PlayerJoin', 6],
-  ['Guesser', 7],
-  ['Synchronise', 8],
-  ['GameComplete', 9],
-  ['MakeGuess', 10],
-  ['Join', 11],
-  ['GameStarted', 12],
-]);
+export const PacketIdentifiers = [
+  'C2SJoin',
+  'S2CAccepted',
+  'S2CWordState',
+  'C2SGuess',
+  'S2CHangmanState',
+  'S2CPlayerJoin',
+  'S2CGuesser',
+  'S2CSynchronise',
+  'S2CGameComplete',
+  'S2CMakeGuess',
+  'S2CGameStarted',
+];
+
+export const PacketLookup = new Map();
+
+for (let i = 0; i < PacketIdentifiers.length; i++) {
+  PacketLookup.set(PacketIdentifiers[i], i);
+}
 
 export function getPacketName(num) {
-  for (const [key, value] of PacketIdentifiers.entries()) {
-    if (value === num) {
-      return key;
-    }
-  }
+  return PacketIdentifiers[num];
+}
+
+export function getPacketId(packetName) {
+  return PacketLookup[packetName];
 }

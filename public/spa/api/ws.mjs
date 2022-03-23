@@ -2,7 +2,7 @@
 /* eslint-disable import/no-unresolved */
 
 import { BufferReader, BufferWriter, unBitPack } from '/buffer.js';
-import { getPacketName, PacketIdentifiers } from '/netIdentifiers.js';
+import { getPacketName, getPacketId } from '/netIdentifiers.js';
 import { getTeamName } from '/teamIdentifiers.js';
 
 import { displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart, showKeyboard } from '../dom/game.mjs';
@@ -149,7 +149,7 @@ export function connectToGameWs(roomCode) {
 
   ws.onopen = () => {
     const buffer = new BufferWriter();
-    buffer.writeInt(PacketIdentifiers.get('Join'), 1);
+    buffer.writeInt(getPacketId('Join'), 1);
     buffer.writeString(roomCode);
     ws.send(buffer.getBufferAsString());
   };
@@ -161,7 +161,7 @@ export function connectToGameWs(roomCode) {
 
 export function makeGuess(char) {
   const buffer = new BufferWriter();
-  buffer.writeInt(PacketIdentifiers.get('MakeGuess'), 1);
+  buffer.writeInt(getPacketId('MakeGuess'), 1);
   buffer.writeChar(char);
   ws.send(buffer.getBufferAsString());
 }

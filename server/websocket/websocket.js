@@ -2,7 +2,7 @@ import { WebSocket } from 'ws';
 import { createInvalidPayloadMessage } from './requestValidation.js';
 import { getActioner } from './messageTypes.js';
 import { BufferReader, BufferWriter } from '../../shared/buffer.js';
-import { getPacketName, PacketIdentifiers } from '../../shared/netIdentifiers.js';
+import { getPacketName, getPacketId } from '../../shared/netIdentifiers.js';
 
 /**
  * Handle websocket connection
@@ -43,7 +43,7 @@ function initiateWebSocket(ws) {
 
 export function kickWebsocket(ws, reason) {
   const buffer = new BufferWriter();
-  buffer.writeInt(PacketIdentifiers.get('Kick'), 1);
+  buffer.writeInt(getPacketId('Kick'), 1);
   buffer.writeString(reason);
   ws.sendBuffer(buffer);
 }
