@@ -82,13 +82,13 @@ const messageHandlers = {
     handleGuesserChange();
   },
 
-  S2CWordState: function (data) {
+  S2CWordStateUpdate: function (data) {
     currentWordState = data.readString();
     console.log(currentWordState);
     setWordToGuess(currentWordState);
   },
 
-  S2CGuess: function (data) {
+  S2CGuessMade: function (data) {
     const char = data.readChar();
     // was guess correct?
     data.readBoolean();
@@ -96,28 +96,28 @@ const messageHandlers = {
     setCharactersGuessed(char);
   },
 
-  S2CGuesser: function (data) {
+  S2CGuesserUpdate: function (data) {
     currentGuesserId = data.readInt(1);
     console.log(currentGuesserId);
     handleGuesserChange();
   },
 
-  S2CGameComplete: function (data) {
+  S2COnGameComplete: function (data) {
     setCoverKeyboardText(`${getTeamName(data.readInt(1))} Won the game`);
   },
 
-  S2CHangmanState: function (data) {
+  S2CHangmanStateUpdate: function (data) {
     updateHangmanState(data.readInt(1));
   },
 
-  S2CPlayerJoin: function (data) {
+  S2COnPlayerJoin: function (data) {
     const player = Player.fromBuffer(data);
     console.log('player joined!', player.name);
     players.set(player.id, player);
     handleGuesserChange();
   },
 
-  S2CGameStarted: function () {
+  S2COnGameStarted: function () {
     gameStarted = true;
     handleGuesserChange();
   },

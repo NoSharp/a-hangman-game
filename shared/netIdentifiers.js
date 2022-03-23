@@ -1,19 +1,16 @@
-// TODO: refactor naming convention of the packet identifier.
-// TODO: add inverse of the packet identifer map.
 // TODO: make synchronise part of the acceptance packet.
-// TODO: add some sort of idenfitifer for packet direction.
 export const PacketIdentifiers = [
   'C2SJoin',
   'S2CAccepted',
-  'S2CWordState',
-  'S2CGuess',
-  'S2CHangmanState',
-  'S2CPlayerJoin',
-  'S2CGuesser',
+  'S2CWordStateUpdate',
+  'S2CGuessMade',
+  'S2CHangmanStateUpdate',
+  'S2COnPlayerJoin',
+  'S2CGuesserUpdate',
   'S2CSynchronise',
-  'S2CGameComplete',
+  'S2COnGameComplete',
   'C2SMakeGuess',
-  'S2CGameStarted',
+  'S2COnGameStarted',
 ];
 
 export const PacketLookup = new Map();
