@@ -224,7 +224,10 @@ buffer library
     int (1b) -- the id of the player
 ```
 Size When Networked(where id is 0):
-buffer 1b JSON 8b
+
+buffer 1b 
+
+JSON 8b
 
 S2C - Synchronise
 

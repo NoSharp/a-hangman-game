@@ -7,6 +7,8 @@ import { getCharacterIndexes } from '../utils/stringUtils.js';
 import { getRandomWord } from '../utils/wordList.js';
 import { Player } from './player.js';
 
+
+// TODO: Decouple network handling.
 /**
  * This is a list of key-values, used to represent rooms.
  * The key is a string, the room code.

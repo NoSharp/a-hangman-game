@@ -1,5 +1,9 @@
+// TODO: refactor naming convention of the packet identifier.
+// TODO: add inverse of the packet identifer map.
+// TODO: make synchronise part of the acceptance packet.
+// TODO: add some sort of idenfitifer for packet direction.
 export const PacketIdentifiers = new Map([
-  ['Kick', 0],
+  ['Reject', 0],
   ['Join', 1],
   ['Accepted', 2],
   ['WordState', 3],
