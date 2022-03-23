@@ -30,9 +30,13 @@ Terms:
 - C2S - Sent from the client to the server
 - A2A - Sent from either the client to the server or server to the client.
 - b (when in context of a unit) - one 8 bit byte.
+
 ### Buffer
 The buffer is a non-standard method of serializing messages across
-the websocket. 
+the websocket.
+
+This system is inspired by data is networked is done in early source-engine 1 game titles like
+Half-Life 2 and Garry's Mod.
 
 The goal of this approach is to reduce wasted data being networked (like key name etc.),
 and improve speed of data serialization, as there is a standard packet structure and layout as defined below. 
@@ -44,7 +48,7 @@ Each integer has a given maximum length (in bytes) and is encoded in little-endi
 
 **Bit Packing** 
 For lack of a better term, when two numbers get combined
-into one byte, with a given bit-width, we can take advantage
+into one number, with a given bit-width, we can take advantage
 of this with our predefined layout.
 
 example:
