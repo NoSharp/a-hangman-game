@@ -14,7 +14,7 @@ function assert(condition, errMessage) {
  */
 export class BufferWriter {
   constructor() {
-    this.buffer = [];
+    this.buffer = new Uint8Array(1024);
     this.curPos = 0;
   }
 
@@ -31,7 +31,7 @@ export class BufferWriter {
       this.writeChar(str[i]);
     }
 
-    this.buffer.push(0x00);
+    this.writeByte(0x00);
   }
 
 
@@ -42,6 +42,7 @@ export class BufferWriter {
   // Write it in little endian format.
   writeInt(num, byteSize) {
     let lastMaxValue = 0;
+    // Converts to a 2's complement 32 bit integer
     num = num >>> 0;
     for (let byteIdx = 0; byteIdx < byteSize; byteIdx++) {
       // get our max value for this amount of bits (-1 because we include 0).
@@ -49,7 +50,7 @@ export class BufferWriter {
 
       // byte pad out if we need to, to avoid writing bytes repeatedly.
       if (maxValue > num && lastMaxValue > num) {
-        this.buffer.push(0x00);
+        this.writeByte(0x00);
         continue;
       }
 
@@ -57,17 +58,18 @@ export class BufferWriter {
       // mask the byte, we've just bit shifted then
       // append to our array.
       const byteData = num >> (byteIdx * 8) & 0xFF;
-      this.buffer.push(byteData);
+      this.writeByte(byteData);
       lastMaxValue = maxValue;
     }
   }
 
+  writeByte(val) {
+    this.buffer[this.curPos] = val;
+    this.curPos++;
+  }
+
   getBufferAsString() {
-    let str = '';
-    for (let i = 0; i < this.buffer.length; i++) {
-      str += String.fromCharCode(this.buffer[i]);
-    }
-    return str;
+    return String.fromCharCode(...this.buffer);
   }
 }
 
@@ -78,7 +80,7 @@ export class BufferReader {
   }
 
   static fromString(str) {
-    const buffer = [];
+    const buffer = new Uint8Array(1024);
     for (let i = 0; i < str.length; i++) {
       buffer[i] = str.charCodeAt(i);
     }
@@ -144,6 +146,12 @@ export function unBitPack(num, bBitWidth, totalLength) {
   return [(num >> amountToShiftA & bBitMask), num & aBitMask];
 }
 
+const buffer = new BufferWriter();
+buffer.writeInt(120, 1);
+buffer.writeString('Testing123');
+const bfread = BufferReader.fromString(buffer.getBufferAsString());
+console.log(bfread.readInt(1));
+console.log(bfread.readString());
 // Benchmarking serialization.
 // JSON most likely will be more efficient than the results of the benchmark
 // in practice due  to how v8 handles objects. JSON.parse was used to force
