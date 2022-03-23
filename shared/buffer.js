@@ -146,12 +146,12 @@ export function unBitPack(num, bBitWidth, totalLength) {
   return [(num >> amountToShiftA & bBitMask), num & aBitMask];
 }
 
-const buffer = new BufferWriter();
-buffer.writeInt(120, 1);
-buffer.writeString('Testing123');
-const bfread = BufferReader.fromString(buffer.getBufferAsString());
-console.log(bfread.readInt(1));
-console.log(bfread.readString());
+// const buffer = new BufferWriter();
+// buffer.writeInt(120, 1);
+// buffer.writeString('Testing123');
+// const bfread = BufferReader.fromString(buffer.getBufferAsString());
+// console.log(bfread.readInt(1));
+// console.log(bfread.readString());
 // Benchmarking serialization.
 // JSON most likely will be more efficient than the results of the benchmark
 // in practice due  to how v8 handles objects. JSON.parse was used to force
