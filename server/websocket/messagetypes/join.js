@@ -1,7 +1,5 @@
 import { gameExists, findGameByRoomCode } from '../../game_logic/game.js';
-import { BufferWriter } from '../../../shared/buffer.js';
 import { getRandomWord } from '../../utils/wordList.js';
-import { getPacketId } from '../../../shared/netIdentifiers.js';
 import { kickWebsocket } from '../websocket.js';
 
 export const messageName = 'C2SJoin';
@@ -28,18 +26,6 @@ export function onMessage(ws, buffer) {
   ws.setRoomCode(roomCode);
 
   const playerName = getRandomWord();
-
-
   const player = game.addPlayer(ws, playerName);
-
-  // Send an accepted response
-  let bfWriter = new BufferWriter();
-  bfWriter.writeInt(getPacketId('S2CAccepted'), 1);
-  player.generateDTO(bfWriter);
-  ws.sendBuffer(bfWriter);
-
-  bfWriter = new BufferWriter();
-  game.generateDTO(bfWriter);
-  // Send game info.
-  ws.sendBuffer(bfWriter);
+  game.acceptPlayer(player);
 }
