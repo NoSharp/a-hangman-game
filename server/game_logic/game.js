@@ -1,10 +1,9 @@
 // 🎷🐛
-import { bitPack, BufferWriter } from '../../shared/buffer.js';
-import { getPacketId } from '../../shared/netIdentifiers.js';
-import { TeamIdentifiers } from '../../shared/teamIdentifiers.js';
 import { invertArray } from '../utils/arrayUtils.js';
+import { inflate } from '../utils/inflateDecorator.js';
 import { getCharacterIndexes } from '../utils/stringUtils.js';
 import { getRandomWord } from '../utils/wordList.js';
+import { broadcastGameComplete, broadcastGuess, broadcastGameStart, broadcastHangmanState, broadcastPlayerJoin, broadcastWordState, broadcastGuesserUpdate, acceptPlayer } from './networking.js';
 import { Player } from './player.js';
 
 
@@ -105,10 +104,7 @@ export class Game {
 
   setCurrentGuesserId(id) {
     this.currentGuesserId = id;
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2CGuesserUpdate'), 1);
-    buffer.writeInt(this.currentGuesserId, 1);
-    this.broadcastBufferToClients(buffer);
+    this.broadcastGuesserUpdate();
   }
 
   incrementGuesser() {
@@ -223,90 +219,52 @@ export class Game {
     return newWordState;
   }
 
+  // eslint-disable-next-line no-unused-vars
+  acceptPlayer(player) {
+    // INFLATED: networking.js
+  }
+
+  broadcastGuesserUpdate() {
+    // INFLATED: networking.js
+  }
+
+  // eslint-disable-next-line no-unused-vars
   broadcastGameComplete(winningTeam) {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2COnGameComplete'), 1);
-    buffer.writeInt(TeamIdentifiers.get(winningTeam), 1);
-    this.broadcastBufferToClients(buffer);
+    // INFLATED: networking.js
   }
 
+  // eslint-disable-next-line no-unused-vars
   broadcastGuess(char, wasGuessCorrect) {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2CGuessMade'), 1);
-    buffer.writeChar(char);
-    buffer.writeBoolean(wasGuessCorrect);
-    this.broadcastBufferToClients(buffer);
+    // INFLATED: networking.js
   }
 
+  // eslint-disable-next-line no-unused-vars
   broadcastHangmanState() {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2CHangmanStateUpdate'), 1);
-    this.generateHangmanDTO(buffer);
-    this.broadcastBufferToClients(buffer);
+    // INFLATED: networking.js
   }
 
+  // eslint-disable-next-line no-unused-vars
   broadcastWordState() {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2CWordStateUpdate'), 1);
-    this.generateWordStateDTO(buffer);
-    this.broadcastBufferToClients(buffer);
+    // INFLATED: networking.js
   }
 
+  // eslint-disable-next-line no-unused-vars
   broadcastPlayerJoin(player) {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2COnPlayerJoin'), 1);
-    player.generateDTO(buffer);
-    this.broadcastBufferToClients(buffer);
+    // INFLATED: networking.js
   }
 
   broadcastGameStart() {
-    const buffer = new BufferWriter();
-    buffer.writeInt(getPacketId('S2COnGameStarted'), 1);
-    this.broadcastBufferToClients(buffer);
-  }
-
-  /**
-   * Converts the game data into a data transfer object
-   * Used on Synchronise requests sent by the client.
-   * @returns {Object} The payload to send to the client
-   */
-  generateDTO(buffer) {
-    buffer.writeInt(getPacketId('S2CSynchronise'), 1);
-    buffer.writeInt(bitPack(this.hangmanState, this.players.size, 5, 8), 1);
-    this.generateWordStateDTO(buffer);
-    for (const char of this.guessedCharacters.keys()) {
-      buffer.writeChar(char);
-    }
-    buffer.writeInt(0x00, 1); // null terminate the array
-    for (const player of this.players.values()) {
-      player.generateDTO(buffer);
-    }
-    buffer.writeInt(this.currentGuesserId, 1);
-  }
-
-  /**
-   *
-   * @returns {Object} the hangman state
-   */
-  generateHangmanDTO(buffer) {
-    buffer.writeInt(this.hangmanState, 1);
-  }
-
-  generateWordStateDTO(buffer) {
-    buffer.writeString(this.currentWordState);
-  }
-
-  generateGuessedCharactersDTO() {
-    const guessedChars = [];
-    for (const val of this.guessedCharacters.keys()) {
-      guessedChars.push(val);
-    }
-    return guessedChars;
-  }
-
-  broadcastBufferToClients(buffer) {
-    this.players.forEach((ply) => {
-      ply.sendBuffer(buffer);
-    });
+    // INFLATED: networking.js
   }
 }
+
+// Inflation
+
+inflate(Game.prototype, 'broadcastGameComplete', broadcastGameComplete);
+inflate(Game.prototype, 'broadcastGuess', broadcastGuess);
+inflate(Game.prototype, 'broadcastGameStart', broadcastGameStart);
+inflate(Game.prototype, 'broadcastHangmanState', broadcastHangmanState);
+inflate(Game.prototype, 'broadcastPlayerJoin', broadcastPlayerJoin);
+inflate(Game.prototype, 'broadcastWordState', broadcastWordState);
+inflate(Game.prototype, 'broadcastGuesserUpdate', broadcastGuesserUpdate);
+inflate(Game.prototype, 'acceptPlayer', acceptPlayer);
