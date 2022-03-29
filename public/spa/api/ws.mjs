@@ -52,9 +52,7 @@ const messageHandlers = {
     currentUserName = player.name;
     currentId = player.id;
     players.set(currentId, new Player(currentUserName, currentId));
-  },
 
-  S2CSynchronise: function (data) {
     let playerCount = 0;
     [currentHangmanState, playerCount] = unBitPack(data.readInt(1), 5, 8);
 
@@ -81,6 +79,7 @@ const messageHandlers = {
     updateHangmanState(currentHangmanState);
     handleGuesserChange();
   },
+
 
   S2CWordStateUpdate: function (data) {
     currentWordState = data.readString();
@@ -140,7 +139,7 @@ export function connectToGameWs(roomCode) {
     }
 
     if (messageHandlers[messageName] == null) {
-      console.log(`No handler defined for: ${messageName}`);
+      console.log(`No handler defined for: ${messageName} ${packetId}`);
       return;
     }
     messageHandlers[messageName](readBuffer);
@@ -172,6 +171,5 @@ export function setName(name) {
 export function getName() {
   return currentUserName;
 }
-
 
 // TODO: Handle disconnection and no one being in the game correctly.
