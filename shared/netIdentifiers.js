@@ -1,14 +1,17 @@
 export const PacketIdentifiers = [
+  // Login/Handshake
   'C2SJoin',
   'S2CAccepted',
-  'S2CWordStateUpdate',
-  'S2CGuessMade',
-  'S2CHangmanStateUpdate',
-  'S2COnPlayerJoin',
-  'S2CGuesserUpdate',
-  'S2COnGameComplete',
-  'C2SMakeGuess',
+  // In-Game Packets
   'S2COnGameStarted',
+  'C2SMakeGuess',
+  'S2CGuessMade',
+  'S2CWordStateUpdate',
+  'S2CHangmanStateUpdate',
+  'S2CGuesserUpdate',
+  'S2COnPlayerJoin',
+
+  'S2COnGameComplete',
 ];
 
 export const PacketLookup = new Map();
