@@ -16,12 +16,27 @@ Gotten from http://www.mieliestronk.com/corncob_lowercase.txt
 
 ## Structure:
 - **hangman/server** Handles the "web server" aspect of this:
-    - **hangman/server/routes** Used to handle the actual endpoints that the client can request:
-    - **hangman/server/game_logic** used for handling, turns win-states, character guessing etc.
-    - **hangman/server/utils** used for miscelaneous utilities.
-    - **hangman/server/words** used for ingesting and handling the words list.
-    - **hangman/server/websocket** used for handling the websocket:
-        - **hangman/server/websocket/messagetypes** a file is used for each message the client sends to the server, they follow a generic structure
+    - **/routes** Used to handle the actual endpoints that the client can request.
+    - **/game_logic** used for handling, turns win-states, character guessing etc.
+    - **/utils** used for miscelaneous utilities.
+    - **/websocket** used for handling the websocket:
+        - **/websocket/messagetypes** a file is used for each message the client sends to the server, they follow a generic structure
+
+            Every file in the messagetypes folder is loaded at runtime, and handled correctly.
+            This is to improve modularity, and decrese code replication.
+
+            Each file **__MUST__** export:
+            - onMessage: (ws: WebSocket, buffer: Buffer) -> void
+            - messageName: string
+
+
+- **hangman/public/spa** The front-end or "client" aspect:
+    - **/api** Handles the interaction with the server on both the REST-API and Websocket.
+    - **/dom** Utilities to handle the Document Object Model.
+    - **/game_logic** Small utilities to decode information from a buffer.
+    - **/styles** Various CSS style sheets for presentation of the game
+    - **index.html** The Single page application which calls upon the other files.
+    - **index.css** The style sheet to handle the presentation of the website.
 
 
 ## Websocket Structure:
@@ -32,11 +47,8 @@ Terms:
 - b (when in context of a unit) - one 8 bit byte.
 
 ### Buffer
-The buffer library is a non-standard method of serializing messages across
+The buffer library is a method of serializing messages across
 the websocket.
-
-This system is inspired by data is networked is done in early source-engine 1 game titles like
-Half-Life 2 and Garry's Mod.
 
 The goal of this approach is to reduce wasted data being networked (like key name etc.),
 and improve speed of data serialization, as there is a standard packet structure and layout as defined below. 
@@ -303,13 +315,3 @@ Description: Used to signify to the client that the game has begun.
     - 200, Success full request
 
     - 400, Invalid body:
-```json
-    {
-        "invalidFields": [
-            {
-                "fieldName": "{{FieldName}}",
-                "reason": "{{Reason}}"
-            }
-        ]
-    }
-```
