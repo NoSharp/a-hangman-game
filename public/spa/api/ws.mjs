@@ -102,7 +102,7 @@ const messageHandlers = {
   },
 
   S2COnGameComplete: function (data) {
-    setCoverKeyboardText(`${getTeamName(data.readInt(1))} Won the game`);
+    setCoverKeyboardText(`${getTeamName(data.readInt(1))} Won the game in: ${data.readInt(2)} turns!`);
   },
 
   S2CHangmanStateUpdate: function (data) {

@@ -52,6 +52,7 @@ export class Game {
     /* The word they'll be guessing */
     this.targetWord = generateWord();
     this.guessedCharacters = new Map();
+    this.currentScore = 0;
 
     // Used to tell the client how to draw the current state of the word
     // a space will be ignored by the client as a missing character
@@ -68,6 +69,13 @@ export class Game {
     this.playerIterator = this.players.values();
   }
 
+  incrementScore() {
+    this.currentScore++;
+  }
+
+  getScore() {
+    return this.currentScore;
+  }
 
   createWordStateForTargetWord() {
     let word = '';

@@ -50,6 +50,7 @@ export function broadcastGameComplete(winningTeam) {
   const buffer = new BufferWriter();
   buffer.writeInt(getPacketId('S2COnGameComplete'), 1);
   buffer.writeInt(TeamIdentifiers.get(winningTeam), 1);
+  buffer.writeInt(this.getScore(), 2);
   broadcastBufferToClients(this, buffer);
 }
 
