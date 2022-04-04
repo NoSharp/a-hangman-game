@@ -5,7 +5,7 @@ import { BufferReader, BufferWriter, unBitPack } from '/buffer.js';
 import { getPacketName, getPacketId } from '/netIdentifiers.js';
 import { getTeamName } from '/teamIdentifiers.js';
 
-import { displayGameSection, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart, showKeyboard } from '../dom/game.mjs';
+import { displayGameSection, setPlayerName, setWordToGuess, setCharactersGuessed, setCoverKeyboardText, showHangmanPart, showKeyboard } from '../dom/game.mjs';
 import { Player } from '../game_logic/game.mjs';
 
 let ws;
@@ -48,9 +48,11 @@ const messageHandlers = {
 
   S2CAccepted: function (data) {
     shouldRenderOnNextSynchronise = true;
+
     const player = Player.fromBuffer(data);
     currentUserName = player.name;
     currentId = player.id;
+    setPlayerName(currentUserName);
     players.set(currentId, new Player(currentUserName, currentId));
 
     let playerCount = 0;
@@ -97,7 +99,6 @@ const messageHandlers = {
 
   S2CGuesserUpdate: function (data) {
     currentGuesserId = data.readInt(1);
-    console.log(currentGuesserId);
     handleGuesserChange();
   },
 

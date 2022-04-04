@@ -34,6 +34,14 @@ button{
     cursor: pointer;
 }
 
+.hangman-container{
+    text-align: center;
+}
+
+h2 {
+    
+    font-family: "montserrat", sans-serif;
+}
 
 @media screen and (max-height: 600px) {
     .hangman-display {

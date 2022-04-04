@@ -97,3 +97,7 @@ export function displayGameSection() {
   generateKeys();
   // setWordToGuess("flood");
 }
+
+export function setPlayerName(name) {
+  document.querySelector('#playerName').innerText = `Hello, ${name}`;
+}
