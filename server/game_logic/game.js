@@ -123,7 +123,7 @@ export class Game {
       this.incrementGuesser();
       return;
     }
-
+    this.incrementScore();
     this.setCurrentGuesserId(player.id);
   }
 
