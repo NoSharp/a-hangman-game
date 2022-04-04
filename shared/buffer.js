@@ -69,7 +69,7 @@ export class BufferWriter {
   }
 
   getBufferAsString() {
-    return String.fromCharCode(...this.buffer);
+    return String.fromCharCode(...this.buffer.slice(0, this.curPos));
   }
 }
 
