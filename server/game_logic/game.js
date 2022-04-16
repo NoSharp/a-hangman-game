@@ -184,6 +184,16 @@ export class Game {
     destroyGame(this.code);
   }
 
+  finishGameWithTeam(team) {
+    this.broadcastGameComplete(team);
+
+    for (const player of this.players.values()) {
+      player.closeWebSocket();
+    }
+
+    destroyGame(this.code);
+  }
+
   incrementHangmanState() {
     this.hangmanState += 1;
     this.broadcastHangmanState();

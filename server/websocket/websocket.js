@@ -3,7 +3,7 @@ import { createInvalidPayloadMessage } from './requestValidation.js';
 import { getActioner } from './messageTypes.js';
 import { BufferReader, BufferWriter } from '../../shared/buffer.js';
 import { getPacketName, getPacketId } from '../../shared/netIdentifiers.js';
-
+import { findGameByRoomCode } from '../game_logic/game.js';
 /**
  * Handle websocket connection
  * @param {WebSocket} ws
@@ -38,7 +38,13 @@ function initiateWebSocket(ws) {
 
   ws.on('error', (err) => { console.log(`err ${err}`); });
 
-  ws.on('close', () => { console.log('closed!'); });
+  ws.on('close', () => {
+    // we need to end their game and kick the players.
+    // the cpu's win because the players surrendered.
+    const game = findGameByRoomCode(ws.getRoomCode());
+    if (game == null) return;
+    game.finishGameWithTeam('CPU');
+  });
 }
 
 export function kickWebsocket(ws, reason) {
@@ -83,6 +89,7 @@ export function mountWebSocketManager(wss) {
   WebSocket.prototype.sendBuffer = function (buffer) {
     this.send(buffer.getBufferAsString());
   };
+
 
   wss.on('connection', (ws) => {
     console.log('Got connection?');

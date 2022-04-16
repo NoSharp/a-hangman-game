@@ -15,7 +15,7 @@ export class Player {
   }
 
   closeWebSocket() {
-    this.socket.close();
+    this.socket != null && this.socket.close();
   }
 
   sendBuffer(buffer) {
