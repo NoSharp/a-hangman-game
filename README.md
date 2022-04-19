@@ -1,6 +1,26 @@
 # Hangman.
 
 ## How the game works:
+A user will either click create or join game.
+If they clicked create:
+    They will specify the game name, this is used to identify the game.
+    They will also enter a player count.
+The game will then be created
+If they clicked join:
+    They will then be prompted to enter a game code, if it's valid they'll be loaded into a game.
+
+Once the game has the specified amount of players to start, the game will then go-ahead.
+To guess a character a player can press one of the light purple buttons, if a button is gray'd out then the player
+cannot use it and must chose another character as that one has already been guessed.
+
+If the guess was correct a previously blank character will appear
+If the guess wasn't correct then a part of the gallows will be drawn
+
+This continues until every character in the word has been guessed or until all of the gallows are drawn.
+
+If the players have successfully revealed the word then the game is won by the players, otherwise it's won by the computer.
+
+Once a game is complete the game name becomes available again for someone to re-use.
 
 ## Libraries (✅ approved, ❌ denied, 🔃 TBC ):
 - Baretest ✅
