@@ -7,7 +7,6 @@ import { broadcastGameComplete, broadcastGuess, broadcastGameStart, broadcastHan
 import { Player } from './player.js';
 
 
-// TODO: Decouple network handling.
 /**
  * This is a list of key-values, used to represent rooms.
  * The key is a string, the room code.
@@ -89,7 +88,6 @@ export class Game {
     const player = new Player(ws, name, this.players.size);
     this.players.set(player.id, player);
     this.broadcastPlayerJoin(player);
-    console.log(this.players.size, this.roomSize);
     if (this.players.size >= this.roomSize) {
       this.startGame();
     }
@@ -276,8 +274,7 @@ export class Game {
   }
 }
 
-// Inflation
-
+// Inflation/Decoupling
 inflate(Game.prototype, 'broadcastGameComplete', broadcastGameComplete);
 inflate(Game.prototype, 'broadcastGuess', broadcastGuess);
 inflate(Game.prototype, 'broadcastGameStart', broadcastGameStart);

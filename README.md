@@ -1,8 +1,5 @@
 # Hangman.
 
-# Word List
-Gotten from http://www.mieliestronk.com/corncob_lowercase.txt
-
 ## How the game works:
 
 ## Libraries (✅ approved, ❌ denied, 🔃 TBC ):
