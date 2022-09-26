@@ -9,8 +9,6 @@ function assert(condition, errMessage) {
  * Used to manipulate an array of bytes.
  * Utility is trimmed down and only does what we need
  * so no writing or reading floating point numbers etc.
- * I never deal with signed numbers so we only have utilities
- * for dealing with unsigned numbers.
  */
 export class BufferWriter {
   constructor() {
@@ -22,8 +20,8 @@ export class BufferWriter {
     this.writeInt(char.charCodeAt(0), 1);
   }
 
-  // Write until null termination
-  // each string is ascii because we don't need to deal with non-unicode characters.
+  // Write string, append null termination
+  // each string is ascii because we don't need to deal with unicode characters.
   writeString(str) {
     const strLength = str.length;
 
