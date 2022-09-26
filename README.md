@@ -1,5 +1,9 @@
 # Hangman.
 
+## Citations
+
+`Julieta Ulanovsky, S. Matas, JP. del Peral, JL. Bailly. Montserrat Font https://fonts.google.com/specimen/Montserrat`
+
 ## How the game works:
 A user will either click create or join game.
 If they clicked create:
